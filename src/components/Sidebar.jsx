@@ -34,7 +34,7 @@ const Sidebar = ({ isCollapsed }) => {
         icon={<HouseDoor size={20} />}
         isCollapsed={isCollapsed}
       >
-        Home
+        Работа
       </SidebarItem>
       {userRole === "ГИП" && (
         <SidebarItem
@@ -42,7 +42,7 @@ const Sidebar = ({ isCollapsed }) => {
           icon={<Gear size={20} />}
           isCollapsed={isCollapsed}
         >
-          Dashboard
+          Объекты
         </SidebarItem>
       )}
       <SidebarItem
@@ -50,14 +50,14 @@ const Sidebar = ({ isCollapsed }) => {
         icon={<GraphUp size={20} />}
         isCollapsed={isCollapsed}
       >
-        Orders
+        Отчеты
       </SidebarItem>
       <SidebarItem
         to="/profile-edit"
         icon={<Person size={20} />}
         isCollapsed={isCollapsed}
       >
-        Products
+        Профиль
       </SidebarItem>
     </Nav>
   );

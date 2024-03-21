@@ -34,17 +34,6 @@ const WorkLogSummaryTable = () => {
       try {
         // Предполагается, что /users и /workTimeLogs это эндпоинты API для получения информации о пользователях и логах работы соответственно
         const usersResponse = await axios.get("/users");
-        const sortUsers = usersResponse.data.sort((a, b) => {
-          if (a.department != b.department) {
-            return a.department.localeCompare(b.department);
-          }
-          if (a.lastName != b.lastName) {
-            return a.lastName.localeCompare(b.lastName);
-          }
-          if (a.firstName != b.firstName) {
-            return a.firstName.localeCompare(b.firstName);
-          }
-        });
 
         const logsResponse = await axios.get("/workTimeLogs");
 
@@ -55,8 +44,23 @@ const WorkLogSummaryTable = () => {
           startDate,
           endDate
         );
-        const processedData = processUserData(sortUsers, updatedFilteredLogs);
-        setUserData(processedData);
+        const processedData = processUserData(
+          usersResponse.data,
+          updatedFilteredLogs
+        );
+
+        const sortProcessedData = processedData.sort((a, b) => {
+          if (a.department != b.department) {
+            return a.department.localeCompare(b.department);
+          }
+          if (a.lastName != b.lastName) {
+            return a.lastName.localeCompare(b.lastName);
+          }
+          if (a.firstName != b.firstName) {
+            return a.firstName.localeCompare(b.firstName);
+          }
+        });
+        setUserData(sortProcessedData);
       } catch (error) {
         console.error("Ошибка при получении данных:", error);
       }

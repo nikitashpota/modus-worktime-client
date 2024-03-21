@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Form, Button, Card, Container, Row, Col } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../services/axios";
+import departments from "../services/departmentsData";
 
 function RegistrationForm() {
   const [username, setUsername] = useState("");
@@ -127,13 +128,11 @@ function RegistrationForm() {
                     required
                   >
                     <option value="">Выберите отдел...</option>
-                    <option value="АР">АР</option>
-                    <option value="КР">КР</option>
-                    <option value="ОВ">ОВ</option>
-                    <option value="ВК">ВК</option>
-                    <option value="ЭОМ">ЭОМ</option>
-                    <option value="СС">СС</option>
-                    <option value="ГП">ГП</option>
+                    {departments.map((dept) => (
+                      <option key={dept.Code} value={dept.Code}>
+                        {dept.Name}
+                      </option>
+                    ))}
                   </Form.Select>
                 </Form.Group>
 

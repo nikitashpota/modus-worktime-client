@@ -4,6 +4,7 @@ import axios from "../services/axios"; // Путь к вашему файлу с
 import { useAuth } from "../services/AuthContext"; // Путь к вашему AuthContext
 import TimeTable from "../components/TimeTable";
 
+
 const EmployeeView = () => {
   // user - это объект с информацией о пользователе, например:
   const { userId } = useAuth();

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Card } from "react-bootstrap";
 import axios from "../services/axios";
 import { useAuth } from "../services/AuthContext"; // Предполагая, что ваш AuthContext находится в папке contexts
+import departments from "../services/departmentsData";
 
 function ProfileEdit() {
   const [firstName, setFirstName] = useState("");
@@ -99,13 +100,11 @@ function ProfileEdit() {
               required
             >
               <option value="">Выберите отдел...</option>
-              <option value="АР">АР</option>
-              <option value="КР">КР</option>
-              <option value="ОВ">ОВ</option>
-              <option value="ВК">ВК</option>
-              <option value="ЭОМ">ЭОМ</option>
-              <option value="СС">СС</option>
-              <option value="ГП">ГП</option>
+              {departments.map((dept) => (
+                <option key={dept.Code} value={dept.Code}>
+                  {dept.Name}
+                </option>
+              ))}
             </Form.Select>
           </Form.Group>
 

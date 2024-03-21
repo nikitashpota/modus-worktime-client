@@ -121,7 +121,7 @@ function EmployeeWorkloadTable() {
       const response = await axios.get("/buildings");
       const data = response.data;
       const sortData = data.sort((a, b) => {
-        return a.createdAt.localeCompare(b.createdAt);
+        return a.name.localeCompare(b.name);
       });
       setBuildings(sortData);
     };
