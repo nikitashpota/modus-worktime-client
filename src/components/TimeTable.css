@@ -1,0 +1,19 @@
+/* Стили для таблицы */
+
+
+/* Заголовки столбцов с тонким шрифтом */
+.thin-header th {
+  font-weight: 400; /* Эквивалент .font-weight-light в Bootstrap */
+}
+
+/* Подсветка ячейки с актуальной датой */
+.today-highlight {
+  background-color: #606060; /* Светло-серый цвет, аналогичный Bootstrap светло-серому */
+}
+
+/* Стили для первого столбца */
+.first-column {
+  min-width: 200px;
+  max-width: 450px;
+}
+

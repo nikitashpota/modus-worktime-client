@@ -1,0 +1,27 @@
+/* Sidebar.css */
+.sidebar .nav-link {
+  color: var(--bs-dark);
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.sidebar-icon {
+  display: inline-block;
+  width: 2rem;
+  text-align: center;
+}
+
+.collapsed .sidebar-icon {
+  margin: 0 auto;
+}
+
+.collapsed .nav-link span {
+  display: none;
+}
+
+/* Дополнительно может потребоваться общий стиль для иконок */
+.react-bootstrap-icons {
+  vertical-align: bottom; /* Для корректного выравнивания с текстом */
+}
