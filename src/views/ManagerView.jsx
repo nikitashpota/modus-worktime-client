@@ -47,8 +47,7 @@ function ManagerView() {
 
   return (
     <div>
-      <h2>Управление объектами</h2>
-      <AddBuildingForm onBuildingAdded={handleBuildingAdded}/>
+      <AddBuildingForm onBuildingAdded={handleBuildingAdded} />
       <BuildingList
         buildings={buildings}
         onSelectUserForBuilding={handleSelectUserForBuilding}

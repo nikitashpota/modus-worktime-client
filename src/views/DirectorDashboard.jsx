@@ -2,6 +2,7 @@ import React from "react";
 import { Tab, Row, Col, Nav } from "react-bootstrap";
 import WorkLogSummaryTable from "../components/WorkLogSummaryTable";
 import EmployeeWorkloadTable from "../components/EmployeeWorkloadTable";
+import ProjectOverview from "../components/ProjectOverview";
 // Импортируйте другие таблицы и компоненты графиков, которые вы планируете использовать
 
 const DirectorDashboard = () => {
@@ -16,6 +17,9 @@ const DirectorDashboard = () => {
             <Nav.Item>
               <Nav.Link eventKey="second">Ведомость объектов</Nav.Link>
             </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="third">Пользователь-задачи</Nav.Link>
+            </Nav.Item>
             {/* Добавьте другие Nav.Item с соответствующими Nav.Link для каждой таблицы или графика */}
           </Nav>
         </Col>
@@ -26,6 +30,9 @@ const DirectorDashboard = () => {
             </Tab.Pane>
             <Tab.Pane eventKey="second">
               <EmployeeWorkloadTable />
+            </Tab.Pane>
+            <Tab.Pane eventKey="third">
+              <ProjectOverview />
             </Tab.Pane>
             {/* Добавьте другие Tab.Pane для каждой таблицы или графика */}
           </Tab.Content>

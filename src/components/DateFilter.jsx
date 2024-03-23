@@ -34,11 +34,11 @@ const DateFilter = ({ onFilter }) => {
 
   return (
     <Form>
-      <Row className="align-items-center">
+      <Row
+        className="align-items-center"
+        style={{ display: "flex", flexDirection: "row", flexWrap: "nowrap" }}
+      >
         <Col xs="auto">
-          <Form.Label htmlFor="startDate" visuallyHidden>
-            Начальная дата
-          </Form.Label>
           <Form.Control
             type="date"
             id="startDate"
@@ -47,9 +47,6 @@ const DateFilter = ({ onFilter }) => {
           />
         </Col>
         <Col xs="auto">
-          <Form.Label htmlFor="endDate" visuallyHidden>
-            Конечная дата
-          </Form.Label>
           <Form.Control
             type="date"
             id="endDate"

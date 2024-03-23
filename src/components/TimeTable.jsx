@@ -82,6 +82,7 @@ const TimeTable = () => {
                   formatDateWithWeekday(date) === formatDateWithWeekday(today)
                     ? "#c7ccc985"
                     : "transparent",
+                textAlign: "center",
               }}
             >
               {formatDateWithWeekday(date)}
@@ -103,7 +104,7 @@ const TimeTable = () => {
                   log.date === dateString && log.buildingId === building.id
               );
               return (
-                <td key={date.toISOString()}>
+                <td key={date.toISOString()} style={{ textAlign: "center" }}>
                   <TimeTableCell
                     date={dateString}
                     logs={logs}
