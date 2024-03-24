@@ -58,12 +58,14 @@ const ProjectOverview = ({ users, buildings, workTimeLogs }) => {
   };
 
   // Функция фильтрации данных в таблице
-  const filteredLogs = workTimeLogs.filter(
-    (log) =>
-      selectedUsers.find((user) => user.value === log.userId) &&
-      log.date >= dateRange.startDate &&
-      log.date <= dateRange.endDate
-  );
+  const filteredLogs = workTimeLogs
+    .filter(
+      (log) =>
+        selectedUsers.find((user) => user.value === log.userId) &&
+        log.date >= dateRange.startDate &&
+        log.date <= dateRange.endDate
+    )
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   function convertDateFormat(dateStr) {
     const [year, month, day] = dateStr.split("-");
