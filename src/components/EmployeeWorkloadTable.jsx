@@ -1,18 +1,20 @@
 import { useState, useEffect } from "react";
 import { Table, Button } from "react-bootstrap";
 import DateFilter from "./DateFilter";
-import axios from "../services/axios";
 import "./EmployeeWorkloadTable.css";
 import * as XLSX from "xlsx";
 
-function EmployeeWorkloadTable() {
-  const [users, setUsers] = useState([]);
-  const [buildings, setBuildings] = useState([]);
-  const [logs, setLogs] = useState([]);
+function EmployeeWorkloadTable({ users, buildings, workTimeLogs }) {
+  const [sortUsers, setSortUsers] = useState([]);
+  const [sortBuildings, setSortBuildings] = useState([]);
   const [hoursByProject, setHoursByProject] = useState([]);
 
   const handleFilter = (date) => {
-    const filterLogs = filterLogsByDate(logs, date.startDate, date.endDate);
+    const filterLogs = filterLogsByDate(
+      workTimeLogs,
+      date.startDate,
+      date.endDate
+    );
     const calculateHours = calculateHoursByProject(filterLogs);
     setHoursByProject(calculateHours);
   };
@@ -50,9 +52,6 @@ function EmployeeWorkloadTable() {
 
     return result;
   };
-
-  // const compiledData = compileData(percentages, buildings, users);
-  // console.log(compiledData);
 
   const filterLogsByDate = (logs, startDate, endDate) => {
     // Преобразование строк даты в объекты Date для сравнения
@@ -100,10 +99,20 @@ function EmployeeWorkloadTable() {
 
   useEffect(() => {
     // Функция для получения данных о пользователях
-    const fetchUsers = async () => {
-      const response = await axios.get("/users");
-      const data = response.data;
-      const sortData = data.sort((a, b) => {
+
+    users.sort((a, b) => {
+      if (a.department != b.department) {
+        return a.department.localeCompare(b.department);
+      }
+      if (a.lastName != b.lastName) {
+        return a.lastName.localeCompare(b.lastName);
+      }
+      if (a.firstName != b.firstName) {
+        return a.firstName.localeCompare(b.firstName);
+      }
+    });
+    setSortUsers(
+      users.sort((a, b) => {
         if (a.department != b.department) {
           return a.department.localeCompare(b.department);
         }
@@ -113,28 +122,15 @@ function EmployeeWorkloadTable() {
         if (a.firstName != b.firstName) {
           return a.firstName.localeCompare(b.firstName);
         }
-      });
-      setUsers(sortData);
-    };
-    // Функция для получения данных о зданиях
-    const fetchBuildings = async () => {
-      const response = await axios.get("/buildings");
-      const data = response.data;
-      const sortData = data.sort((a, b) => {
+      })
+    );
+
+    setSortBuildings(
+      buildings.sort((a, b) => {
         return a.name.localeCompare(b.name);
-      });
-      setBuildings(sortData);
-    };
-    // Функция для получения логов работы
-    const fetchLogs = async () => {
-      const response = await axios.get("/workTimeLogs");
-      const data = response.data;
-      setLogs(data);
-    };
-    fetchUsers();
-    fetchBuildings();
-    fetchLogs();
-  }, []);
+      })
+    );
+  }, [users, buildings, workTimeLogs]);
 
   const exportToXlsx = (data, fileName) => {
     console.log(hoursByProject);
@@ -157,16 +153,16 @@ function EmployeeWorkloadTable() {
         <thead>
           <tr>
             <th>Отдел / Сотрудник</th>
-            {buildings.map((building) => (
+            {sortBuildings.map((building) => (
               <th key={building.id}>{building.name}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
+          {sortUsers.map((user) => (
             <tr key={user.id}>
               <td>{`${user.firstName} ${user.lastName} (${user.department})`}</td>
-              {buildings.map((building) => {
+              {sortBuildings.map((building) => {
                 const hoursKey = `${user.id}_${building.id}`;
                 const hours = hoursByProject[hoursKey] || 0;
                 return <td key={building.id}>{hours}</td>;
@@ -179,7 +175,7 @@ function EmployeeWorkloadTable() {
         variant="success"
         onClick={() =>
           exportToXlsx(
-            compileData(hoursByProject, buildings, users),
+            compileData(hoursByProject, sortBuildings, sortUsers),
             "CompileData"
           )
         }

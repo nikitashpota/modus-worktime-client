@@ -1,11 +1,43 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import axios from "../services/axios";
 import { Tab, Row, Col, Nav } from "react-bootstrap";
 import WorkLogSummaryTable from "../components/WorkLogSummaryTable";
 import EmployeeWorkloadTable from "../components/EmployeeWorkloadTable";
 import ProjectOverview from "../components/ProjectOverview";
+import DepartmentHoursChart from "../components/DepartmentHoursChart";
 // Импортируйте другие таблицы и компоненты графиков, которые вы планируете использовать
 
+// Загрузка данных
+
 const DirectorDashboard = () => {
+  const [users, setUsers] = useState([]);
+  const [buildings, setBuildings] = useState([]);
+  const [workTimeLogs, setWorkTimeLogs] = useState([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const { data } = await axios.get("/users");
+      // console.log("users", data);
+      setUsers(data);
+    };
+
+    const fetchBuildings = async () => {
+      const { data } = await axios.get("/buildings");
+      // console.log("buildings", data);
+      setBuildings(data);
+    };
+
+    const fetchWorkTimeLogs = async () => {
+      const { data } = await axios.get("/workTimeLogs");
+      // console.log("workTimeLogs", data);
+      setWorkTimeLogs(data);
+    };
+
+    fetchUsers();
+    fetchBuildings();
+    fetchWorkTimeLogs();
+  }, []);
+
   return (
     <Tab.Container id="left-tabs-example" defaultActiveKey="first">
       <Row>
@@ -20,6 +52,9 @@ const DirectorDashboard = () => {
             <Nav.Item>
               <Nav.Link eventKey="third">Пользователь-задачи</Nav.Link>
             </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="fourth">Отдел-часы</Nav.Link>
+            </Nav.Item>
             {/* Добавьте другие Nav.Item с соответствующими Nav.Link для каждой таблицы или графика */}
           </Nav>
         </Col>
@@ -29,10 +64,25 @@ const DirectorDashboard = () => {
               <WorkLogSummaryTable />
             </Tab.Pane>
             <Tab.Pane eventKey="second">
-              <EmployeeWorkloadTable />
+              <EmployeeWorkloadTable
+                users={users}
+                buildings={buildings}
+                workTimeLogs={workTimeLogs}
+              />
             </Tab.Pane>
             <Tab.Pane eventKey="third">
-              <ProjectOverview />
+              <ProjectOverview
+                users={users}
+                buildings={buildings}
+                workTimeLogs={workTimeLogs}
+              />
+            </Tab.Pane>
+            <Tab.Pane eventKey="fourth">
+              <DepartmentHoursChart
+                users={users}
+                buildings={buildings}
+                workTimeLogs={workTimeLogs}
+              />
             </Tab.Pane>
             {/* Добавьте другие Tab.Pane для каждой таблицы или графика */}
           </Tab.Content>
