@@ -5,6 +5,7 @@ function BuildingList({
   buildings,
   onSelectUserForBuilding,
   onBuildingDeleted,
+  onSelectBuildingToEdit,
 }) {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedBuildingId, setSelectedBuildingId] = useState(null);
@@ -48,6 +49,13 @@ function BuildingList({
                   className="me-2"
                 >
                   Добавить исполнителя
+                </Button>
+                <Button
+                  variant="warning"
+                  onClick={() => onSelectBuildingToEdit(building.id)}
+                  className="me-2"
+                >
+                  Редактировать
                 </Button>
                 <Button
                   variant="danger"

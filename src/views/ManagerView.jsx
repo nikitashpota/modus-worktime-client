@@ -2,17 +2,26 @@ import React, { useState, useEffect } from "react";
 import axios from "../services/axios";
 import AddBuildingForm from "../components/AddBuildingForm";
 import BuildingList from "../components/BuildingList";
+import EditBuildingModal from "../components/EditBuildingModal";
 import { useNavigate } from "react-router-dom";
 
 function ManagerView() {
   const navigate = useNavigate();
   const [buildings, setBuildings] = useState([]);
   const [isUpdated, setIsUpdated] = useState(false); // Для триггера обновления списка объектов
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedBuildingId, setSelectedBuildingId] = useState(null);
+
+  const onSelectBuildingToEdit = (buildingId) => {
+    setSelectedBuildingId(buildingId);
+    setShowEditModal(true);
+  };
 
   const fetchObjects = async () => {
     try {
       const response = await axios.get("/buildings");
       setBuildings(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error("Ошибка при загрузке объектов:", error);
     }
@@ -52,6 +61,14 @@ function ManagerView() {
         buildings={buildings}
         onSelectUserForBuilding={handleSelectUserForBuilding}
         onBuildingDeleted={handleBuildingDeleted}
+        onSelectBuildingToEdit={onSelectBuildingToEdit}
+      />
+
+      <EditBuildingModal
+        show={showEditModal}
+        buildingId={selectedBuildingId}
+        handleClose={() => setShowEditModal(false)}
+        updateBuildingList={handleBuildingAdded}
       />
     </div>
   );
