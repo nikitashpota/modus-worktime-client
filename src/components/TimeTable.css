@@ -1,6 +1,5 @@
 /* Стили для таблицы */
 
-
 /* Заголовки столбцов с тонким шрифтом */
 .thin-header th {
   font-weight: 400; /* Эквивалент .font-weight-light в Bootstrap */
@@ -17,3 +16,17 @@
   max-width: 450px;
 }
 
+/* Стилизация скроллбара */
+.table-responsive::-webkit-scrollbar {
+  height: 8px; /* Высота скроллбара */
+  background: transparent; /* Прозрачный фон скроллбара */
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: #3d3d3d; /* Цвет скроллбара */
+  border-radius: 4px; /* Скругление углов скроллбара */
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: transparent; /* Прозрачный фон трека скроллбара */
+}

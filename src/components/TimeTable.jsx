@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Table } from "react-bootstrap";
-import axios from "../services/axios"; // Ваша настроенная инстанция axios
-import { useAuth } from "../services/AuthContext"; // Контекст аутентификации
-import TimeTableCell from "./TimeTableCell"; // Компонент ячейки таблицы
-import { format, addDays, subDays } from "date-fns";
+import { Table, Form, Button, Row, Col } from "react-bootstrap";
+import axios from "../services/axios";
+import { useAuth } from "../services/AuthContext";
+import TimeTableCell from "./TimeTableCell";
+import { format, parseISO, subDays, addDays } from "date-fns";
 
 import "./TimeTable.css";
 
@@ -12,7 +12,9 @@ const TimeTable = () => {
   const [buildings, setBuildings] = useState([]);
   const [dates, setDates] = useState([]);
   const [workTimeLogs, setWorkTimeLogs] = useState([]);
-  const [update, setUpdate] = useState(false);
+  const today = new Date();
+  const sevenDaysAgo = subDays(today, 7);
+  const twoDaysAhead = addDays(today, 2);
 
   function formatDateWithWeekday(date) {
     // Получаем день недели сокращенно
@@ -28,96 +30,139 @@ const TimeTable = () => {
     return `${weekDayShort}, ${dateStr}`;
   }
 
+  const [startDate, setStartDate] = useState(
+    format(sevenDaysAgo, "yyyy-MM-dd")
+  );
+  const [endDate, setEndDate] = useState(format(twoDaysAhead, "yyyy-MM-dd"));
+
   const updateWorkTimeLogs = () => {
-    setUpdate(!update);
+    fetchData(); // Вызов fetchData для обновления данных с новыми датами
   };
 
-  const today = new Date();
   useEffect(() => {
+    fetchData();
+  }, [userId]); // Удаление update из зависимостей, чтобы избежать бесконечного цикла
+
+  const fetchData = async () => {
     if (userId) {
-      const fetchData = async () => {
-        try {
-          // Запросы к серверу для получения данных...
+      try {
+        const buildingsResponse = await axios.get(`/userBuildings/${userId}`);
+        setBuildings(buildingsResponse.data);
+        const logsResponse = await axios.get(`/workTimeLogs/${userId}`);
+        setWorkTimeLogs(logsResponse.data);
 
-          const buildingsResponse = await axios.get(`/userBuildings/${userId}`);
-          setBuildings(
-            buildingsResponse.data.sort(
-              (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
-            )
-          );
-          const logs = await axios.get(`/workTimeLogs/${userId}`);
-          setWorkTimeLogs(logs.data);
+        // Генерация дат для отображения в шапке таблицы
+        let start = startDate ? parseISO(startDate) : new Date();
+        let end = endDate ? parseISO(endDate) : new Date();
 
-          // Генерация дат для отображения в шапке таблицы...
+        let tempDates = [];
+        let currentDate = new Date(start);
 
-          const datesArray = [];
-
-          // Генерация дат с неделю назад до двух дней вперед
-          for (let i = -7; i <= 2; i++) {
-            const date =
-              i < 0 ? subDays(today, Math.abs(i)) : addDays(today, i);
-            datesArray.push(date);
-          }
-
-          setDates(datesArray);
-        } catch (error) {
-          console.error("Ошибка при загрузке данных:", error);
+        while (currentDate <= end) {
+          tempDates.push(new Date(currentDate));
+          currentDate.setDate(currentDate.getDate() + 1);
         }
-      };
 
-      fetchData();
+        setDates(tempDates);
+      } catch (error) {
+        console.error("Ошибка при загрузке данных:", error);
+      }
     }
-  }, [userId, update]);
+  };
 
   return (
-    <Table bordered className="table thin-header">
-      <thead>
-        <tr>
-          <th style={{ minWidth: "200px", maxWidth: "400px" }}></th>
-          {dates.map((date, index) => (
-            <th
-              key={index}
-              style={{
-                backgroundColor:
-                  formatDateWithWeekday(date) === formatDateWithWeekday(today)
-                    ? "#c7ccc985"
-                    : "transparent",
-                textAlign: "center",
-              }}
-            >
-              {formatDateWithWeekday(date)}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {buildings.map((building) => (
-          <tr key={building.id}>
-            <td style={{ minWidth: "250px", maxWidth: "400px" }}>
-              {building.name}
-            </td>
-            {dates.map((date) => {
-              const dateString = date.toISOString().split("T")[0];
-
-              const logs = workTimeLogs.filter(
-                (log) =>
-                  log.date === dateString && log.buildingId === building.id
-              );
-              return (
-                <td key={date.toISOString()} style={{ textAlign: "center" }}>
-                  <TimeTableCell
-                    date={dateString}
-                    logs={logs}
-                    buildingId={building.id}
-                    onUpdate={updateWorkTimeLogs}
-                  />
+    <>
+      <Row className="mb-3" style={{ width: "500px" }}>
+        <Col>
+          <Form.Control
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+        </Col>
+        <Col>
+          <Form.Control
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+        </Col>
+        <Col>
+          <Button onClick={updateWorkTimeLogs}>Применить</Button>
+        </Col>
+      </Row>
+      <div style={{ overflowX: "auto" }} className="table-responsive">
+        <Table bordered className="table thin-header">
+          <thead>
+            <tr>
+              <th
+                style={{
+                  minWidth: "200px",
+                  position: "sticky",
+                  left: 0,
+                  background: "white",
+                  zIndex: 1,
+                }}
+              >
+                Объект
+              </th>
+              {dates.map((date, index) => (
+                <th
+                  key={index}
+                  style={{
+                    backgroundColor:
+                      formatDateWithWeekday(date) ===
+                      formatDateWithWeekday(today)
+                        ? "#c7ccc985"
+                        : "transparent",
+                    textAlign: "center",
+                    minWidth: "110px",
+                  }}
+                >
+                  {formatDateWithWeekday(date)}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {buildings.map((building) => (
+              <tr key={building.id}>
+                <td
+                  style={{
+                    position: "sticky",
+                    left: 0,
+                    background: "white",
+                    zIndex: 1,
+                  }}
+                >
+                  {building.name}
                 </td>
-              );
-            })}
-          </tr>
-        ))}
-      </tbody>
-    </Table>
+                {dates.map((date) => {
+                  const dateString = format(date, "yyyy-MM-dd");
+                  const logs = workTimeLogs.filter(
+                    (log) =>
+                      log.date === dateString && log.buildingId === building.id
+                  );
+                  return (
+                    <td
+                      key={dateString}
+                      style={{ textAlign: "center", minWidth: "110px" }}
+                    >
+                      <TimeTableCell
+                        date={dateString}
+                        logs={logs}
+                        buildingId={building.id}
+                        onUpdate={updateWorkTimeLogs}
+                      />
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </div>
+    </>
   );
 };
 
