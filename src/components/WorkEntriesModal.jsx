@@ -16,8 +16,13 @@ const WorkEntryRow = ({ entry, onUpdateEntry, onRemoveEntry }) => {
   };
 
   return (
-    <Form.Group as={Row} className="mb-3" controlId={`entry-${entry.id}`}>
-      <Col xs={2}>
+    <Form.Group
+      as={Row}
+      className="mb-3 g-0"
+      controlId={`entry-${entry.id}`}
+      style={{ gap: "15px" }}
+    >
+      <Col style={{ maxWidth: "100px" }}>
         <Form.Control
           type="number"
           placeholder="Часы"
@@ -25,9 +30,9 @@ const WorkEntryRow = ({ entry, onUpdateEntry, onRemoveEntry }) => {
           onChange={(e) => onUpdateEntry({ ...entry, hours: e.target.value })}
         />
       </Col>
-      <Col xs={8}>
+      <Col>
         <Form.Control
-          type="text"
+          type="textarea"
           placeholder="Описание работы"
           value={entry.workType || ""}
           onChange={(e) =>
@@ -35,7 +40,7 @@ const WorkEntryRow = ({ entry, onUpdateEntry, onRemoveEntry }) => {
           }
         />
       </Col>
-      <Col xs={1} className="d-flex align-items-center justify-content-center">
+      <Col xs="auto" className="d-flex justify-content-center">
         <Button variant="danger" onClick={() => handleRemoveClick(entry.id)}>
           <Trash />
         </Button>
@@ -54,24 +59,6 @@ const WorkEntriesModal = ({
   onUpdateTable,
 }) => {
   const [entries, setEntries] = useState(initialEntries);
-
-  // useEffect(() => {
-  //   const handleRefresh = async () => {
-  //     try {
-  //       const response = await axios.get(`/workTimeLogs/logs`, {
-  //         params: { userId, buildingId, date },
-  //       });
-  //       setEntries(response.data);
-  //       console.log(response.data);
-  //     } catch (error) {
-  //       console.error("Ошибка при получении логов:", error);
-  //     }
-  //   };
-  //   handleRefresh(entries);
-  //   console.log();
-  // }, []);
-
-  // setEntries(initialEntries);
 
   const addNewEntry = () => {
     setEntries([
