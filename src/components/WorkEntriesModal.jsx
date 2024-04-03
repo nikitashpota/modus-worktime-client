@@ -52,13 +52,13 @@ const WorkEntryRow = ({ entry, onUpdateEntry, onRemoveEntry }) => {
 const WorkEntriesModal = ({
   show,
   onHide,
-  initialEntries,
+  logs,
   userId,
   buildingId,
   date,
   onUpdateTable,
 }) => {
-  const [entries, setEntries] = useState(initialEntries);
+  const [entries, setEntries] = useState(logs);
 
   const addNewEntry = () => {
     setEntries([
@@ -100,9 +100,8 @@ const WorkEntriesModal = ({
         }
       }
     }
-    setEntries([]);
     onUpdateTable();
-    onHide(); // Закрываем модальное окно
+    onHide();
   };
 
   const handleClose = async () => {

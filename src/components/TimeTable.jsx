@@ -31,17 +31,50 @@ const TimeTable = () => {
   }
 
   const [startDate, setStartDate] = useState(
-    format(sevenDaysAgo, "yyyy-MM-dd")
+    localStorage.getItem("selectedStartDate") ||
+      format(sevenDaysAgo, "yyyy-MM-dd")
   );
-  const [endDate, setEndDate] = useState(format(twoDaysAhead, "yyyy-MM-dd"));
+  const [endDate, setEndDate] = useState(
+    localStorage.getItem("selectedEndDate") ||
+      format(twoDaysAhead, "yyyy-MM-dd")
+  );
+
+  const updateDateRange = () => {
+    // Генерация дат для отображения в шапке таблицы
+    let start = startDate ? parseISO(startDate) : new Date();
+    let end = endDate ? parseISO(endDate) : new Date();
+
+    let tempDates = [];
+    let currentDate = new Date(start);
+
+    while (currentDate <= end) {
+      tempDates.push(new Date(currentDate));
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    setDates(tempDates);
+
+    localStorage.setItem("selectedStartDate", startDate);
+    localStorage.setItem("selectedEndDate", endDate);
+  };
 
   const updateWorkTimeLogs = () => {
-    fetchData(); // Вызов fetchData для обновления данных с новыми датами
+    console.log("updateWorkTimeLogs");
+    fecthLogs();
+  };
+
+  const fecthLogs = async () => {
+    try {
+      const logsResponse = await axios.get(`/workTimeLogs/${userId}`);
+      setWorkTimeLogs(logsResponse.data);
+    } catch (error) {
+      console.error("Ошибка при загрузке данных:", error);
+    }
   };
 
   useEffect(() => {
     fetchData();
-  }, [userId]); // Удаление update из зависимостей, чтобы избежать бесконечного цикла
+  }, [userId]);
 
   const fetchData = async () => {
     if (userId) {
@@ -88,7 +121,7 @@ const TimeTable = () => {
           />
         </Col>
         <Col>
-          <Button onClick={updateWorkTimeLogs}>Применить</Button>
+          <Button onClick={updateDateRange}>Применить</Button>
         </Col>
       </Row>
       <div style={{ overflowX: "auto" }} className="table-responsive">

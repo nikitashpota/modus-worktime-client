@@ -32,7 +32,7 @@ const TimeTableCell = ({ date, logs, buildingId, onUpdate }) => {
       <WorkEntriesModal
         show={showModal}
         onHide={() => setShowModal(false)}
-        initialEntries={logs}
+        logs={logs}
         userId={userId}
         buildingId={buildingId}
         date={date}
