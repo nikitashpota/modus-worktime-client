@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { PlusLg as PlusIcon } from "react-bootstrap-icons";
 import WorkEntriesModal from "./WorkEntriesModal";
@@ -9,14 +9,16 @@ import { useAuth } from "../services/AuthContext"; // Контекст ауте�
 
 const TimeTableCell = ({ date, logs, buildingId, onUpdate }) => {
   const [showModal, setShowModal] = useState(false);
+  useEffect(() => {}, [showModal]);
+
   const { userId } = useAuth();
   // Функция для расчета суммы часов
   const calculateTotalHours = () => {
+    // console.log("calculateTotalHours", logs);
     return logs.reduce((sum, log) => sum + parseFloat(log.hours), 0);
   };
 
   const handleCellClick = () => {
-    console.log("handleCellClick", logs);
     setShowModal(true);
   };
 
@@ -30,6 +32,7 @@ const TimeTableCell = ({ date, logs, buildingId, onUpdate }) => {
         {logs.length > 0 ? `${calculateTotalHours()} ч` : <PlusIcon />}
       </Button>
       <WorkEntriesModal
+        key={`${buildingId}_${date}`}
         show={showModal}
         onHide={() => setShowModal(false)}
         logs={logs}

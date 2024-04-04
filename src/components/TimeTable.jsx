@@ -182,6 +182,7 @@ const TimeTable = () => {
                       style={{ textAlign: "center", minWidth: "110px" }}
                     >
                       <TimeTableCell
+                        key ={`${dateString}_${building.id}`}
                         date={dateString}
                         logs={logs}
                         buildingId={building.id}

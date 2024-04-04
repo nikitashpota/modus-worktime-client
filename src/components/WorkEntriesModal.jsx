@@ -16,18 +16,14 @@ const WorkEntryRow = ({ entry, onUpdateEntry, onRemoveEntry }) => {
   };
 
   return (
-    <Form.Group
-      as={Row}
-      className="mb-3 g-0"
-      controlId={`entry-${entry.id}`}
-      style={{ gap: "15px" }}
-    >
+    <Form.Group as={Row} className="mb-3 g-0" style={{ gap: "15px" }}>
       <Col style={{ maxWidth: "100px" }}>
         <Form.Control
           type="number"
           placeholder="Часы"
           value={entry.hours || ""}
           onChange={(e) => onUpdateEntry({ ...entry, hours: e.target.value })}
+          id={`hours-${entry.id}`} // Уникальный id для поля ввода часов
         />
       </Col>
       <Col>
@@ -38,6 +34,7 @@ const WorkEntryRow = ({ entry, onUpdateEntry, onRemoveEntry }) => {
           onChange={(e) =>
             onUpdateEntry({ ...entry, workType: e.target.value })
           }
+          id={`workType-${entry.id}`} // Уникальный id для поля ввода описания работы
         />
       </Col>
       <Col xs="auto" className="d-flex justify-content-center">
@@ -59,6 +56,10 @@ const WorkEntriesModal = ({
   onUpdateTable,
 }) => {
   const [entries, setEntries] = useState(logs);
+
+  useEffect(() => {
+    setEntries(logs);
+  }, [logs]);
 
   const addNewEntry = () => {
     setEntries([
@@ -102,6 +103,8 @@ const WorkEntriesModal = ({
     }
     onUpdateTable();
     onHide();
+    // console.log("entries", entries);
+    setEntries([]);
   };
 
   const handleClose = async () => {
