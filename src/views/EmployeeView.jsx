@@ -35,7 +35,6 @@ const EmployeeView = () => {
       <div style={{ marginBottom: "16px" }}>
         <p style={{ fontWeight: "500" }}>Профиль пользователя:</p>
         <Card style={{ width: "18rem", marginBottom: "16px" }}>
-          {/* <Card.Header>Профиль пользователя</Card.Header> */}
           <ListGroup variant="flush">
             <ListGroup.Item>
               Имя: {`${user.lastName} ${user.firstName}`}

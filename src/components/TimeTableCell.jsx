@@ -14,7 +14,6 @@ const TimeTableCell = ({ date, logs, buildingId, onUpdate }) => {
   const { userId } = useAuth();
   // Функция для расчета суммы часов
   const calculateTotalHours = () => {
-    // console.log("calculateTotalHours", logs);
     return logs.reduce((sum, log) => sum + parseFloat(log.hours), 0);
   };
 

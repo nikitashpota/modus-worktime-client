@@ -11,13 +11,13 @@ import LoginForm from "./views/LoginForm";
 import RegistrationForm from "./views/RegistrationForm";
 import ProfileEdit from "./views/ProfileEdit";
 import { AuthProvider } from "./services/AuthContext";
-import AssignUserPage from "./views/AssignUserPage";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 import { ChevronCompactLeft } from "react-bootstrap-icons";
 import { ChevronCompactRight } from "react-bootstrap-icons";
+import BuildingPage from "./views/BuildingPage";
 
 function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
@@ -63,8 +63,8 @@ function App() {
                 <Route path="/register" element={<RegistrationForm />} />
                 <Route path="/profile-edit" element={<ProfileEdit />} />
                 <Route
-                  path="/assign-user/:buildingId"
-                  element={<AssignUserPage />}
+                  path="/building/:buildingId"
+                  element={<BuildingPage />}
                 />
               </Routes>
             </div>

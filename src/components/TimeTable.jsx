@@ -59,7 +59,6 @@ const TimeTable = () => {
   };
 
   const updateWorkTimeLogs = () => {
-    console.log("updateWorkTimeLogs");
     fecthLogs();
   };
 

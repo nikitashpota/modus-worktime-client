@@ -3,9 +3,8 @@ import { useParams } from "react-router-dom";
 import { Button, ListGroup, Form } from "react-bootstrap";
 import axios from "../services/axios";
 
-const AssignUserPage = () => {
-  const { buildingId } = useParams();
-  const [building, setBuilding] = useState(null);
+const AssignUserBuilding = ({ building }) => {
+  const buildingId = building.id;
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("");
   const [assignedUserIds, setAssignedUserIds] = useState([]);
@@ -13,7 +12,6 @@ const AssignUserPage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        // Здесь ваш API URL для получения списка пользователей
         const response = await axios.get(`/users`);
         setUsers(response.data);
       } catch (error) {
@@ -35,18 +33,6 @@ const AssignUserPage = () => {
     };
 
     fetchAssignedUsers();
-
-    const fetchBuilding = async () => {
-      try {
-        // Загрузка данных о здании
-        const response = await axios.get(`/buildings/${buildingId}`);
-        setBuilding(response.data); // Сохраняем полученные данные о здании
-      } catch (error) {
-        console.error("Ошибка при загрузке данных о здании:", error);
-      }
-    };
-
-    fetchBuilding();
   }, [buildingId]);
 
   // Функция для назначения пользователя
@@ -89,13 +75,6 @@ const AssignUserPage = () => {
 
   return (
     <div>
-      <h2>Добавить исполнителя</h2>
-      {building && (
-        <>
-          <h4>{`Объект: ${building.number} - ${building.name}`}</h4>
-          <p>{building.description}</p>
-        </>
-      )}
       <Form.Group className="mb-3">
         <Form.Control
           type="text"
@@ -125,4 +104,4 @@ const AssignUserPage = () => {
   );
 };
 
-export default AssignUserPage;
+export default AssignUserBuilding;
