@@ -14,21 +14,20 @@ const BuildingCards = ({ buildings, onSelectBuilding }) => {
     <Row xs={1} md={2} lg={4} className="g-4">
       {buildings.map((building) => (
         <Col key={building.id}>
-          <Card style={{ height: "400px" }}>
+          <Card style={{ minHeight: "400px" }}>
             <Card.Img
               variant="top"
               src="/building-img.webp"
               style={{
-                height: "50%",
+                maxHeight: "150px",
                 objectFit: "contain",
-                padding: "10px",
                 opacity: 0.5,
               }}
             />
             <Card.Body className="d-flex flex-column">
               <Card.Title>{truncateString(building.name, 40)}</Card.Title>
-              <Card.Text className="flex-grow-1" style={{ overflow: "hidden" }}>
-                {truncateString(building.description, 50)}
+              <Card.Text className="flex-grow-1" style={{ overflow: "hidden", wordWrap: "break-word", maxHeight: "120px" }}>
+                {truncateString(building.description, 500)}
               </Card.Text>
               <Button
                 variant="primary"
