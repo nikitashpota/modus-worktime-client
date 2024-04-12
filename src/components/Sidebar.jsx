@@ -38,7 +38,7 @@ const Sidebar = ({ isCollapsed }) => {
       </SidebarItem>
       {userRole === "ГИП" && (
         <SidebarItem
-          to="/manager"
+          to="/building"
           icon={<Gear size={20} />}
           isCollapsed={isCollapsed}
         >

@@ -24,11 +24,9 @@ function LoginForm() {
       login(response.data.token, response.data.role, response.data.id);
       console.log(response.data.role, response.data.id);
 
-      // alert(response.data.message); // Вывод сообщения об успешном входе
-      navigate("/"); // Переадресация на главную страницу или другой защищенный маршрут
+      navigate("/");
     } catch (error) {
       if (error.response) {
-        // Сервер вернул ошибку (например, пользователь не найден или неправильный пароль)
         alert(error.response.data.message);
       } else {
         alert("Произошла ошибка при попытке входа");

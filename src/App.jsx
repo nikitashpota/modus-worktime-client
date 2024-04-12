@@ -57,7 +57,7 @@ function App() {
             >
               <Routes>
                 <Route path="/" element={<EmployeeView />} />
-                <Route path="/manager" element={<ManagerView />} />
+                <Route path="/building" element={<ManagerView />} />
                 <Route path="/director" element={<DirectorDashboard />} />
                 <Route path="/auth" element={<LoginForm />} />
                 <Route path="/register" element={<RegistrationForm />} />

@@ -1,15 +1,8 @@
-import React, { useState, useRef } from "react";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import React, { useState, useRef, useEffect } from "react";
+import { Form, Button } from "react-bootstrap";
 import { Pencil, Save } from "react-bootstrap-icons";
 
-const EditableTextField = ({
-  label,
-  name,
-  value,
-  onChange,
-  as = "input",
-  rows,
-}) => {
+const EditableTextField = ({ label, name, value, onChange, as = "input" }) => {
   const [isEditable, setIsEditable] = useState(false);
   const [inputValue, setInputValue] = useState(value);
   const contentRef = useRef(null);
@@ -29,38 +22,45 @@ const EditableTextField = ({
   };
 
   return (
-    <Form.Group as={Row} className="d-flex align-items-center mb-3">
-      <Form.Label
-        column
-        sm={2}
+    <div
+      style={{
+        display: "flex",
+        alignItems: "start",
+        marginBottom: "16px",
+        gap: "16px",
+      }}
+    >
+      <label
         style={{
-          paddingTop: "6px",
-          paddingBottom: "6px",
-          fontWeight: "normal",
+          minWidth: "150px",
+          fontWeight: "500",
+          paddingBottom: "7px",
+          paddingTop: "7px",
         }}
       >
         {label}
-      </Form.Label>
-      <Col sm={8}>
+      </label>
+      <div
+        style={{
+          flexGrow: 1,
+          padding: "6px",
+          background: isEditable ? "#fff" : "transparent",
+          border: isEditable ? "1px solid #ced4da" : "1px solid #ffffff",
+        }}
+      >
         <div
           ref={contentRef}
           contentEditable={isEditable}
           onBlur={handleContentChange}
-          style={{
-            minHeight: as === "textarea" ? `${rows * 20}px` : "38px",
-            padding: "6px",
-            border: isEditable ? "1px solid #ced4da" : "none",
-            background: isEditable ? "#fff" : "transparent",
-          }}
+          style={{ minHeight: "100%", outline: 0 }}
           dangerouslySetInnerHTML={{ __html: inputValue || "Не указано" }}
         ></div>
-      </Col>
-      <Col sm={2} style={{ display: "flex", justifyContent: "flex-end" }}>
+      </div>
+      <div style={{ minWidth: "50px" }}>
         <Button
           variant={isEditable ? "outline-success" : "outline-secondary"}
           onClick={toggleEdit}
           style={{
-            width: "40px",
             height: "38px",
             display: "flex",
             alignItems: "center",
@@ -69,8 +69,8 @@ const EditableTextField = ({
         >
           {isEditable ? <Save /> : <Pencil />}
         </Button>
-      </Col>
-    </Form.Group>
+      </div>
+    </div>
   );
 };
 
