@@ -120,7 +120,9 @@ const TimeTable = () => {
           />
         </Col>
         <Col>
-          <Button onClick={updateDateRange}>Применить</Button>
+          <Button onClick={updateDateRange} variant="outline-primary">
+            Применить
+          </Button>
         </Col>
       </Row>
       <div style={{ overflowX: "auto" }} className="table-responsive">
@@ -181,7 +183,7 @@ const TimeTable = () => {
                       style={{ textAlign: "center", minWidth: "110px" }}
                     >
                       <TimeTableCell
-                        key ={`${dateString}_${building.id}`}
+                        key={`${dateString}_${building.id}`}
                         date={dateString}
                         logs={logs}
                         buildingId={building.id}

@@ -51,7 +51,7 @@ const BuildingDetails = ({ building, handleIsUpdated }) => {
       />
       <Button
         onClick={handleSaveChanges}
-        variant="success"
+        variant="outline-success"
         style={{ marginTop: "15px" }}
       >
         Сохранить

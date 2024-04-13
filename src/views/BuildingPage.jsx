@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../services/axios";
-import { Tabs, Tab } from "react-bootstrap";
+import { Tabs, Tab, Button } from "react-bootstrap";
 import BuildingDetails from "../components/BuildingDetails";
 import AssignUserBuilding from "../components/AssignUserBuilding";
+import { Trash } from "react-bootstrap-icons";
 
 const BuildingPage = () => {
   const { buildingId } = useParams();
@@ -34,8 +35,22 @@ const BuildingPage = () => {
   return (
     <div>
       {building && (
-        <div style={{ marginBottom: "16px" }}>
+        <div
+          style={{
+            marginBottom: "16px",
+            display: "flex",
+            flexWrap: "nowrap",
+            justifyContent: "space-between",
+          }}
+        >
           <h4>{`Объект: ${building.number} - ${building.name}`}</h4>
+          <Button
+            variant="outline-danger"
+            style={{ display: "flex", alignItems: "center", gap: "6px" }}
+          >
+            <Trash />
+            Удалить
+          </Button>
         </div>
       )}
       <Tabs

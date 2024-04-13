@@ -10,7 +10,7 @@ const Header = () => {
   return (
     <Navbar expand="lg" className="custom-navbar">
       <Container>
-        <Navbar.Brand href="#home" className="text-white">
+        <Navbar.Brand className="text-white">
           MODUS
           <img
             src="/logo.png"

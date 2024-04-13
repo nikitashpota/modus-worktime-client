@@ -55,7 +55,7 @@ const DateFilter = ({ onFilter }) => {
           />
         </Col>
         <Col xs="auto">
-          <Button onClick={applyFilter} type="button">
+          <Button onClick={applyFilter} type="button" variant="outline-primary">
             Применить
           </Button>
         </Col>

@@ -26,11 +26,18 @@ const BuildingCards = ({ buildings, onSelectBuilding }) => {
             />
             <Card.Body className="d-flex flex-column">
               <Card.Title>{truncateString(building.name, 40)}</Card.Title>
-              <Card.Text className="flex-grow-1" style={{ overflow: "hidden", wordWrap: "break-word", maxHeight: "120px" }}>
+              <Card.Text
+                className="flex-grow-1"
+                style={{
+                  overflow: "hidden",
+                  wordWrap: "break-word",
+                  maxHeight: "120px",
+                }}
+              >
                 {truncateString(building.description, 500)}
               </Card.Text>
               <Button
-                variant="primary"
+                variant="outline-primary"
                 className="mt-auto"
                 onClick={() => onSelectBuilding(building.id)}
               >

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { Pencil, Save } from "react-bootstrap-icons";
 
-const EditableTextField = ({ label, name, value, onChange, as = "input" }) => {
+const EditableTextField = ({ label, name, value, onChange }) => {
   const [isEditable, setIsEditable] = useState(false);
   const [inputValue, setInputValue] = useState(value);
   const contentRef = useRef(null);
@@ -58,7 +58,7 @@ const EditableTextField = ({ label, name, value, onChange, as = "input" }) => {
       </div>
       <div style={{ minWidth: "50px" }}>
         <Button
-          variant={isEditable ? "outline-success" : "outline-secondary"}
+          variant={isEditable ? "outline-success" : "outline-primary"}
           onClick={toggleEdit}
           style={{
             height: "38px",

@@ -1,20 +1,18 @@
 /* Header.css */
 .custom-navbar {
-    background-color: #252525 !important; /* Устанавливаем темный фон */
-  }
-  
-  .custom-navbar .navbar-brand,
-  .custom-navbar .btn {
-    color: white !important; /* Устанавливаем белый цвет текста */
-  }
-  
-  .custom-navbar .btn {
-    border: 1px solid white; /* Устанавливаем белую границу для кнопки */
-  }
-  
-  /* Измените цвет текста кнопки на наведение, если это необходимо */
-  .custom-navbar .btn:hover {
-    color: #252525 !important; /* Темный цвет текста при наведении */
-    background-color: white !important; /* Белый фон кнопки при наведении */
-  }
-  
+  background-color: #252525 !important;
+}
+
+.custom-navbar .navbar-brand,
+.custom-navbar .btn {
+  color: white !important;
+}
+
+.custom-navbar .btn {
+  border: 1px solid white;
+}
+
+.custom-navbar .btn:hover {
+  color: #252525 !important;
+  background-color: white !important;
+}
