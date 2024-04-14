@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, ListGroup, Form, Accordion } from "react-bootstrap";
+import { Card, Button, ListGroup, Form, Accordion } from "react-bootstrap";
 import axios from "../services/axios";
 import departmentsData from "../services/departmentsData"; // Импортируем данные отделов
 import "./AssignUserBuilding.css";
@@ -8,6 +8,7 @@ const AssignUserBuilding = ({ building }) => {
   const buildingId = building.id;
   const [users, setUsers] = useState([]);
   const [assignedUserIds, setAssignedUserIds] = useState([]);
+  const [departmentGroups, setDepartmentGroups] = useState([]);
 
   useEffect(() => {
     const fetchUsersAndAssignments = async () => {
@@ -25,6 +26,28 @@ const AssignUserBuilding = ({ building }) => {
 
     fetchUsersAndAssignments();
   }, [buildingId]);
+
+  useEffect(() => {
+    const groups = departmentsData
+      .map((department) => ({
+        code: department.Code,
+        name: department.Name,
+        users: users.filter(
+          (user) =>
+            user.department === department.Code &&
+            assignedUserIds.includes(user.id)
+        ),
+      }))
+      .filter((dept) => dept.users.length > 0)
+      .map((dept) => ({
+        code: dept.code,
+        userNames: dept.users
+          .map((user) => `${user.lastName} ${user.firstName}`)
+          .join(", "),
+      }));
+
+    setDepartmentGroups(groups);
+  }, [assignedUserIds]);
 
   const handleAssignUser = async (userId) => {
     try {
@@ -48,7 +71,7 @@ const AssignUserBuilding = ({ building }) => {
       >
         {`${user.lastName} ${user.firstName[0]}.`}
         <Button
-          variant={assigned ? "danger" : "primary"}
+          variant={assigned ? "outline-danger" : "outline-primary"}
           onClick={() => handleAssignUser(user.id)}
         >
           {assigned ? "Отменить" : "Назначить"}
@@ -60,6 +83,7 @@ const AssignUserBuilding = ({ building }) => {
   const departmentSortedList = departmentsData.sort((a, b) =>
     a.Name.localeCompare(b.Name)
   );
+
   const usersByDepartment = departmentSortedList.map((department) => {
     const departmentUsers = users.filter(
       (user) => user.department === department.Code
@@ -105,6 +129,17 @@ const AssignUserBuilding = ({ building }) => {
 
   return (
     <div>
+      <p style={{ fontWeight: "500" }}>Актуальный состав проектной группы:</p>
+      <Card style={{ marginBottom: "16px" }}>
+        <ListGroup variant="flush">
+          {departmentGroups.map((dept) => (
+            <ListGroup.Item key={dept.code}>
+              {`${dept.code}: ${dept.userNames}`}
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
+      </Card>
+      <p style={{ fontWeight: "500" }}>Сформировать проектную группу:</p>
       <Accordion defaultActiveKey="0">{usersByDepartment}</Accordion>
     </div>
   );

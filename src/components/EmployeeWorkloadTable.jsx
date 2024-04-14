@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Table, Button } from "react-bootstrap";
 import DateFilter from "./DateFilter";
 import "./EmployeeWorkloadTable.css";
+import "./TimeTable.css";
 import * as XLSX from "xlsx";
 
 function EmployeeWorkloadTable({ users, buildings, workTimeLogs }) {
@@ -148,29 +149,47 @@ function EmployeeWorkloadTable({ users, buildings, workTimeLogs }) {
       <div style={{ marginBottom: "16px" }}>
         <DateFilter onFilter={handleFilter} />
       </div>
-
-      <Table bordered className="table thin-header">
-        <thead>
-          <tr>
-            <th>Отдел / Сотрудник</th>
-            {sortBuildings.map((building) => (
-              <th key={building.id}>{building.name}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {sortUsers.map((user) => (
-            <tr key={user.id}>
-              <td>{`${user.firstName} ${user.lastName} (${user.department})`}</td>
-              {sortBuildings.map((building) => {
-                const hoursKey = `${user.id}_${building.id}`;
-                const hours = hoursByProject[hoursKey] || 0;
-                return <td key={building.id}>{hours}</td>;
-              })}
+      <div style={{ overflowX: "auto" }} className="table-responsive">
+        <Table bordered className="table thin-header">
+          <thead>
+            <tr>
+              <th
+                style={{
+                  minWidth: "200px",
+                  position: "sticky",
+                  left: 0,
+                  background: "white",
+                  zIndex: 1,
+                }}
+              >
+                Отдел / Сотрудник
+              </th>
+              {sortBuildings.map((building) => (
+                <th key={building.id}>{building.name}</th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {sortUsers.map((user) => (
+              <tr key={user.id}>
+                <td
+                  style={{
+                    position: "sticky",
+                    left: 0,
+                    background: "white",
+                    zIndex: 1,
+                  }}
+                >{`${user.firstName} ${user.lastName} (${user.department})`}</td>
+                {sortBuildings.map((building) => {
+                  const hoursKey = `${user.id}_${building.id}`;
+                  const hours = hoursByProject[hoursKey] || 0;
+                  return <td key={building.id}>{hours}</td>;
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </div>
       <Button
         variant="success"
         onClick={() =>
