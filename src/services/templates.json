@@ -1,0 +1,168 @@
+[
+  {
+    "name": "Шаблон проектной документации (ПД)",
+    "sections": [
+      {
+        "sectionCode": "ГП",
+        "sectionName": "Генеральный план",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "АР",
+        "sectionName": "Архитектурные решения",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "КР",
+        "sectionName": "Конструктивные и объемно-планировочные решения",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "ТХ",
+        "sectionName": "Технологические решения",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "ИС",
+        "sectionName": "Инженерное оборудование, сети и системы",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "ЭОМ",
+        "sectionName": "Электрооборудование, освещение, молниезащита и заземление",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "СС",
+        "sectionName": "Системы связи и автоматизации",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "ОДИ",
+        "sectionName": "Организация строительства, демонтажа и иные работы",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "СМ",
+        "sectionName": "Сметная документация",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "ПБ",
+        "sectionName": "Проект организации работ по сносу (демонтажу) объектов",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "ОВ",
+        "sectionName": "Мероприятия по охране окружающей среды",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "ПМ",
+        "sectionName": "Мероприятия по обеспечению пожарной безопасности",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "БД",
+        "sectionName": "Мероприятия по обеспечению доступа инвалидов",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      }
+    ]
+  },
+  {
+    "name": "Шаблон рабочей документации (РД)",
+    "sections": [
+      {
+        "sectionCode": "КЖ",
+        "sectionName": "Конструкции железобетонные",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "КМ",
+        "sectionName": "Конструкции металлические",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "АР",
+        "sectionName": "Архитектурные рабочие чертежи",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "ТХ",
+        "sectionName": "Технологические решения",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "ЭМ",
+        "sectionName": "Электромонтажные работы",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "ВК",
+        "sectionName": "Вентиляция и кондиционирование",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "ОВ",
+        "sectionName": "Отопление и вентиляция",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "СС",
+        "sectionName": "Слаботочные системы",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "КИПиА",
+        "sectionName": "Контрольно-измерительные приборы и автоматика",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "ПЗ",
+        "sectionName": "Проект организации строительства",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "БИ",
+        "sectionName": "Благоустройство и инфраструктура",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "ПБ",
+        "sectionName": "Проектные мероприятия по обеспечению безопасности",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      },
+      {
+        "sectionCode": "ОЗ",
+        "sectionName": "Охрана окружающей среды",
+        "startDate": "2019-04-18",
+        "endDate": "2020-04-18"
+      }
+    ]
+  }
+]

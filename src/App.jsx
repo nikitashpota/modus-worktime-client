@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import Header from "./components/Header"; // Предполагается, что Header находится в папке components
-import Sidebar from "./components/Sidebar"; // Убедитесь, что Sidebar тоже в папке components
-import Footer from "./components/Footer"; // Аналогично для Footer
+import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
+import Footer from "./components/Footer";
 import EmployeeView from "./views/EmployeeView";
 import ManagerView from "./views/ManagerView";
 import DirectorDashboard from "./views/DirectorDashboard";

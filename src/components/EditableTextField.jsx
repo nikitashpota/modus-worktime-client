@@ -1,76 +1,94 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { Pencil, Save } from "react-bootstrap-icons";
 
-const EditableTextField = ({ label, name, value, onChange }) => {
+const EditableTextField = ({
+  type = "text",
+  label,
+  name,
+  value,
+  onChange,
+  options = null,
+}) => {
   const [isEditable, setIsEditable] = useState(false);
   const [inputValue, setInputValue] = useState(value);
-  const contentRef = useRef(null);
 
-  const handleContentChange = () => {
-    setInputValue(contentRef.current.innerText);
+  // Обновление локального состояния при изменении внешнего value
+  useEffect(() => {
+    if (options) console.log("value", value);
+    setInputValue(value);
+  }, [value]);
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
   };
 
   const toggleEdit = () => {
-    if (isEditable) {
-      handleContentChange();
-      if (onChange) {
-        onChange({ target: { name, value: contentRef.current.innerText } });
-      }
+    if (isEditable && onChange) {
+      onChange({ target: { name, value: inputValue } }); // Trigger onChange only when saving changes
     }
     setIsEditable(!isEditable);
   };
 
   return (
-    <div
+    <Form.Group
       style={{
         display: "flex",
-        alignItems: "start",
+        alignItems: "center",
         marginBottom: "16px",
-        gap: "16px",
+        gap: "10px",
       }}
     >
-      <label
-        style={{
-          minWidth: "150px",
-          fontWeight: "500",
-          paddingBottom: "7px",
-          paddingTop: "7px",
-        }}
+      <Form.Label
+        style={{ minWidth: "450px", maxWidth: "450px", fontWeight: "500" }}
       >
         {label}
-      </label>
-      <div
-        style={{
-          flexGrow: 1,
-          padding: "6px",
-          background: isEditable ? "#fff" : "transparent",
-          border: isEditable ? "1px solid #ced4da" : "1px solid #ffffff",
-        }}
-      >
-        <div
-          ref={contentRef}
-          contentEditable={isEditable}
-          onBlur={handleContentChange}
-          style={{ minHeight: "100%", outline: 0 }}
-          dangerouslySetInnerHTML={{ __html: inputValue || "Не указано" }}
-        ></div>
-      </div>
-      <div style={{ minWidth: "50px" }}>
-        <Button
-          variant={isEditable ? "outline-success" : "outline-primary"}
-          onClick={toggleEdit}
-          style={{
-            height: "38px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+      </Form.Label>
+      {type === "textarea" ? (
+        <Form.Control
+          as="textarea"
+          name={name}
+          value={inputValue}
+          onChange={handleInputChange}
+          rows={3}
+          readOnly={!isEditable}
+        />
+      ) : type === "select" && options ? (
+        <Form.Control
+          as="select"
+          name={name}
+          value={inputValue}
+          onChange={handleInputChange}
+          disabled={!isEditable}
+          style={{ whiteSpace: "normal", height: "auto", maxWidth: "100%" }}
         >
-          {isEditable ? <Save /> : <Pencil />}
-        </Button>
-      </div>
-    </div>
+          {Object.entries(options).map(([key, text]) => (
+            <option
+              key={key}
+              value={key}
+              style={{ whiteSpace: "normal", height: "auto", maxWidth: "100%" }}
+            >
+              {text}
+            </option>
+          ))}
+        </Form.Control>
+      ) : (
+        <Form.Control
+          type={type === "number" ? "number" : "text"}
+          name={name}
+          value={inputValue}
+          onChange={handleInputChange}
+          readOnly={!isEditable}
+        />
+      )}
+
+      <Button
+        variant={isEditable ? "outline-success" : "outline-primary"}
+        onClick={toggleEdit}
+      >
+        {isEditable ? <Save /> : <Pencil />}
+      </Button>
+    </Form.Group>
   );
 };
 

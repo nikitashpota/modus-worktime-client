@@ -8,8 +8,6 @@ import "./TimeTable.css";
 const ProjectOverview = ({ users, buildings, workTimeLogs }) => {
   const [sortUsers, setSortUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  // const [buildings, setBuildings] = useState([]);
-  // const [workTimeLogs, setLogs] = useState([]);
   const [dateRange, setDateRange] = useState({ startDate: "", endDate: "" });
 
   useEffect(() => {
