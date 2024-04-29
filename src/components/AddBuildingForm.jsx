@@ -51,31 +51,31 @@ function AddBuildingForm({ onBuildingAdded }) {
         {!isCollapsed && (
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
-              <Form.Label>Номер объекта</Form.Label>
+              <Form.Label>Шифр объекта</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Введите номер или шифр"
+                placeholder="Введите номер или шифр..."
                 value={number}
                 onChange={(e) => setNumber(e.target.value)}
                 required
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Название объекта</Form.Label>
+              <Form.Label>Краткое название объекта</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Введите название"
+                placeholder="Краткое название объекта..."
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Описание объекта</Form.Label>
+              <Form.Label>Полное название объекта</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
-                placeholder="Введите описание"
+                placeholder="Полное название объекта..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />

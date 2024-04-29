@@ -16,3 +16,10 @@
   color: #252525 !important;
   background-color: white !important;
 }
+
+.custom-navbar .container {
+  display: flex;
+  justify-content: space-between; /* Равномерное распределение содержимого */
+  align-items: center; /* Центрирование содержимого по вертикали */
+  padding: 0 30px; /* Отступы слева и справа */
+}

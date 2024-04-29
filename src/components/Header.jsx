@@ -9,9 +9,8 @@ const Header = () => {
 
   return (
     <Navbar expand="lg" className="custom-navbar">
-      <Container>
-        <Navbar.Brand className="text-white">
-          MODUS
+      <Container fluid>
+        <Navbar.Brand className="text-white" style={{ userSelect: "none" }}>
           <img
             src="/logo.png"
             width="30"
@@ -19,10 +18,11 @@ const Header = () => {
             className="d-inline-block align-top"
             alt="MODUS logo"
           />
-          WT
+          MODUS Work Time
         </Navbar.Brand>
         {isAuthenticated ? (
           <Button
+            style={{ width: "100px" }}
             onClick={logout}
             variant="outline-primary"
             className="text-white"
@@ -30,7 +30,11 @@ const Header = () => {
             Выход
           </Button>
         ) : (
-          <Link to="/auth" className="btn btn-outline-primary text-white">
+          <Link
+            style={{ width: "100px" }}
+            to="/auth"
+            className="btn btn-outline-primary text-white"
+          >
             Вход
           </Link>
         )}
