@@ -4,40 +4,27 @@ import axios from "../services/axios";
 import { useAuth } from "../services/AuthContext";
 import TimeTableCell from "./TimeTableCell";
 import { format, parseISO, subDays, addDays } from "date-fns";
-
 import "./TimeTable.css";
 
 const TimeTable = () => {
   const { userId } = useAuth();
-  const [buildings, setBuildings] = useState([]);
+  const [sections, setSections] = useState([]); // Новый массив для разделов
   const [dates, setDates] = useState([]);
   const [workTimeLogs, setWorkTimeLogs] = useState([]);
   const today = new Date();
   const sevenDaysAgo = subDays(today, 7);
   const twoDaysAhead = addDays(today, 2);
 
-  function formatDateWithWeekday(date) {
-    // Получаем день недели сокращенно
+  const formatDateWithWeekday = (date) => {
     const weekDayShort = date
       .toLocaleString("ru-RU", { weekday: "short" })
       .replace(".", "");
-    // Получаем дату в формате день.месяц
     const dateStr = date.toLocaleDateString("ru-RU", {
       day: "2-digit",
       month: "2-digit",
     });
-    // Собираем и возвращаем итоговую строку
     return `${weekDayShort}, ${dateStr}`;
-  }
-
-  const [startDate, setStartDate] = useState(
-    localStorage.getItem("selectedStartDate") ||
-      format(sevenDaysAgo, "yyyy-MM-dd")
-  );
-  const [endDate, setEndDate] = useState(
-    localStorage.getItem("selectedEndDate") ||
-      format(twoDaysAhead, "yyyy-MM-dd")
-  );
+  };
 
   const updateDateRange = () => {
     // Генерация дат для отображения в шапке таблицы
@@ -58,44 +45,28 @@ const TimeTable = () => {
     localStorage.setItem("selectedEndDate", endDate);
   };
 
-  const updateWorkTimeLogs = () => {
-    fecthLogs();
-  };
-
-  const fecthLogs = async () => {
-    try {
-      const logsResponse = await axios.get(`/workTimeLogs/${userId}`);
-      setWorkTimeLogs(logsResponse.data);
-    } catch (error) {
-      console.error("Ошибка при загрузке данных:", error);
-    }
-  };
+  const [startDate, setStartDate] = useState(
+    localStorage.getItem("selectedStartDate") ||
+      format(sevenDaysAgo, "yyyy-MM-dd")
+  );
+  const [endDate, setEndDate] = useState(
+    localStorage.getItem("selectedEndDate") ||
+      format(twoDaysAhead, "yyyy-MM-dd")
+  );
 
   useEffect(() => {
-    fetchData();
-  }, [userId]);
+    fetchSectionsAndLogs();
+    updateDateRange();
+  }, [userId, startDate, endDate]);
 
-  const fetchData = async () => {
+  const fetchSectionsAndLogs = async () => {
     if (userId) {
       try {
-        const buildingsResponse = await axios.get(`/userBuildings/${userId}`);
-        setBuildings(buildingsResponse.data);
+        const sectionsResponse = await axios.get(`/sections/by-user/${userId}`);
+        setSections(sectionsResponse.data);
         const logsResponse = await axios.get(`/workTimeLogs/${userId}`);
         setWorkTimeLogs(logsResponse.data);
-
-        // Генерация дат для отображения в шапке таблицы
-        let start = startDate ? parseISO(startDate) : new Date();
-        let end = endDate ? parseISO(endDate) : new Date();
-
-        let tempDates = [];
-        let currentDate = new Date(start);
-
-        while (currentDate <= end) {
-          tempDates.push(new Date(currentDate));
-          currentDate.setDate(currentDate.getDate() + 1);
-        }
-
-        setDates(tempDates);
+        console.log("userId", sectionsResponse.data);
       } catch (error) {
         console.error("Ошибка при загрузке данных:", error);
       }
@@ -104,7 +75,7 @@ const TimeTable = () => {
 
   return (
     <>
-      <Row className="mb-3" style={{ width: "500px" }}>
+      <Row className="mb-3" style={{ width: "400px" }}>
         <Col>
           <Form.Control
             type="date"
@@ -119,27 +90,17 @@ const TimeTable = () => {
             onChange={(e) => setEndDate(e.target.value)}
           />
         </Col>
-        <Col>
+        {/* <Col>
           <Button onClick={updateDateRange} variant="outline-primary">
             Применить
           </Button>
-        </Col>
+        </Col> */}
       </Row>
       <div style={{ overflowX: "auto" }} className="table-responsive">
         <Table bordered className="table thin-header">
           <thead>
             <tr>
-              <th
-                style={{
-                  minWidth: "200px",
-                  position: "sticky",
-                  left: 0,
-                  background: "white",
-                  zIndex: 1,
-                }}
-              >
-                Объект
-              </th>
+              <th className="first-column__width"></th>
               {dates.map((date, index) => (
                 <th
                   key={index}
@@ -159,35 +120,34 @@ const TimeTable = () => {
             </tr>
           </thead>
           <tbody>
-            {buildings.map((building) => (
-              <tr key={building.id}>
-                <td
-                  style={{
-                    position: "sticky",
-                    left: 0,
-                    background: "white",
-                    zIndex: 1,
-                  }}
-                >
-                  {building.name}
+            {sections.map((us) => (
+              <tr key={us.section.id}>
+                <td className="first-column__width">
+                  <p style={{ fontWeight: 500 }}>{us.section.building.name}</p>
+                  <pre>{`Раздел: ${us.section.sectionCode} Стадия: ${us.section.stage}`}</pre>
                 </td>
                 {dates.map((date) => {
                   const dateString = format(date, "yyyy-MM-dd");
                   const logs = workTimeLogs.filter(
                     (log) =>
-                      log.date === dateString && log.buildingId === building.id
+                      log.date === dateString && log.sectionId === us.section.id
                   );
                   return (
                     <td
                       key={dateString}
-                      style={{ textAlign: "center", minWidth: "110px" }}
+                      style={{
+                        textAlign: "center",
+                        minWidth: "110px",
+                        position: "relative",
+                      }}
                     >
                       <TimeTableCell
-                        key={`${dateString}_${building.id}`}
+                        key={`${dateString}_${us.section.id}`}
                         date={dateString}
                         logs={logs}
-                        buildingId={building.id}
-                        onUpdate={updateWorkTimeLogs}
+                        sectionId={us.section.id}
+                        buildingId={us.section.buildingId}
+                        onUpdate={fetchSectionsAndLogs}
                       />
                     </td>
                   );

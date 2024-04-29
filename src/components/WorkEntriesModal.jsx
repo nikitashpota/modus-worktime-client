@@ -51,6 +51,7 @@ const WorkEntriesModal = ({
   onHide,
   logs,
   userId,
+  sectionId,
   buildingId,
   date,
   onUpdateTable,
@@ -82,7 +83,7 @@ const WorkEntriesModal = ({
 
   const handleSave = async () => {
     for (const entry of entries) {
-      const payload = { ...entry, userId, buildingId, date };
+      const payload = { ...entry, userId, sectionId, buildingId, date };
       if (entry.id.toString().startsWith("new-")) {
         try {
           // Создание новой записи
@@ -103,7 +104,6 @@ const WorkEntriesModal = ({
     }
     onUpdateTable();
     onHide();
-    // console.log("entries", entries);
     setEntries([]);
   };
 
@@ -114,7 +114,7 @@ const WorkEntriesModal = ({
   return (
     <Modal show={show} onHide={onHide} size="lg">
       <Modal.Header closeButton>
-        <Modal.Title>Добавление работ</Modal.Title>
+        <Modal.Title style={{ fontSize: "18px" }}>Ведомость работ</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {entries.map((entry) => {

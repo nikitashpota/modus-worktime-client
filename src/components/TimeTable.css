@@ -11,9 +11,9 @@
 }
 
 /* Стили для первого столбца */
-.first-column {
-  min-width: 200px;
-  max-width: 450px;
+.first-column__width {
+  min-width: 300px !important;
+  max-width: 450px !important;
 }
 
 /* Стилизация скроллбара */

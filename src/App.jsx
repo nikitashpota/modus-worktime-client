@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Container, Row, Col, Button } from "react-bootstrap";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import Footer from "./components/Footer";
@@ -36,7 +35,6 @@ function App() {
               className={`sidebar-section d-flex flex-column ${
                 isSidebarCollapsed ? "collapsed" : ""
               }`}
-              style={{ minWidth: isSidebarCollapsed ? "66px" : "200px" }}
             >
               <Sidebar isCollapsed={isSidebarCollapsed} />
             </div>

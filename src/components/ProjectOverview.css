@@ -1,0 +1,15 @@
+.td-width-300 {
+  min-width: 300px !important;
+  width: 300px !important;
+}
+
+.td-width-200 {
+  min-width: 200px !important;
+  width: 200px !important;
+}
+
+.td-width-100 {
+    min-width: 100px !important;
+    width: 100px !important;
+  }
+  

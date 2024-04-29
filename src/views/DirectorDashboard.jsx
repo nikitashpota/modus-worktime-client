@@ -12,6 +12,7 @@ import DepartmentHoursChart from "../components/DepartmentHoursChart";
 const DirectorDashboard = () => {
   const [users, setUsers] = useState([]);
   const [buildings, setBuildings] = useState([]);
+  const [sections, setSections] = useState([]);
   const [workTimeLogs, setWorkTimeLogs] = useState([]);
 
   useEffect(() => {
@@ -23,8 +24,13 @@ const DirectorDashboard = () => {
 
     const fetchBuildings = async () => {
       const { data } = await axios.get("/buildings");
-      // console.log("buildings", data);
       setBuildings(data);
+    };
+
+    const fetchSections = async () => {
+      const { data } = await axios.get("/sections");
+      // console.log("sections", data);
+      setSections(data);
     };
 
     const fetchWorkTimeLogs = async () => {
@@ -36,6 +42,7 @@ const DirectorDashboard = () => {
     fetchUsers();
     fetchBuildings();
     fetchWorkTimeLogs();
+    fetchSections();
   }, []);
 
   return (
@@ -58,6 +65,7 @@ const DirectorDashboard = () => {
         <ProjectOverview
           users={users}
           buildings={buildings}
+          sections={sections}
           workTimeLogs={workTimeLogs}
         />
       </Tab>

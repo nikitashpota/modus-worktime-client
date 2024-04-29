@@ -1,22 +1,29 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../services/axios";
 import { Tabs, Tab, Button } from "react-bootstrap";
 import BuildingDetails from "../components/BuildingDetails";
-import AssignUserBuilding from "../components/AssignUserBuilding";
+// import AssignUserBuilding from "../components/AssignUserBuilding";
 import { Trash } from "react-bootstrap-icons";
 import SectionList from "../components/SectionList";
+import ProjectTimeline from "../components/ProjectTimeline";
 
 const BuildingPage = () => {
   const { buildingId } = useParams();
   const [building, setBuilding] = useState(null);
   const [isUpdated, setIsUpdated] = useState(false);
+  const [activeTab, setActiveTab] = useState("info");
+
+  const handleSelect = (key) => {
+    setActiveTab(key);
+  };
 
   const handleIsUpdated = () => {
     setIsUpdated(!isUpdated);
   };
 
   useEffect(() => {
+    console.log("buildingId", buildingId);
     const fetchBuilding = async () => {
       try {
         const response = await axios.get(`/buildings/${buildingId}`);
@@ -58,6 +65,8 @@ const BuildingPage = () => {
         defaultActiveKey="info"
         id="building-details-tabs"
         style={{ marginBottom: "24px" }}
+        activeKey={activeTab}
+        onSelect={handleSelect}
       >
         <Tab eventKey="info" title="Информация об объекте">
           <BuildingDetails
@@ -65,14 +74,14 @@ const BuildingPage = () => {
             handleIsUpdated={handleIsUpdated}
           />
         </Tab>
+        <Tab eventKey="timeline" title="График проектирования">
+          <ProjectTimeline buildingId={buildingId} activeTab={activeTab} />
+        </Tab>
         <Tab eventKey="pd" title="Проектная документация">
-          <SectionList stage={"PD"} buildingId={buildingId} />
+          <SectionList stage={"ПД"} buildingId={buildingId} />
         </Tab>
         <Tab eventKey="wd" title="Рабочая документация">
-          <SectionList stage={"WD"} buildingId={buildingId} />
-        </Tab>
-        <Tab eventKey="assign" title="Проектная группа">
-          <AssignUserBuilding building={building} />
+          <SectionList stage={"РД"} buildingId={buildingId} />
         </Tab>
       </Tabs>
     </div>

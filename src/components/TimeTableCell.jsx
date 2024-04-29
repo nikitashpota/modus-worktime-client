@@ -7,7 +7,7 @@ import { useAuth } from "../services/AuthContext"; // Контекст ауте�
 // Предположим, что WorkEntriesModal - это ваш компонент модального окна
 // import WorkEntriesModal from './WorkEntriesModal';
 
-const TimeTableCell = ({ date, logs, buildingId, onUpdate }) => {
+const TimeTableCell = ({ date, logs, sectionId, buildingId, onUpdate }) => {
   const [showModal, setShowModal] = useState(false);
   useEffect(() => {}, [showModal]);
 
@@ -26,16 +26,25 @@ const TimeTableCell = ({ date, logs, buildingId, onUpdate }) => {
       <Button
         variant="outline-primary"
         onClick={handleCellClick}
-        style={{ width: "50px" }}
+        style={{
+          border: "none",
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+          borderRadius: 0,
+        }}
       >
         {logs.length > 0 ? `${calculateTotalHours()} ч` : <PlusIcon />}
       </Button>
       <WorkEntriesModal
-        key={`${buildingId}_${date}`}
+        key={`${sectionId}_${date}`}
         show={showModal}
         onHide={() => setShowModal(false)}
         logs={logs}
         userId={userId}
+        sectionId={sectionId}
         buildingId={buildingId}
         date={date}
         onUpdateTable={onUpdate}

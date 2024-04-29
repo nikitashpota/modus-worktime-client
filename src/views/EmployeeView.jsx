@@ -32,7 +32,7 @@ const EmployeeView = () => {
   }, [userId]);
   return (
     <>
-      <div style={{ marginBottom: "16px" }}>
+      {/* <div style={{ marginBottom: "16px" }}>
         <p style={{ fontWeight: "500" }}>Профиль пользователя:</p>
         <Card style={{ width: "18rem", marginBottom: "16px" }}>
           <ListGroup variant="flush">
@@ -43,9 +43,9 @@ const EmployeeView = () => {
             <ListGroup.Item>Email: {user.email}</ListGroup.Item>
           </ListGroup>
         </Card>
-      </div>
+      </div> */}
       <div>
-        <p style={{ fontWeight: "500" }}>Учет времени:</p>
+        {/* <p style={{ fontWeight: "500" }}>Учет времени:</p> */}
         <TimeTable />
       </div>
     </>

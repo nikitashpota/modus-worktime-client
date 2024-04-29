@@ -5,6 +5,7 @@ import SectionListItem from "./SectionListItem";
 import AddSectionModal from "./AddSectionModal";
 import EditSectionModal from "./EditSectionModal";
 import LoadTemplateModal from "./LoadTemplateModal";
+import AssignUserToSectionModal from "./AssignUserToSectionModal";
 import templates from "../services/templates.json";
 
 const SectionList = ({ stage, buildingId }) => {
@@ -12,6 +13,8 @@ const SectionList = ({ stage, buildingId }) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showTemplateModal, setShowTemplateModal] = useState(false);
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [currentSectionId, setCurrentSectionId] = useState(null);
   const [editableSection, setEditableSection] = useState({
     sectionCode: "",
     sectionName: "",
@@ -32,7 +35,7 @@ const SectionList = ({ stage, buildingId }) => {
   const fetchSections = async () => {
     try {
       const response = await axios.get(
-        `/sections?stage=${stage}&buildingId=${buildingId}`
+        `/sections//by-stage-building?stage=${stage}&buildingId=${buildingId}`
       );
       setSections(
         response.data.sort((a, b) => {
@@ -52,7 +55,6 @@ const SectionList = ({ stage, buildingId }) => {
 
   const handleSaveChanges = async () => {
     const url = `/sections/${editableSection.id}`;
-    console.log("Sending PUT request to:", url, "with data:", editableSection);
     try {
       await axios.put(url, editableSection);
       const updatedSections = sections.map((sec) =>
@@ -76,7 +78,8 @@ const SectionList = ({ stage, buildingId }) => {
 
   const handleAddUser = (sectionId) => {
     console.log("Add user to section", sectionId);
-    // Функция заглушка для добавления пользователя
+    setCurrentSectionId(sectionId);
+    setShowAssignModal(true);
   };
 
   const handleChangeNewSection = (e) => {
@@ -174,6 +177,12 @@ const SectionList = ({ stage, buildingId }) => {
         onHide={() => setShowTemplateModal(false)}
         templates={templates}
         onLoadTemplate={handleLoadTemplate}
+      />
+
+      <AssignUserToSectionModal
+        show={showAssignModal}
+        onHide={() => setShowAssignModal(false)}
+        sectionId={currentSectionId}
       />
     </>
   );

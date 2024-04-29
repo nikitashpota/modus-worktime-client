@@ -1,24 +1,38 @@
 import React, { useState } from "react";
-import { Form, Button, Card, Container, Row, Col } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Card,
+  Container,
+  Row,
+  Col,
+  InputGroup,
+} from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../services/axios";
 import departments from "../services/departmentsData";
+import { EyeSlash, Eye } from "react-bootstrap-icons"; 
 
 function RegistrationForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordRepeat, setPasswordRepeat] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [role, setRole] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [department, setDepartment] = useState("");
 
-  const navigate = useNavigate(); // Для перенаправления пользователя после регистрации
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (password !== passwordRepeat) {
+      alert("Пароли не совпадают");
+      return;
+    }
     try {
-      // Отправка данных на сервер
       await axios.post("/users/register", {
         username,
         email,
@@ -29,11 +43,10 @@ function RegistrationForm() {
         department,
       });
       alert("Регистрация прошла успешно");
-      navigate("/auth"); // Перенаправление на страницу входа
+      navigate("/auth");
     } catch (error) {
       console.error("Ошибка при регистрации:", error);
       if (error.response) {
-        // Сервер вернул код ошибки, отличный от 2xx
         alert(`Ошибка: ${error.response.data.message}`);
       } else {
         alert("Ошибка при регистрации");
@@ -41,10 +54,14 @@ function RegistrationForm() {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
   return (
     <Container
       className="d-flex justify-content-center align-items-center"
-      style={{ height: "100%" }}
+      style={{ height: "100%", width: "40%" }}
     >
       <Row>
         <Col>
@@ -76,11 +93,30 @@ function RegistrationForm() {
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                   <Form.Label>Пароль</Form.Label>
+                  <InputGroup>
+                    <Form.Control
+                      type={passwordVisible ? "text" : "password"}
+                      placeholder="Пароль"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                    <InputGroup.Text onClick={togglePasswordVisibility}>
+                      {passwordVisible ? <EyeSlash /> : <Eye />}
+                    </InputGroup.Text>
+                  </InputGroup>
+                </Form.Group>
+
+                <Form.Group
+                  className="mb-3"
+                  controlId="formBasicPasswordRepeat"
+                >
+                  <Form.Label>Повторите пароль</Form.Label>
                   <Form.Control
                     type="password"
-                    placeholder="Пароль..."
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Повторите пароль"
+                    value={passwordRepeat}
+                    onChange={(e) => setPasswordRepeat(e.target.value)}
                     required
                   />
                 </Form.Group>

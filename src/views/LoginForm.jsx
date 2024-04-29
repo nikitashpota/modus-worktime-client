@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { Form, Button, Card, Container, Row, Col } from "react-bootstrap";
+import { Form, Button, Card, Container, Row, Col, InputGroup } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../services/axios";
 import { useAuth } from "../services/AuthContext"; // Используйте контекст аутентификации
+import { EyeSlash, Eye } from "react-bootstrap-icons"; 
 
 function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -34,6 +36,10 @@ function LoginForm() {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
   return (
     <Container
       className="d-flex justify-content-center align-items-center"
@@ -56,13 +62,26 @@ function LoginForm() {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
-                  <Form.Label>Пароль</Form.Label>
+                  {/* <Form.Label>Пароль</Form.Label>
                   <Form.Control
                     type="password"
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                  />
+                  /> */}
+                  <Form.Label>Пароль</Form.Label>
+                  <InputGroup>
+                    <Form.Control
+                      type={passwordVisible ? "text" : "password"}
+                      placeholder="Пароль"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                    <InputGroup.Text onClick={togglePasswordVisibility}>
+                      {passwordVisible ? <EyeSlash /> : <Eye />}
+                    </InputGroup.Text>
+                  </InputGroup>
                   <Form.Text className="text-muted">
                     <Link to="/reset-password">Forgot password?</Link>
                   </Form.Text>
