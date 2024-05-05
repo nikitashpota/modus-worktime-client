@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Card } from "react-bootstrap";
 import axios from "../services/axios";
-import { useAuth } from "../services/AuthContext"; // Предполагая, что ваш AuthContext находится в папке contexts
+import { useAuth } from "../services/AuthContext";
 import departments from "../services/departmentsData";
 
 function ProfileEdit() {
@@ -13,7 +13,7 @@ function ProfileEdit() {
 
   // Продолжите добавлять состояния по мере необходимости
 
-  const { userId } = useAuth(); // Используйте данные пользователя из AuthContext
+  const { userId } = useAuth(); 
   useEffect(() => {
     // Загрузите данные профиля пользователя при монтировании компонента
     if (userId) {

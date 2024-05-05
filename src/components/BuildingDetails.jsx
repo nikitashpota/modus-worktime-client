@@ -60,7 +60,7 @@ const BuildingDetails = ({ building, handleIsUpdated }) => {
             <Button
               onClick={handleSaveChanges}
               variant="outline-success"
-              style={{ marginTop: "15px" }}
+              style={{ marginTop: "16px" }}
             >
               Сохранить
             </Button>
@@ -151,7 +151,7 @@ const BuildingDetails = ({ building, handleIsUpdated }) => {
             <Button
               onClick={handleSaveChanges}
               variant="outline-primary"
-              style={{ marginTop: "15px" }}
+              style={{ marginTop: "16px" }}
             >
               Сохранить
             </Button>

@@ -48,7 +48,6 @@ const DepartmentHoursChart = ({ users, buildings, workTimeLogs }) => {
       );
     });
 
-    console.log("filteredData", filteredLogs);
 
     // Суммирование часов по отделам
     const hoursByDepartment = filteredLogs.reduce((acc, log) => {

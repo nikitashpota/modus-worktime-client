@@ -35,7 +35,6 @@ const DirectorDashboard = () => {
 
     const fetchWorkTimeLogs = async () => {
       const { data } = await axios.get("/workTimeLogs");
-      // console.log("workTimeLogs", data);
       setWorkTimeLogs(data);
     };
 

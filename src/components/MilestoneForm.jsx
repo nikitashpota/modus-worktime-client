@@ -1,24 +1,44 @@
-import React from "react";
+import { useState } from "react";
 import {
   Form,
   Button,
   ListGroup,
   InputGroup,
   FormControl,
+  FormLabel,
+  FormText,
 } from "react-bootstrap";
 import { Trash, List } from "react-bootstrap-icons";
 import milestonesData from "../services/milestonesData";
+import { Dropdown, DropdownButton } from "react-bootstrap";
+import UpdateMilestoneModal from "./UpdateMilestoneModal";
 
 const MilestoneForm = ({
   milestones,
-  onDateChange,
+  onUpdateMilestone,
   onDeleteMilestone,
   onAddMilestone,
+  userName,
 }) => {
-  const handleNameChange = (id, newName) => {
+  const [showModal, setShowModal] = useState(false);
+  const [selectedMilestone, setSelectedMilestone] = useState(null);
+  const [isActualUpdate, setIsActualUpdate] = useState(false);
+
+  const handleOpenModal = (milestone, actual) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setSelectedMilestone(milestone);
+    setIsActualUpdate(actual);
+    setShowModal(true);
+  };
+
+  const handleNameAndCodeChange = (id, newName) => {
     const newCode = milestonesData.find((m) => m.label === newName)?.code || "";
-    onDateChange(id, "name", newName);
-    onDateChange(id, "code", newCode);
+    const updateData = {
+      name: newName,
+      code: newCode,
+    };
+    onUpdateMilestone(id, updateData);
   };
 
   return (
@@ -40,16 +60,37 @@ const MilestoneForm = ({
             style={{ padding: 0 }}
           >
             <InputGroup className="mb-3">
-              <Button
+              <DropdownButton
+                id="dropdown-item-button"
+                title=""
                 variant="outline-secondary"
-                style={{ width: "40px", flex: "none" }}
+                style={{
+                  width: "40px",
+                  flex: "none",
+                  zIndex: "0",
+                  border: "1px solid #d3d3d3",
+                  marginRight: "5px",
+                }}
               >
-                <List />
-              </Button>
+                <Dropdown.Item
+                  as="button"
+                  onClick={() => handleOpenModal(milestone, false)}
+                >
+                  Изменить начальную дату
+                </Dropdown.Item>
+                <Dropdown.Item
+                  as="button"
+                  onClick={() => handleOpenModal(milestone, true)}
+                >
+                  Актуализировать дату
+                </Dropdown.Item>
+              </DropdownButton>
 
               <FormControl
                 as="select"
-                onChange={(e) => handleNameChange(milestone.id, e.target.value)}
+                onChange={(e) =>
+                  handleNameAndCodeChange(milestone.id, e.target.value)
+                }
                 style={{ flex: "1" }}
                 value={milestone.name}
               >
@@ -68,15 +109,27 @@ const MilestoneForm = ({
               <FormControl
                 type="date"
                 value={milestone.date}
-                onChange={(e) =>
-                  onDateChange(milestone.id, "date", e.target.value)
-                }
-                style={{ width: "10%", flex: "none" }}
+                readOnly={true}
+                style={{
+                  width: "10%",
+                  flex: "none",
+                  backgroundColor: "#A3B4D9",
+                }}
+              />
+              <FormControl
+                type="date"
+                value={milestone.updatedDate}
+                readOnly={true}
+                style={{
+                  width: "10%",
+                  flex: "none",
+                  backgroundColor: "#FFBFBF",
+                }}
               />
               <Button
                 variant="outline-danger"
                 onClick={() => onDeleteMilestone(milestone.id)}
-                style={{ width: "40px", flex: "none" }}
+                style={{ width: "40px", flex: "none", zIndex: "0" }}
               >
                 <Trash />
               </Button>
@@ -84,6 +137,22 @@ const MilestoneForm = ({
           </ListGroup.Item>
         ))}
       </ListGroup>
+      <UpdateMilestoneModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        onSave={(date, reason) =>
+          onUpdateMilestone(selectedMilestone.id, {
+            [isActualUpdate ? "updatedDate" : "date"]: date,
+            [isActualUpdate ? "updatedDateChangeReason" : "dateChangeReason"]:
+              reason,
+            [isActualUpdate
+              ? "userResponsibleForUpdate"
+              : "userResponsibleForChange"]: userName,
+          })
+        }
+        milestone={selectedMilestone}
+        isActualUpdate={isActualUpdate}
+      />
     </Form>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table, Form, Button, Row, Col } from "react-bootstrap";
+import { Table, Form, Button, Row, Col, Badge } from "react-bootstrap";
 import axios from "../services/axios";
 import { useAuth } from "../services/AuthContext";
 import TimeTableCell from "./TimeTableCell";
@@ -123,8 +123,22 @@ const TimeTable = () => {
             {sections.map((us) => (
               <tr key={us.section.id}>
                 <td className="first-column__width">
-                  <p style={{ fontWeight: 500 }}>{us.section.building.name}</p>
-                  <pre>{`Раздел: ${us.section.sectionCode} Стадия: ${us.section.stage}`}</pre>
+                  <h5
+                    style={{ fontWeight: 400, fontSize: 16 }}
+                  >{`${us.section.building.number}`}</h5>
+                  <h5
+                    style={{ fontWeight: 500, fontSize: 16 }}
+                  >{`${us.section.building.name}`}</h5>
+                  <h5 style={{ fontWeight: 400, fontSize: 16 }}>
+                    Раздел:{" "}
+                    <span style={{ fontWeight: 500 }}>
+                      {us.section.sectionCode}
+                    </span>
+                  </h5>
+                  <h5 style={{ fontWeight: 400, fontSize: 16 }}>
+                    Стадия:{" "}
+                    <span style={{ fontWeight: 500 }}>{us.section.stage}</span>
+                  </h5>
                 </td>
                 {dates.map((date) => {
                   const dateString = format(date, "yyyy-MM-dd");

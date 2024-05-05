@@ -2,7 +2,13 @@ import React from "react";
 import { Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useAuth } from "../services/AuthContext";
-import { HouseDoor, Gear, GraphUp, Person } from "react-bootstrap-icons"; // Импортируйте нужные иконки
+import {
+  HouseDoor,
+  Gear,
+  GraphUp,
+  Person,
+  People,
+} from "react-bootstrap-icons"; // Импортируйте нужные иконки
 import "./Sidebar.css"; // Предполагается, что стили будут в этом файле
 
 const SidebarItem = ({ to, icon, children, isCollapsed }) => (
@@ -51,6 +57,17 @@ const Sidebar = ({ isCollapsed }) => {
         isCollapsed={isCollapsed}
       >
         Отчеты
+      </SidebarItem>
+
+      <SidebarItem
+        icon={<img src="/rub.svg" width="26" height="26" alt="rub" />}
+        isCollapsed={isCollapsed}
+      >
+        Финансы
+      </SidebarItem>
+
+      <SidebarItem icon={<People size={20} />} isCollapsed={isCollapsed}>
+        Персонал
       </SidebarItem>
       <SidebarItem
         to="/profile-edit"
