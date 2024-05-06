@@ -37,7 +37,7 @@ const CustomTooltip = ({ active, payload, isActualUpdate }) => {
         }}
       >
         <p style={{ margin: 0 }}>{data.name}</p>
-        <p style={{ margin: 0 }}>
+        {!data.hours && <p style={{ margin: 0 }}>
           {new Date(data.date).toLocaleDateString()} Р.дат:{" "}
           <span
             style={{
@@ -55,7 +55,7 @@ const CustomTooltip = ({ active, payload, isActualUpdate }) => {
               parseISO(data.begginDate)
             )}
           </span>
-        </p>
+        </p>}
         {data.hours > 0 && (
           <p style={{ margin: 0 }}>Кол-во часов: {data.hours} ч.</p>
         )}

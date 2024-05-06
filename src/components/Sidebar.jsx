@@ -3,9 +3,9 @@ import { Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useAuth } from "../services/AuthContext";
 import {
-  HouseDoor,
-  Gear,
-  GraphUp,
+  Hourglass,
+  Buildings,
+  Grid3x3,
   Person,
   People,
 } from "react-bootstrap-icons"; // Импортируйте нужные иконки
@@ -37,7 +37,7 @@ const Sidebar = ({ isCollapsed }) => {
     >
       <SidebarItem
         to="/"
-        icon={<HouseDoor size={20} />}
+        icon={<Hourglass size={20} />}
         isCollapsed={isCollapsed}
       >
         Работа
@@ -45,7 +45,7 @@ const Sidebar = ({ isCollapsed }) => {
       {userRole === "ГИП" && (
         <SidebarItem
           to="/building"
-          icon={<Gear size={20} />}
+          icon={<Buildings size={20} />}
           isCollapsed={isCollapsed}
         >
           Объекты
@@ -53,7 +53,7 @@ const Sidebar = ({ isCollapsed }) => {
       )}
       <SidebarItem
         to="/director"
-        icon={<GraphUp size={20} />}
+        icon={<Grid3x3 size={20} />}
         isCollapsed={isCollapsed}
       >
         Отчеты
