@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button, Form, Row, Col } from "react-bootstrap";
+import { Modal, Button, Form, Row, Col, InputGroup } from "react-bootstrap";
 import { PlusLg as PlusIcon, Trash } from "react-bootstrap-icons";
 import axios from "../services/axios";
 
@@ -16,33 +16,33 @@ const WorkEntryRow = ({ entry, onUpdateEntry, onRemoveEntry }) => {
   };
 
   return (
-    <Form.Group as={Row} className="mb-3 g-0" style={{ gap: "15px" }}>
-      <Col style={{ maxWidth: "100px" }}>
-        <Form.Control
-          type="number"
-          placeholder="Часы"
-          value={entry.hours || ""}
-          onChange={(e) => onUpdateEntry({ ...entry, hours: e.target.value })}
-          id={`hours-${entry.id}`} // Уникальный id для поля ввода часов
-        />
-      </Col>
-      <Col>
-        <Form.Control
-          type="textarea"
-          placeholder="Описание работы"
-          value={entry.workType || ""}
-          onChange={(e) =>
-            onUpdateEntry({ ...entry, workType: e.target.value })
-          }
-          id={`workType-${entry.id}`} // Уникальный id для поля ввода описания работы
-        />
-      </Col>
-      <Col xs="auto" className="d-flex justify-content-center">
-        <Button variant="danger" onClick={() => handleRemoveClick(entry.id)}>
-          <Trash />
-        </Button>
-      </Col>
-    </Form.Group>
+    <InputGroup className="mb-3">
+      <Form.Control
+        style={{ width: "80px", flex: "none" }}
+        type="number"
+        placeholder="Часы"
+        max={10}
+        min={0}
+        value={entry.hours || ""}
+        onChange={(e) => onUpdateEntry({ ...entry, hours: e.target.value })}
+        id={`hours-${entry.id}`} // Уникальный id для поля ввода часов
+      />
+      <Form.Control
+        style={{ flex: "1" }}
+        type="text"
+        placeholder="Описание работы"
+        value={entry.workType || ""}
+        onChange={(e) => onUpdateEntry({ ...entry, workType: e.target.value })}
+        id={`workType-${entry.id}`} // Уникальный id для поля ввода описания работы
+      />
+      <Button
+        variant="outline-danger"
+        onClick={() => handleRemoveClick(entry.id)}
+        style={{ width: "45px", flex: "none" }}
+      >
+        <Trash />
+      </Button>
+    </InputGroup>
   );
 };
 
@@ -127,15 +127,17 @@ const WorkEntriesModal = ({
             />
           );
         })}
-        <Button variant="primary" onClick={addNewEntry} className="mb-3">
+        <Button
+          variant="outline-primary"
+          onClick={addNewEntry}
+          className="mb-3"
+          width={80}
+        >
           <PlusIcon />
         </Button>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-          Закрыть
-        </Button>
-        <Button variant="primary" onClick={handleSave}>
+        <Button variant="outline-primary" onClick={handleSave}>
           Готово
         </Button>
       </Modal.Footer>

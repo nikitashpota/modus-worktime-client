@@ -8,6 +8,7 @@ import TimelineChart from "./TimelineChart";
 import { useAuth } from "../services/AuthContext";
 import { PlusCircle, DashCircle } from "react-bootstrap-icons";
 import "./TimeTable.css";
+import { parseISO } from "date-fns";
 
 const BuildingTimeline = ({ buildingId, activeTab }) => {
   const [milestones, setMilestones] = useState([]);
@@ -73,7 +74,12 @@ const BuildingTimeline = ({ buildingId, activeTab }) => {
     try {
       const response = await axios.get(`/milestones/${buildingId}`);
       if (Array.isArray(response.data)) {
-        setMilestones(response.data);
+        setMilestones(
+          response.data.sort((a, b) => {
+            // Convert dates from ISO format to Date objects and compare their timestamps
+            return new Date(a.updatedDate) - new Date(b.updatedDate);
+          })
+        );
       } else {
         console.error(
           "Expected an array of milestones, but received:",
@@ -88,10 +94,10 @@ const BuildingTimeline = ({ buildingId, activeTab }) => {
   };
 
   const handleDateChange = async (id, updateData) => {
-    console.log("Updating milestone:", id, updateData);
+    console.log(updateData);
     try {
       await axios.put(`/milestones/${id}`, updateData);
-      fetchMilestones(); // Перезагрузка данных после обновления
+      fetchMilestones();
     } catch (error) {
       console.error("Error updating milestone:", error);
     }
@@ -106,22 +112,21 @@ const BuildingTimeline = ({ buildingId, activeTab }) => {
     }
   };
 
-  const handleAddMilestone = async () => {
-    if (buildingId) {
-      const newMilestone = {
-        buildingId,
-        name: milestonesData[0].label,
-        code: milestonesData[0].code,
-        date: new Date().toISOString().slice(0, 10),
-        updatedDate: new Date().toISOString().slice(0, 10),
-      };
-      console.log(newMilestone);
-      try {
-        const response = await axios.post(`/milestones`, newMilestone);
-        setMilestones([...milestones, response.data]);
-      } catch (error) {
-        console.error("Error adding milestone:", error);
-      }
+  const handleAddMilestone = async (name, code, initialDate) => {
+    const newMilestone = {
+      buildingId,
+      name,
+      code,
+      initialDate,
+      date: initialDate,
+      updatedDate: initialDate,
+    };
+
+    try {
+      await axios.post(`/milestones`, newMilestone);
+      fetchMilestones();
+    } catch (error) {
+      console.error("Ошибка при добавлении вехи:", error);
     }
   };
 
@@ -159,12 +164,18 @@ const BuildingTimeline = ({ buildingId, activeTab }) => {
                 milestones={milestones}
                 workTimeLogs={workTimeLogs}
                 update={update}
-                isActualUpdate={false}
+                typeDate={"ActualDate"}
+                colorLine="#D92211"
               />
               <TimelineChart
                 milestones={milestones}
-                colorLine="#FF421C"
-                isActualUpdate={true}
+                colorLine="#F2BC1B"
+                typeDate={"AmendedDate"}
+              />
+              <TimelineChart
+                milestones={milestones}
+                colorLine="#15BFBF"
+                typeDate={"InitialDate"}
               />
             </div>
           </div>

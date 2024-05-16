@@ -66,7 +66,6 @@ const TimeTable = () => {
         setSections(sectionsResponse.data);
         const logsResponse = await axios.get(`/workTimeLogs/${userId}`);
         setWorkTimeLogs(logsResponse.data);
-        console.log("userId", sectionsResponse.data);
       } catch (error) {
         console.error("Ошибка при загрузке данных:", error);
       }

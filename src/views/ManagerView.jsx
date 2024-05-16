@@ -4,6 +4,7 @@ import AddBuildingForm from "../components/AddBuildingForm";
 import { useNavigate } from "react-router-dom";
 import BuildingCards from "../components/BuildingCards";
 
+
 function ManagerView() {
   const navigate = useNavigate();
   const [buildings, setBuildings] = useState([]);
@@ -17,7 +18,6 @@ function ManagerView() {
     try {
       const response = await axios.get("/buildings");
       setBuildings(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error("Ошибка при загрузке объектов:", error);
     }
@@ -33,7 +33,10 @@ function ManagerView() {
 
   return (
     <div>
-      <AddBuildingForm onBuildingAdded={handleBuildingAdded} />
+      <AddBuildingForm
+        onBuildingAdded={handleBuildingAdded}
+
+      />
       <BuildingCards
         buildings={buildings}
         onSelectBuilding={handleSelectUserForBuilding}

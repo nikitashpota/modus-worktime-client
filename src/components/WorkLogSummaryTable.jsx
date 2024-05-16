@@ -32,13 +32,8 @@ const WorkLogSummaryTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Предполагается, что /users и /workTimeLogs это эндпоинты API для получения информации о пользователях и логах работы соответственно
         const usersResponse = await axios.get("/users");
-
         const logsResponse = await axios.get("/workTimeLogs");
-
-        // Обработка данных и создание структуры данных для таблицы
-        // Это место для вашей логики преобразования и агрегации данных
         const updatedFilteredLogs = filterLogsByDate(
           logsResponse.data,
           startDate,
@@ -97,9 +92,9 @@ const WorkLogSummaryTable = () => {
     // Преобразование данных обратно в массив и подготовка к выводу
     const processedData = Object.values(usersMap).map((user) => ({
       ...user,
-      totalDays: user.totalDays.size, // Преобразование Set в количество уникальных дней
-      tasksCount: user.tasksCount.size, // Преобразование Set в количество уникальных задач
-      buildingsCount: user.buildingsCount.size, // Преобразование Set в количество зданий
+      totalDays: user.totalDays.size,
+      tasksCount: user.tasksCount.size,
+      buildingsCount: user.buildingsCount.size,
     }));
 
     return processedData;
@@ -122,7 +117,7 @@ const WorkLogSummaryTable = () => {
       <Table bordered className="table thin-header">
         <thead>
           <tr>
-            <th>Фамилия И.</th>
+            <th>Фамилия И. (Отдел)</th>
             <th>Общее кол-во дней</th>
             <th>Количество часов</th>
             <th>Количество задач</th>
@@ -132,7 +127,7 @@ const WorkLogSummaryTable = () => {
         <tbody>
           {userData.map((user) => (
             <tr key={user.id}>
-              <td>{`${user.lastName} ${user.firstName}`}</td>
+              <td>{`${user.lastName} ${user.firstName} (${user.department})`}</td>
               <td>{user.totalDays}</td>
               <td>{user.totalHours}</td>
               <td>{user.tasksCount}</td>

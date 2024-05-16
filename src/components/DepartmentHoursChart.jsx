@@ -12,9 +12,6 @@ import {
 } from "recharts";
 
 const DepartmentHoursChart = ({ users, buildings, workTimeLogs }) => {
-  // const [users, setUsers] = useState([]);
-  // const [buildings, setBuildings] = useState([]);
-  // const [workTimeLogs, setWorkTimeLogs] = useState([]);
   const [selectedBuilding, setSelectedBuilding] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");

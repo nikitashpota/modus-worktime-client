@@ -3,14 +3,16 @@ import { useParams } from "react-router-dom";
 import axios from "../services/axios";
 import { Tabs, Tab, Button, Badge } from "react-bootstrap";
 import BuildingDetails from "../components/BuildingDetails";
-// import AssignUserBuilding from "../components/AssignUserBuilding";
 import { Trash } from "react-bootstrap-icons";
 import SectionList from "../components/SectionList";
 import BuildingTimeline from "../components/BuildingTimeline";
 import { useNavigate } from "react-router-dom";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import SubcontractorList from "../components/SubcontractorList";
+import { useAuth } from "../services/AuthContext";
 
 const BuildingPage = () => {
+  const { userRole } = useAuth();
   const { buildingId } = useParams();
   const [building, setBuilding] = useState(null);
   const [isUpdated, setIsUpdated] = useState(false);
@@ -37,12 +39,10 @@ const BuildingPage = () => {
         "Error deleting building:",
         error.response?.data || error.message
       );
-      // Обработка ошибок, например показать уведомление пользователю
     }
   };
 
   useEffect(() => {
-    console.log("buildingId", buildingId);
     const fetchBuilding = async () => {
       try {
         const response = await axios.get(`/buildings/${buildingId}`);
@@ -77,7 +77,11 @@ const BuildingPage = () => {
           <Button
             variant="outline-danger"
             onClick={() => setShowConfirmModal(true)}
-            style={{ display: "flex", alignItems: "center", gap: "6px" }}
+            style={{
+              display: userRole === "Проектировщик" ? "none" : "flex",
+              alignItems: "center",
+              gap: "6px",
+            }}
           >
             <Trash />
             Удалить
@@ -109,13 +113,34 @@ const BuildingPage = () => {
         <Tab eventKey="timeline" title="График проектирования">
           <BuildingTimeline buildingId={buildingId} activeTab={activeTab} />
         </Tab>
-        <Tab eventKey="pd" title="Проектная документация">
+        <Tab
+          eventKey="pd"
+          title="Проектная документация"
+          disabled={userRole === "Проектировщик" ? true : false}
+        >
           <SectionList stage={"ПД"} buildingId={buildingId} />
         </Tab>
-        <Tab eventKey="wd" title="Рабочая документация">
+        <Tab
+          eventKey="wd"
+          title="Рабочая документация"
+          disabled={userRole === "Проектировщик" ? true : false}
+        >
           <SectionList stage={"РД"} buildingId={buildingId} />
         </Tab>
-        <Tab eventKey="subcontractors" title="Субподрядные организации"></Tab>
+        <Tab
+          eventKey="-"
+          title="Прочие работы"
+          disabled={userRole === "Проектировщик" ? true : false}
+        >
+          <SectionList stage={"-"} buildingId={buildingId} />
+        </Tab>
+        <Tab
+          eventKey="subcontractors"
+          title="Субподрядные организации"
+          disabled={userRole === "Проектировщик" ? true : false}
+        >
+          <SubcontractorList buildingId={buildingId} />
+        </Tab>
       </Tabs>
     </div>
   );

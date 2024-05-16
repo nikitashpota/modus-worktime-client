@@ -17,6 +17,8 @@ import "./App.css";
 import { ChevronCompactLeft } from "react-bootstrap-icons";
 import { ChevronCompactRight } from "react-bootstrap-icons";
 import BuildingPage from "./views/BuildingPage";
+import UserManagement from "./views/UserManagement";
+import FinancialReports from "./views/FinancialReports";
 
 function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
@@ -60,6 +62,11 @@ function App() {
                 <Route path="/auth" element={<LoginForm />} />
                 <Route path="/register" element={<RegistrationForm />} />
                 <Route path="/profile-edit" element={<ProfileEdit />} />
+                <Route path="/user-management" element={<UserManagement />} />
+                <Route
+                  path="/financial-reports"
+                  element={<FinancialReports />}
+                />
                 <Route
                   path="/building/:buildingId"
                   element={<BuildingPage />}

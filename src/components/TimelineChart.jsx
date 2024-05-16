@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   ComposedChart,
   Line,
@@ -24,9 +24,10 @@ const CustomDot = (props) => {
   }
 };
 
-const CustomTooltip = ({ active, payload, isActualUpdate }) => {
+const CustomTooltip = ({ active, payload, typeDate }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
+    console.log(data);
     return (
       <div
         style={{
@@ -37,34 +38,51 @@ const CustomTooltip = ({ active, payload, isActualUpdate }) => {
         }}
       >
         <p style={{ margin: 0 }}>{data.name}</p>
-        {!data.hours && <p style={{ margin: 0 }}>
-          {new Date(data.date).toLocaleDateString()} Р.дат:{" "}
-          <span
-            style={{
-              color:
-                differenceInDays(
-                  parseISO(data.updatedDate),
-                  parseISO(data.begginDate)
-                ) > 0
-                  ? "red"
-                  : "green",
-            }}
-          >
-            {differenceInDays(
-              parseISO(data.updatedDate),
-              parseISO(data.begginDate)
+        {!data.hours && (
+          <div style={{ margin: 0 }}>
+            {new Date(data.date).toLocaleDateString()}
+            {typeDate === "ActualDate" ? (
+              <div style={{ margin: 0 }}>
+                <p style={{ margin: 0 }}>
+                  Разница дат:{" "}
+                  {differenceInDays(
+                    parseISO(data.actualDate),
+                    parseISO(data.amendedDate)
+                  )}{" "}
+                  дн.{" "}(
+                  {differenceInDays(
+                    parseISO(data.actualDate),
+                    parseISO(data.initialDate)
+                  )}{" "}дн.)
+                </p>
+                <p style={{ margin: 0 }}>{data.userResponsibleForUpdate}</p>
+                <p style={{ margin: 0 }}>{data.updatedDateChangeReason}</p>
+              </div>
+            ) : typeDate === "AmendedDate" ? (
+              <div style={{ margin: 0 }}>
+                <p style={{ margin: 0 }}>
+                  Разница дат:{" "}
+                  {differenceInDays(
+                    parseISO(data.amendedDate),
+                    parseISO(data.initialDate)
+                  )}{" "}
+                  дн.
+                </p>
+                <p style={{ margin: 0 }}>{data.userResponsibleForChange}</p>
+                <p style={{ margin: 0 }}>{data.dateChangeReason}</p>
+              </div>
+            ) : (
+              <div style={{ margin: 0 }}>
+                <p style={{ margin: 0 }}>
+                  {data.userResponsibleForInitialDate}
+                </p>
+                <p style={{ margin: 0 }}>{data.initialDateChangeReason}</p>
+              </div>
             )}
-          </span>
-        </p>}
+          </div>
+        )}
         {data.hours > 0 && (
           <p style={{ margin: 0 }}>Кол-во часов: {data.hours} ч.</p>
-        )}
-        {/* {isActualUpdate && <p style={{ margin: 0 }}>{}</p>} */}
-        {isActualUpdate && (
-          <p style={{ margin: 0 }}>{data.userResponsibleForUpdate}</p>
-        )}
-        {isActualUpdate && (
-          <p style={{ margin: 0 }}>{data.updatedDateChangeReason}</p>
         )}
       </div>
     );
@@ -79,7 +97,7 @@ const TimelineChart = ({
   height = 100,
   colorLine = "#007bff",
   update,
-  isActualUpdate = false,
+  typeDate,
 }) => {
   const [combinedData, setCombinedData] = useState([]);
   if (workTimeLogs.length > 0) height = 200;
@@ -118,23 +136,24 @@ const TimelineChart = ({
 
   useEffect(() => {
     if (milestones.length > 0) {
+      const dateRange = {
+        start: parseISO(milestones[0].date),
+        end: parseISO(milestones[milestones.length - 1].date),
+      };
+
       const modifiedData = milestones.map((item) => ({
         ...item,
-        begginDate: item.date,
-        date: isActualUpdate
-          ? parseISO(item.updatedDate).getTime()
-          : parseISO(item.date).getTime(),
+        initialDate: item.initialDate,
+        amendedDate: item.date,
+        actualDate: item.updatedDate,
+        date:
+          typeDate === "ActualDate"
+            ? parseISO(item.updatedDate).getTime()
+            : typeDate === "InitialDate"
+            ? parseISO(item.initialDate).getTime()
+            : parseISO(item.date).getTime(),
         y: 0,
       }));
-
-      const dateRange = {
-        start: isActualUpdate
-          ? parseISO(milestones[0].updatedDate)
-          : parseISO(milestones[0].date),
-        end: isActualUpdate
-          ? parseISO(milestones[milestones.length - 1].updatedDate)
-          : parseISO(milestones[milestones.length - 1].date),
-      };
 
       const hoursByDate = Object.values(
         workTimeLogs
@@ -153,6 +172,8 @@ const TimelineChart = ({
     }
   }, [milestones, update]);
 
+  // if (combinedData.length > 0) console.log({ typeDate }, combinedData);
+
   return (
     <ResponsiveContainer width="100%" height={height}>
       <ComposedChart
@@ -166,8 +187,8 @@ const TimelineChart = ({
           domain={["dataMin", "dataMax"]}
         />
         <YAxis hide={true} domain={[0, 20]} />
-        <Tooltip content={<CustomTooltip isActualUpdate={isActualUpdate} />} />
-        <Bar dataKey="hours" fill="#a6cbff" barSize={15} />
+        <Tooltip content={<CustomTooltip typeDate={typeDate} />} />
+        <Bar dataKey="hours" fill="#a6cbff" />
         <Line
           type="monotone"
           dataKey="y"

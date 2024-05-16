@@ -61,11 +61,11 @@ function RegistrationForm() {
   return (
     <Container
       className="d-flex justify-content-center align-items-center"
-      style={{ height: "100%", width: "40%" }}
+      style={{ height: "100%", width: "80%" }}
     >
       <Row>
         <Col>
-          <Card style={{ width: "18rem" }}>
+          <Card style={{ width: "32rem" }}>
             <Card.Body>
               <Card.Title className="text-center mb-4">Регистрация</Card.Title>
               <Form onSubmit={handleSubmit}>
@@ -112,13 +112,25 @@ function RegistrationForm() {
                   controlId="formBasicPasswordRepeat"
                 >
                   <Form.Label>Повторите пароль</Form.Label>
-                  <Form.Control
+                  <InputGroup>
+                    <Form.Control
+                      type={passwordVisible ? "text" : "password"}
+                      placeholder="Повторите пароль"
+                      value={passwordRepeat}
+                      onChange={(e) => setPasswordRepeat(e.target.value)}
+                      required
+                    />
+                    <InputGroup.Text onClick={togglePasswordVisibility}>
+                      {passwordVisible ? <EyeSlash /> : <Eye />}
+                    </InputGroup.Text>
+                  </InputGroup>
+                  {/* <Form.Control
                     type="password"
                     placeholder="Повторите пароль"
                     value={passwordRepeat}
                     onChange={(e) => setPasswordRepeat(e.target.value)}
                     required
-                  />
+                  /> */}
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicFirstName">
@@ -153,6 +165,7 @@ function RegistrationForm() {
                     <option value="">Выберите роль...</option>
                     <option value="Проектировщик">Проектировщик</option>
                     <option value="ГИП">ГИП</option>
+                    <option value="Администратор">Администратор</option>
                   </Form.Select>
                 </Form.Group>
 

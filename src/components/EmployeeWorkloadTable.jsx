@@ -162,7 +162,7 @@ function EmployeeWorkloadTable({ users, buildings, workTimeLogs }) {
                   zIndex: 1,
                 }}
               >
-                Отдел / Сотрудник
+                Фамилия И. (Отдел)
               </th>
               {sortBuildings.map((building) => (
                 <th key={building.id}>{building.name}</th>
@@ -179,7 +179,7 @@ function EmployeeWorkloadTable({ users, buildings, workTimeLogs }) {
                     background: "white",
                     zIndex: 1,
                   }}
-                >{`${user.firstName} ${user.lastName} (${user.department})`}</td>
+                >{`${user.lastName} ${user.firstName} (${user.department})`}</td>
                 {sortBuildings.map((building) => {
                   const hoursKey = `${user.id}_${building.id}`;
                   const hours = hoursByProject[hoursKey] || 0;

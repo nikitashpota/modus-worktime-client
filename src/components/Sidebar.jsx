@@ -8,6 +8,7 @@ import {
   Grid3x3,
   Person,
   People,
+  PiggyBank
 } from "react-bootstrap-icons"; // Импортируйте нужные иконки
 import "./Sidebar.css"; // Предполагается, что стили будут в этом файле
 
@@ -42,15 +43,15 @@ const Sidebar = ({ isCollapsed }) => {
       >
         Работа
       </SidebarItem>
-      {userRole === "ГИП" && (
-        <SidebarItem
-          to="/building"
-          icon={<Buildings size={20} />}
-          isCollapsed={isCollapsed}
-        >
-          Объекты
-        </SidebarItem>
-      )}
+
+      <SidebarItem
+        to="/building"
+        icon={<Buildings size={20} />}
+        isCollapsed={isCollapsed}
+      >
+        Объекты
+      </SidebarItem>
+
       <SidebarItem
         to="/director"
         icon={<Grid3x3 size={20} />}
@@ -60,13 +61,19 @@ const Sidebar = ({ isCollapsed }) => {
       </SidebarItem>
 
       <SidebarItem
-        icon={<img src="/rub.svg" width="26" height="26" alt="rub" />}
+        icon={<PiggyBank size={20} />}//{<img src="/rub.svg" width="26" height="26" alt="rub" />}
         isCollapsed={isCollapsed}
+        to="/financial-reports"
+        
       >
         Финансы
       </SidebarItem>
 
-      <SidebarItem icon={<People size={20} />} isCollapsed={isCollapsed}>
+      <SidebarItem
+        icon={<People size={20} />}
+        isCollapsed={isCollapsed}
+        to="/user-management"
+      >
         Персонал
       </SidebarItem>
       <SidebarItem

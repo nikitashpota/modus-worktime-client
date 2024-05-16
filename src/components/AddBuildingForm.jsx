@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Card } from "react-bootstrap";
 import axios from "../services/axios";
 import { ChevronUp, ChevronDown } from "react-bootstrap-icons";
+import { useAuth } from "../services/AuthContext";
 
 function AddBuildingForm({ onBuildingAdded }) {
   const [name, setName] = useState("");
@@ -10,6 +11,7 @@ function AddBuildingForm({ onBuildingAdded }) {
   const [isCollapsed, setIsCollapsed] = useState(
     JSON.parse(localStorage.getItem("addBuildingFormCollapsed"))
   );
+  const { userRole } = useAuth();
 
   // Эффект для сохранения состояния в localStorage при его изменении
   useEffect(() => {
@@ -18,7 +20,6 @@ function AddBuildingForm({ onBuildingAdded }) {
       JSON.stringify(isCollapsed)
     );
   }, [isCollapsed]);
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,7 +41,12 @@ function AddBuildingForm({ onBuildingAdded }) {
   };
 
   return (
-    <Card style={{ marginBottom: "16px" }}>
+    <Card
+      style={{
+        marginBottom: "16px",
+        display: userRole === "Проектировщик" ? "none" : "flex",
+      }}
+    >
       <Card.Body>
         <div className="d-flex justify-content-between align-items-center">
           <Card.Title>Добавить новый объект</Card.Title>

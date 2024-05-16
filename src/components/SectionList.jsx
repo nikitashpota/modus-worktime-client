@@ -114,7 +114,6 @@ const SectionList = ({ stage, buildingId }) => {
 
   const handleLoadTemplate = async (template) => {
     try {
-      // Отправить запрос на сервер для удаления существующих и добавления новых разделов
       await axios.post(`/sections/loadTemplate`, {
         stage,
         buildingId,
@@ -183,6 +182,7 @@ const SectionList = ({ stage, buildingId }) => {
         show={showAssignModal}
         onHide={() => setShowAssignModal(false)}
         sectionId={currentSectionId}
+        buildingId={buildingId}
       />
     </>
   );

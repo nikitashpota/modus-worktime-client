@@ -8,10 +8,12 @@ import {
   FormLabel,
   FormText,
 } from "react-bootstrap";
-import { Trash, List } from "react-bootstrap-icons";
+import { Trash, PencilSquare } from "react-bootstrap-icons";
 import milestonesData from "../services/milestonesData";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 import UpdateMilestoneModal from "./UpdateMilestoneModal";
+import AddMilestoneModal from "./AddMilestoneModal";
+import { useAuth } from "../services/AuthContext";
 
 const MilestoneForm = ({
   milestones,
@@ -21,14 +23,15 @@ const MilestoneForm = ({
   userName,
 }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
   const [selectedMilestone, setSelectedMilestone] = useState(null);
-  const [isActualUpdate, setIsActualUpdate] = useState(false);
-
-  const handleOpenModal = (milestone, actual) => {
+  const [typeDate, setTypeDate] = useState("");
+  const { userRole } = useAuth();
+  const handleOpenModal = (milestone, type) => {
     event.preventDefault();
     event.stopPropagation();
     setSelectedMilestone(milestone);
-    setIsActualUpdate(actual);
+    setTypeDate(type);
     setShowModal(true);
   };
 
@@ -42,17 +45,33 @@ const MilestoneForm = ({
   };
 
   return (
-    <Form>
+    <Form style={{ display: userRole === "Проектировщик" ? "none" : "block" }}>
       <div className="d-flex mt-3 mb-3" style={{ gap: "8px" }}>
         <Button
           variant="outline-primary"
-          onClick={onAddMilestone}
+          onClick={() => setShowAddModal(true)}
           style={{ width: "140px" }}
         >
           Добавить веху
         </Button>
       </div>
       <ListGroup variant="flush">
+        {milestones.length > 0 && (
+          <ListGroup.Item
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              width: "100%",
+              padding: "0 33px",
+            }}
+          >
+            <p style={{ flex: 1 , fontWeight: 500}}>Наименование вехи</p>
+            <p style={{ width: "10%", fontWeight: 500 }}>Код вехи</p>
+            <p style={{ width: "10%", fontWeight: 500 }}>Дата факт</p>
+            <p style={{ width: "10%", fontWeight: 500 }}>Дата доп</p>
+            <p style={{ width: "10%", fontWeight: 500 }}>Дата исход</p>
+          </ListGroup.Item>
+        )}
         {milestones.map((milestone, index) => (
           <ListGroup.Item
             key={milestone.id}
@@ -67,27 +86,36 @@ const MilestoneForm = ({
                 style={{
                   width: "40px",
                   flex: "none",
-                  zIndex: "0",
                   border: "1px solid #d3d3d3",
                   marginRight: "5px",
                 }}
               >
                 <Dropdown.Item
                   as="button"
-                  onClick={() => handleOpenModal(milestone, false)}
+                  onClick={() => handleOpenModal(milestone, "ActualDate")}
+                  disabled={userRole !== "Администратор" ? true : false}
                 >
-                  Изменить начальную дату
+                  Изменить Дата фактическая
+                </Dropdown.Item>
+
+                <Dropdown.Item
+                  as="button"
+                  disabled={userRole === "Проектировщик" ? true : false}
+                  onClick={() => handleOpenModal(milestone, "AmendedDate")}
+                >
+                  Изменить Дата доп. договора
                 </Dropdown.Item>
                 <Dropdown.Item
                   as="button"
-                  onClick={() => handleOpenModal(milestone, true)}
+                  disabled={userRole === "Проектировщик" ? true : false}
+                  onClick={() => handleOpenModal(milestone, "InitialDate")}
                 >
-                  Актуализировать дату
+                  Изменить Дата исход. договора
                 </Dropdown.Item>
               </DropdownButton>
-
               <FormControl
                 as="select"
+                disabled={userRole === "Проектировщик" ? true : false}
                 onChange={(e) =>
                   handleNameAndCodeChange(milestone.id, e.target.value)
                 }
@@ -108,28 +136,45 @@ const MilestoneForm = ({
               />
               <FormControl
                 type="date"
-                value={milestone.date}
-                readOnly={true}
-                style={{
-                  width: "10%",
-                  flex: "none",
-                  backgroundColor: "#A3B4D9",
-                }}
-              />
-              <FormControl
-                type="date"
                 value={milestone.updatedDate}
                 readOnly={true}
                 style={{
                   width: "10%",
                   flex: "none",
-                  backgroundColor: "#FFBFBF",
+                  backgroundColor: "#d9221180",
+                  textAlign: "center",
+                }}
+              />
+              <FormControl
+                type="date"
+                value={milestone.date}
+                readOnly={true}
+                style={{
+                  width: "10%",
+                  flex: "none",
+                  backgroundColor: "#f2bc1b87",
+                  textAlign: "center",
+                }}
+              />
+              <FormControl
+                type="date"
+                value={milestone.initialDate}
+                readOnly={true}
+                style={{
+                  width: "10%",
+                  flex: "none",
+                  backgroundColor: "#15bfbf80",
+                  textAlign: "center",
                 }}
               />
               <Button
                 variant="outline-danger"
                 onClick={() => onDeleteMilestone(milestone.id)}
-                style={{ width: "40px", flex: "none", zIndex: "0" }}
+                style={{
+                  width: "40px",
+                  flex: "none",
+                  zIndex: "0",
+                }}
               >
                 <Trash />
               </Button>
@@ -142,16 +187,30 @@ const MilestoneForm = ({
         onHide={() => setShowModal(false)}
         onSave={(date, reason) =>
           onUpdateMilestone(selectedMilestone.id, {
-            [isActualUpdate ? "updatedDate" : "date"]: date,
-            [isActualUpdate ? "updatedDateChangeReason" : "dateChangeReason"]:
-              reason,
-            [isActualUpdate
+            [typeDate === "ActualDate"
+              ? "updatedDate"
+              : typeDate === "InitialDate"
+              ? "initialDate"
+              : "date"]: date,
+            [typeDate === "ActualDate"
+              ? "updatedDateChangeReason"
+              : typeDate === "InitialDate"
+              ? "initialDateChangeReason"
+              : "dateChangeReason"]: reason,
+            [typeDate === "ActualDate"
               ? "userResponsibleForUpdate"
+              : typeDate === "InitialDate"
+              ? "userResponsibleForInitialDate"
               : "userResponsibleForChange"]: userName,
           })
         }
         milestone={selectedMilestone}
-        isActualUpdate={isActualUpdate}
+        typeDate={typeDate}
+      />
+      <AddMilestoneModal
+        show={showAddModal}
+        onHide={() => setShowAddModal(false)}
+        onAdd={onAddMilestone}
       />
     </Form>
   );

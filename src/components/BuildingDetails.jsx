@@ -9,8 +9,8 @@ import buildingTypes from "../services/buildingTypesData";
 const BuildingDetails = ({ building, handleIsUpdated }) => {
   const [_building, setBuilding] = useState(building);
   const { buildingId } = useParams();
-  const { userId } = useAuth();
-
+  const { userId, userRole } = useAuth();
+  console.log(_building);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setBuilding((prevBuilding) => ({
@@ -38,6 +38,13 @@ const BuildingDetails = ({ building, handleIsUpdated }) => {
           <Form>
             <EditableTextField
               type="text"
+              label="Технический заказчик"
+              name="technicalCustomer"
+              value={_building.technicalCustomer}
+              onChange={handleChange}
+            />
+            <EditableTextField
+              type="text"
               label="Шифр объекта"
               name="number"
               value={_building.number}
@@ -58,6 +65,7 @@ const BuildingDetails = ({ building, handleIsUpdated }) => {
               onChange={handleChange}
             />
             <Button
+              disabled={userRole === "Проектировщик" ? true : false}
               onClick={handleSaveChanges}
               variant="outline-success"
               style={{ marginTop: "16px" }}
@@ -68,10 +76,43 @@ const BuildingDetails = ({ building, handleIsUpdated }) => {
         </Card.Body>
       </Card>
 
+      <Card
+        style={{
+          marginTop: "20px",
+          display: userRole === "Проектировщик" ? "none" : "block",
+        }}
+      >
+        <Card.Header>Стоимость объекта капитального строительства </Card.Header>
+        <Card.Body>
+          <Form>
+            <EditableTextField
+              label="Начальная стоимость ОКС по договору (руб)"
+              type="number"
+              name="initialContractValue"
+              value={_building.initialContractValue}
+              onChange={handleChange}
+            />
+            <EditableTextField
+              label="Текущая стоимость ОКС по договору (руб)"
+              type="number"
+              name="currentContractValue"
+              value={_building.currentContractValue}
+              onChange={handleChange}
+            />
+            <Button
+              disabled={userRole === "Проектировщик" ? true : false}
+              onClick={handleSaveChanges}
+              variant="outline-primary"
+              style={{ marginTop: "16px" }}
+            >
+              Сохранить
+            </Button>
+          </Form>
+        </Card.Body>
+      </Card>
+
       <Card style={{ marginTop: "20px" }}>
-        <Card.Header>
-          Технико-экономические показатели (Исходные данные)
-        </Card.Header>
+        <Card.Header>Технико-экономические показатели</Card.Header>
         <Card.Body>
           <Form>
             <EditableTextField
@@ -149,6 +190,7 @@ const BuildingDetails = ({ building, handleIsUpdated }) => {
               onChange={handleChange}
             />
             <Button
+              disabled={userRole === "Проектировщик" ? true : false}
               onClick={handleSaveChanges}
               variant="outline-primary"
               style={{ marginTop: "16px" }}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { Pencil, Save } from "react-bootstrap-icons";
+import { useAuth } from "../services/AuthContext";
 
 const EditableTextField = ({
   type = "text",
@@ -12,10 +13,10 @@ const EditableTextField = ({
 }) => {
   const [isEditable, setIsEditable] = useState(false);
   const [inputValue, setInputValue] = useState(value);
+  const { userRole } = useAuth();
 
   // Обновление локального состояния при изменении внешнего value
   useEffect(() => {
-    if (options) console.log("value", value);
     setInputValue(value);
   }, [value]);
 
@@ -83,6 +84,7 @@ const EditableTextField = ({
       )}
 
       <Button
+        disabled={userRole === "Проектировщик" ? true : false}
         variant={isEditable ? "outline-success" : "outline-primary"}
         onClick={toggleEdit}
       >

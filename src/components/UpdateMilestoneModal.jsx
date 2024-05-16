@@ -6,24 +6,33 @@ const UpdateMilestoneModal = ({
   onHide,
   onSave,
   milestone,
-  isActualUpdate,
+  typeDate,
 }) => {
   const [date, setDate] = useState("");
   const [reason, setReason] = useState("");
 
+  // [typeDate === "ActualDate"
+  // ? "updatedDate"
+  // : typeDate === "InitialDate"
+  // ? "initialDate"
+  // : "date"]
+
   useEffect(() => {
     if (milestone) {
       setDate(
-        isActualUpdate
-          ? milestone.updatedDate || milestone.date
+        typeDate === "ActualDate"
+          ? milestone.updatedDate
+          : typeDate === "InitialDate"
+          ? milestone.initialDate
           : milestone.date
       );
       setReason("");
     }
-  }, [milestone, isActualUpdate]);
+  }, [milestone, typeDate]);
 
   const handleSave = () => {
     if (date && reason) {
+      console.log(date, reason);
       onSave(date, reason);
       onHide();
     } else {
@@ -34,9 +43,9 @@ const UpdateMilestoneModal = ({
   if (!milestone) return null;
 
   return (
-    <Modal show={show} onHide={onHide}>
+    <Modal show={show} onHide={onHide} size="lg">
       <Modal.Header closeButton>
-        <Modal.Title>Обновление вехи</Modal.Title>
+        <Modal.Title>Обновление вехи {milestone.name}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>

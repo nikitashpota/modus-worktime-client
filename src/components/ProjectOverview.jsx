@@ -12,7 +12,6 @@ const ProjectOverview = ({ users, buildings, sections, workTimeLogs }) => {
   const [dateRange, setDateRange] = useState({ startDate: "", endDate: "" });
 
   useEffect(() => {
-    console.log("sections", sections);
     const sortUsers = users
       .sort((a, b) => {
         if (a.department != b.department) {
