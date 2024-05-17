@@ -165,7 +165,6 @@ function RegistrationForm() {
                     <option value="">Выберите роль...</option>
                     <option value="Проектировщик">Проектировщик</option>
                     <option value="ГИП">ГИП</option>
-                    <option value="Администратор">Администратор</option>
                   </Form.Select>
                 </Form.Group>
 
