@@ -40,49 +40,55 @@ const CustomTooltip = ({ active, payload, typeDate }) => {
         <p style={{ margin: 0 }}>{data.name}</p>
         {!data.hours && (
           <div style={{ margin: 0 }}>
-            {new Date(data.date).toLocaleDateString()}
+            {new Date(data?.date).toLocaleDateString()}
             {typeDate === "ActualDate" ? (
               <div style={{ margin: 0 }}>
                 <p style={{ margin: 0 }}>
                   Разница дат:{" "}
                   {differenceInDays(
-                    parseISO(data.actualDate),
-                    parseISO(data.amendedDate)
+                    parseISO(data?.actualDate),
+                    parseISO(data?.amendedDate)
                   )}{" "}
-                  дн.{" "}(
+                  дн. (
                   {differenceInDays(
-                    parseISO(data.actualDate),
-                    parseISO(data.initialDate)
-                  )}{" "}дн.)
+                    parseISO(data?.actualDate),
+                    parseISO(data?.initialDate)
+                  )}{" "}
+                  дн.)
                 </p>
-                <p style={{ margin: 0 }}>{data.userResponsibleForUpdate}</p>
-                <p style={{ margin: 0 }}>{data.updatedDateChangeReason}</p>
+                <p style={{ margin: 0 }}>{data?.userResponsibleForUpdate}</p>
+                <p style={{ margin: 0 }}>{data?.updatedDateChangeReason}</p>
               </div>
             ) : typeDate === "AmendedDate" ? (
               <div style={{ margin: 0 }}>
                 <p style={{ margin: 0 }}>
                   Разница дат:{" "}
                   {differenceInDays(
-                    parseISO(data.amendedDate),
-                    parseISO(data.initialDate)
+                    parseISO(data?.amendedDate),
+                    parseISO(data?.initialDate)
                   )}{" "}
                   дн.
                 </p>
-                <p style={{ margin: 0 }}>{data.userResponsibleForChange}</p>
-                <p style={{ margin: 0 }}>{data.dateChangeReason}</p>
+                <p style={{ margin: 0 }}>{data?.userResponsibleForChange}</p>
+                <p style={{ margin: 0 }}>{data?.dateChangeReason}</p>
               </div>
             ) : (
               <div style={{ margin: 0 }}>
                 <p style={{ margin: 0 }}>
-                  {data.userResponsibleForInitialDate}
+                  {data?.userResponsibleForInitialDate}
                 </p>
-                <p style={{ margin: 0 }}>{data.initialDateChangeReason}</p>
+                <p style={{ margin: 0 }}>{data?.initialDateChangeReason}</p>
               </div>
             )}
           </div>
         )}
         {data.hours > 0 && (
-          <p style={{ margin: 0 }}>Кол-во часов: {data.hours} ч.</p>
+          <>
+            <p style={{ margin: 0 }}>Кол-во часов: {data.hours} ч.</p>
+            <p style={{ margin: 0 }}>
+              {new Date(data?.date).toLocaleDateString()}
+            </p>
+          </>
         )}
       </div>
     );
@@ -171,8 +177,6 @@ const TimelineChart = ({
       setCombinedData(combineData(hoursByDate, modifiedData));
     }
   }, [milestones, update]);
-
-  // if (combinedData.length > 0) console.log({ typeDate }, combinedData);
 
   return (
     <ResponsiveContainer width="100%" height={height}>

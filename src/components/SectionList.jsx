@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ListGroup, Button } from "react-bootstrap";
 import axios from "../services/axios";
 import SectionListItem from "./SectionListItem";
@@ -77,7 +77,7 @@ const SectionList = ({ stage, buildingId }) => {
   };
 
   const handleAddUser = (sectionId) => {
-    console.log("Add user to section", sectionId);
+    // console.log("Add user to section", sectionId);
     setCurrentSectionId(sectionId);
     setShowAssignModal(true);
   };
@@ -114,10 +114,11 @@ const SectionList = ({ stage, buildingId }) => {
 
   const handleLoadTemplate = async (template) => {
     try {
+      console.log(stage, buildingId, template);
       await axios.post(`/sections/loadTemplate`, {
         stage,
         buildingId,
-        sections: template.sections,
+        sections: template,
       });
       fetchSections(); // Перезагрузить разделы после обновления
       setShowTemplateModal(false);

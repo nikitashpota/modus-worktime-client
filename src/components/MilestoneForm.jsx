@@ -56,22 +56,6 @@ const MilestoneForm = ({
         </Button>
       </div>
       <ListGroup variant="flush">
-        {milestones.length > 0 && (
-          <ListGroup.Item
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              width: "100%",
-              padding: "0 33px",
-            }}
-          >
-            <p style={{ flex: 1 , fontWeight: 500}}>Наименование вехи</p>
-            <p style={{ width: "10%", fontWeight: 500 }}>Код вехи</p>
-            <p style={{ width: "10%", fontWeight: 500 }}>Дата факт</p>
-            <p style={{ width: "10%", fontWeight: 500 }}>Дата доп</p>
-            <p style={{ width: "10%", fontWeight: 500 }}>Дата исход</p>
-          </ListGroup.Item>
-        )}
         {milestones.map((milestone, index) => (
           <ListGroup.Item
             key={milestone.id}

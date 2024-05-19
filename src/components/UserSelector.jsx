@@ -9,10 +9,22 @@ const UserSelector = ({ buildingId, onSelectedUsersChange }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       const response = await axios.get(`/users/building/${buildingId}`);
-      const users = response.data.map((user) => ({
-        label: `${user.firstName} ${user.lastName}`,
-        value: user.id,
-      }));
+      const users = response.data
+        .sort((a, b) => {
+          if (a.department != b.department) {
+            return a.department.localeCompare(b.department);
+          }
+          if (a.lastName != b.lastName) {
+            return a.lastName.localeCompare(b.lastName);
+          }
+          if (a.firstName != b.firstName) {
+            return a.firstName.localeCompare(b.firstName);
+          }
+        })
+        .map((user) => ({
+          label: `${user.firstName} ${user.lastName} (${user.department})`,
+          value: user.id,
+        }));
       setAvailableUsers(users);
     };
     fetchUsers();
