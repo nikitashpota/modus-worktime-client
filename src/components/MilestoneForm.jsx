@@ -77,7 +77,7 @@ const MilestoneForm = ({
                 <Dropdown.Item
                   as="button"
                   onClick={() => handleOpenModal(milestone, "ActualDate")}
-                  disabled={userRole !== "Администратор" ? true : false}
+                  disabled={userRole === "Проектировщик" ? true : false}
                 >
                   Изменить Дата фактическая
                 </Dropdown.Item>
@@ -91,7 +91,7 @@ const MilestoneForm = ({
                 </Dropdown.Item>
                 <Dropdown.Item
                   as="button"
-                  disabled={userRole === "Проектировщик" ? true : false}
+                  disabled={userRole !== "Администратор" ? true : false}
                   onClick={() => handleOpenModal(milestone, "InitialDate")}
                 >
                   Изменить Дата исход. договора
