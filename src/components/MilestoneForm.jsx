@@ -50,7 +50,7 @@ const MilestoneForm = ({
         <Button
           variant="outline-primary"
           onClick={() => setShowAddModal(true)}
-          style={{ width: "140px" }}
+          style={{ width: "140px", marginBottom: "38px" }}
         >
           Добавить веху
         </Button>
@@ -97,60 +97,69 @@ const MilestoneForm = ({
                   Изменить Дата исход. договора
                 </Dropdown.Item>
               </DropdownButton>
-              <FormControl
-                as="select"
-                disabled={userRole === "Проектировщик" ? true : false}
-                onChange={(e) =>
-                  handleNameAndCodeChange(milestone.id, e.target.value)
-                }
-                style={{ flex: "1" }}
-                value={milestone.name}
-              >
-                {milestonesData.map((m) => (
-                  <option key={m.code} value={m.label}>
-                    {m.label}
-                  </option>
-                ))}
-              </FormControl>
-              <FormControl
-                as="input"
-                readOnly
-                value={milestone.code}
-                style={{ width: "10%", flex: "none", textAlign: "center" }}
-              />
-              <FormControl
-                type="date"
-                value={milestone.updatedDate}
-                readOnly={true}
-                style={{
-                  width: "10%",
-                  flex: "none",
-                  backgroundColor: "#d9221180",
-                  textAlign: "center",
-                }}
-              />
-              <FormControl
-                type="date"
-                value={milestone.date}
-                readOnly={true}
-                style={{
-                  width: "10%",
-                  flex: "none",
-                  backgroundColor: "#f2bc1b87",
-                  textAlign: "center",
-                }}
-              />
-              <FormControl
-                type="date"
-                value={milestone.initialDate}
-                readOnly={true}
-                style={{
-                  width: "10%",
-                  flex: "none",
-                  backgroundColor: "#15bfbf80",
-                  textAlign: "center",
-                }}
-              />
+              <div style={{ flex: "1", position: "relative" }}>
+                {index === 0 && <MilestoneHeader title="Наименование вехи" />}
+                <FormControl
+                  as="select"
+                  disabled={userRole === "Проектировщик" ? true : false}
+                  onChange={(e) =>
+                    handleNameAndCodeChange(milestone.id, e.target.value)
+                  }
+                  value={milestone.name}
+                >
+                  {milestonesData.map((m) => (
+                    <option key={m.code} value={m.label}>
+                      {m.label}
+                    </option>
+                  ))}
+                </FormControl>
+              </div>
+              <div style={{ width: "10%", flex: "none", position: "relative" }}>
+                {index === 0 && <MilestoneHeader title="Код вехи" />}
+                <FormControl
+                  as="input"
+                  readOnly
+                  value={milestone.code}
+                  style={{ textAlign: "center" }}
+                />
+              </div>
+              <div style={{ width: "10%", flex: "none", position: "relative" }}>
+                {index === 0 && <MilestoneHeader title="Факт. дата" />}
+                <FormControl
+                  type="date"
+                  value={milestone.updatedDate}
+                  readOnly={true}
+                  style={{
+                    backgroundColor: "#d9221180",
+                    textAlign: "center",
+                  }}
+                />
+              </div>
+              <div style={{ width: "10%", flex: "none", position: "relative" }}>
+                {index === 0 && <MilestoneHeader title="Доп. дата" />}
+                <FormControl
+                  type="date"
+                  value={milestone.date}
+                  readOnly={true}
+                  style={{
+                    backgroundColor: "#f2bc1b87",
+                    textAlign: "center",
+                  }}
+                />
+              </div>
+              <div style={{ width: "10%", flex: "none", position: "relative" }}>
+                {index === 0 && <MilestoneHeader title="Исх. дата" />}
+                <FormControl
+                  type="date"
+                  value={milestone.initialDate}
+                  readOnly={true}
+                  style={{
+                    backgroundColor: "#15bfbf80",
+                    textAlign: "center",
+                  }}
+                />
+              </div>
+
               <Button
                 variant="outline-danger"
                 onClick={() => onDeleteMilestone(milestone.id)}
@@ -199,5 +208,24 @@ const MilestoneForm = ({
     </Form>
   );
 };
+
+const MilestoneHeader = ({ title }) => (
+  <div
+    style={{
+      position: "absolute",
+      top: "-45px",
+      left: "50%", // Устанавливаем элемент на середину относительно родителя
+      transform: "translateX(-50%)", // Сдвигаем элемент на 50% его ширины назад, для центрирования
+      background: "#f8f9fa",
+      padding: "5px 15px",
+      borderRadius: "6px",
+      textAlign: "center",
+      zIndex: 1000,
+      whiteSpace: "nowrap", // Предотвращаем перенос текста
+    }}
+  >
+    {title}
+  </div>
+);
 
 export default MilestoneForm;

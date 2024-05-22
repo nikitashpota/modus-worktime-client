@@ -14,12 +14,22 @@ const CustomDot = (props) => {
   const { cx, cy, stroke, payload } = props;
   if (payload.code) {
     return (
-      <g>
-        <circle cx={cx} cy={cy} r={10} fill={stroke} stroke="none" />
-        <text x={cx} y={cy - 10} dy={-10} textAnchor="middle" fill="#666">
-          {payload.code}
-        </text>
-      </g>
+      <>
+        <g>
+          <circle cx={cx} cy={cy} r={10} fill={stroke} stroke="none" />
+        </g>
+        <foreignObject x={cx - 40} y={cy - 45} dy={50} width="80" height="30">
+          <div
+            style={{
+              backgroundColor: "white",
+              textAlign: "center",
+              borderRadius: "6px",
+            }}
+          >
+            {payload.code}
+          </div>
+        </foreignObject>
+      </>
     );
   }
 };
@@ -27,7 +37,6 @@ const CustomDot = (props) => {
 const CustomTooltip = ({ active, payload, typeDate }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
-    console.log(data);
     return (
       <div
         style={{

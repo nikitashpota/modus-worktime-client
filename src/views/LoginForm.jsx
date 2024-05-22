@@ -62,13 +62,6 @@ function LoginForm() {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
-                  {/* <Form.Label>Пароль</Form.Label>
-                  <Form.Control
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  /> */}
                   <Form.Label>Пароль</Form.Label>
                   <InputGroup>
                     <Form.Control
@@ -83,7 +76,7 @@ function LoginForm() {
                     </InputGroup.Text>
                   </InputGroup>
                   <Form.Text className="text-muted">
-                    <Link to="/reset-password">Forgot password?</Link>
+                    <Link to="/reset-password">Забыли пароль?</Link>
                   </Form.Text>
                 </Form.Group>
 

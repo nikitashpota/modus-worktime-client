@@ -9,6 +9,9 @@ import DirectorDashboard from "./views/DirectorDashboard";
 import LoginForm from "./views/LoginForm";
 import RegistrationForm from "./views/RegistrationForm";
 import ProfileEdit from "./views/ProfileEdit";
+import PasswordResetRequest from "./views/PasswordResetRequest";
+import ResetPasswordForm from "./views/ResetPasswordForm";
+
 import { AuthProvider } from "./services/AuthContext";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -63,6 +66,11 @@ function App() {
                 <Route path="/register" element={<RegistrationForm />} />
                 <Route path="/profile-edit" element={<ProfileEdit />} />
                 <Route path="/user-management" element={<UserManagement />} />
+                <Route
+                  path="/reset-password/:token"
+                  element={<ResetPasswordForm />}
+                />
+                <Route path="/reset-password" element={<PasswordResetRequest />} />
                 <Route
                   path="/financial-reports"
                   element={<FinancialReports />}
