@@ -37,7 +37,7 @@ const BuildingDetails = ({ building, handleIsUpdated }) => {
           <Form>
             <EditableTextField
               type="text"
-              label="Технический заказчик"
+              label="Заказчик"
               name="technicalCustomer"
               value={_building.technicalCustomer}
               onChange={handleChange}
@@ -85,17 +85,24 @@ const BuildingDetails = ({ building, handleIsUpdated }) => {
         <Card.Body>
           <Form>
             <EditableTextField
-              label="Начальная стоимость ОКС по договору (руб)"
+              label="Стоимость ПИР по контракту (руб)"
               type="number"
-              name="initialContractValue"
-              value={_building.initialContractValue}
+              name="pirContractValue"
+              value={_building.pirContractValue}
               onChange={handleChange}
             />
             <EditableTextField
-              label="Текущая стоимость ОКС по договору (руб)"
+              label="Стоимость ПИР после МГЭ (руб)"
               type="number"
-              name="currentContractValue"
-              value={_building.currentContractValue}
+              name="pirPostMgeValue"
+              value={_building.pirPostMgeValue}
+              onChange={handleChange}
+            />
+            <EditableTextField
+              label="Стоимость объекта за кв.м (руб)"
+              type="number"
+              name="costPerSquareMeter"
+              value={_building.costPerSquareMeter}
               onChange={handleChange}
             />
             <Button

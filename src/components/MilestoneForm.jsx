@@ -139,6 +139,12 @@ const MilestoneForm = ({
               <div style={{ flex: "1", position: "relative" }}>
                 {index === 0 && <MilestoneHeader title="Наименование вехи" />}
                 <FormControl
+                  style={{
+                    textDecoration:
+                      milestone.status === "Завершено"
+                        ? "line-through"
+                        : "none",
+                  }}
                   as="select"
                   disabled={userRole === "Проектировщик" ? true : false}
                   onChange={(e) =>
@@ -159,7 +165,13 @@ const MilestoneForm = ({
                   as="input"
                   readOnly
                   value={milestone.code}
-                  style={{ textAlign: "center" }}
+                  style={{
+                    textAlign: "center",
+                    textDecoration:
+                      milestone.status === "Завершено"
+                        ? "line-through"
+                        : "none",
+                  }}
                 />
               </div>
               <div style={{ width: "10%", flex: "none", position: "relative" }}>

@@ -72,8 +72,8 @@ const AttachDocumentModal = ({
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "#f8f9fa",
-            border: fileUrl ? "3px solid blue" : "3px solid red",
-            minHeight: "200px", // Adjust height as needed
+            // border: fileUrl ? "3px solid #0d6efd" : "3px solid red",
+            minHeight: "200px",
             marginBottom: "10px",
           }}
         >
