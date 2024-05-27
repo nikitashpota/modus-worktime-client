@@ -11,19 +11,29 @@ import {
 import { parseISO, isWithinInterval, differenceInDays } from "date-fns";
 
 const CustomDot = (props) => {
-  const { cx, cy, stroke, payload } = props;
+  const { cx, cy, stroke, payload, index } = props;
+  const yOffset = index % 2 === 0 ? 35 : -20;
+  const circleStroke = payload.status === "Завершено" ? "black" : "none";
   if (payload.code) {
     return (
       <>
         <g>
-          <circle cx={cx} cy={cy} r={10} fill={stroke} stroke="none" />
+          <circle
+            cx={cx}
+            cy={cy}
+            r={6}
+            fill={stroke}
+            stroke={circleStroke}
+            strokeWidth={3}
+          />
         </g>
-        <foreignObject x={cx - 40} y={cy - 45} dy={50} width="80" height="30">
+        <foreignObject x={cx - 30} y={cy - yOffset} width="60" height="35">
           <div
             style={{
               backgroundColor: "white",
               textAlign: "center",
-              borderRadius: "6px",
+              borderRadius: "3px",
+              fontSize: "12px",
             }}
           >
             {payload.code}
@@ -32,11 +42,14 @@ const CustomDot = (props) => {
       </>
     );
   }
+
+  return null;
 };
 
 const CustomTooltip = ({ active, payload, typeDate }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
+    if (data.name === "Empty") return null;
     return (
       <div
         style={{
@@ -129,6 +142,8 @@ const TimelineChart = ({
     });
 
     milestonesData.forEach((milestone) => {
+      if (milestone.name === "Empty" && milestone.type.includes(typeDate))
+        return;
       const dateKey = milestone.date;
       if (combined[dateKey]) {
         combined[dateKey] = {
@@ -207,7 +222,7 @@ const TimelineChart = ({
           dataKey="y"
           stroke={colorLine}
           strokeWidth={5}
-          dot={<CustomDot />}
+          dot={(props) => <CustomDot {...props} index={props.index} />}
         />
       </ComposedChart>
     </ResponsiveContainer>

@@ -19,16 +19,16 @@ const SectionListItem = ({ section, onDelete, onEdit, onAddUser }) => {
       className="d-flex justify-content-between align-items-center"
       style={{ borderRight: "1px solid #dee2e6" }}
     >
-      <div style={{ width: "200px", paddingRight: "10px" }}>
+      <div style={{ minWidth: "180px", paddingRight: "10px" }}>
         {section.sectionCode}
       </div>
       <div style={{ flexGrow: 1, padding: "0 10px" }}>
         {section.sectionName}
       </div>
-      <div style={{ width: "150px", padding: "0 10px" }}>
+      <div style={{ minWidth: "100px", padding: "0 10px" }}>
         {formatDate(section.startDate)}
       </div>
-      <div style={{ width: "150px", padding: "0 10px" }}>
+      <div style={{ minWidth: "100px", padding: "0 10px" }}>
         {formatDate(section.endDate)}
       </div>
       <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>

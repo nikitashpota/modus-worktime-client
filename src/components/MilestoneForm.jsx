@@ -5,15 +5,15 @@ import {
   ListGroup,
   InputGroup,
   FormControl,
-  FormLabel,
-  FormText,
 } from "react-bootstrap";
-import { Trash, PencilSquare } from "react-bootstrap-icons";
+import { Trash } from "react-bootstrap-icons";
 import milestonesData from "../services/milestonesData";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 import UpdateMilestoneModal from "./UpdateMilestoneModal";
 import AddMilestoneModal from "./AddMilestoneModal";
+import MilestoneStatusModal from "./MilestoneStatusModal";
 import { useAuth } from "../services/AuthContext";
+import AttachDocumentModal from "./AttachDocumentModal";
 
 const MilestoneForm = ({
   milestones,
@@ -21,18 +21,31 @@ const MilestoneForm = ({
   onDeleteMilestone,
   onAddMilestone,
   userName,
+  handleToggleCertification,
+  handleToggleShowCertified,
+  showOnlyCertified,
+  fetchMilestones,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedMilestone, setSelectedMilestone] = useState(null);
+  const [showStatusModal, setShowStatusModal] = useState(false);
+  const [showAttachDocumentModal, setShowAttachDocumentModal] = useState(false);
   const [typeDate, setTypeDate] = useState("");
   const { userRole } = useAuth();
+
   const handleOpenModal = (milestone, type) => {
     event.preventDefault();
     event.stopPropagation();
     setSelectedMilestone(milestone);
-    setTypeDate(type);
-    setShowModal(true);
+    if (type === "status") {
+      setShowStatusModal(true);
+    } else if (type === "attachDocument") {
+      setShowAttachDocumentModal(true);
+    } else {
+      setTypeDate(type);
+      setShowModal(true);
+    }
   };
 
   const handleNameAndCodeChange = (id, newName) => {
@@ -50,9 +63,16 @@ const MilestoneForm = ({
         <Button
           variant="outline-primary"
           onClick={() => setShowAddModal(true)}
-          style={{ width: "140px", marginBottom: "38px" }}
+          style={{ width: "160px", marginBottom: "38px" }}
         >
           Добавить веху
+        </Button>
+        <Button
+          variant="outline-primary"
+          onClick={handleToggleShowCertified}
+          style={{ width: "160px", marginBottom: "38px" }}
+        >
+          {showOnlyCertified ? "Показать все" : "Показать с актом"}
         </Button>
       </div>
       <ListGroup variant="flush">
@@ -96,6 +116,25 @@ const MilestoneForm = ({
                 >
                   Изменить Дата исход. договора
                 </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => handleOpenModal(milestone, "status")}
+                >
+                  Изменить Статус вехи
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    handleToggleCertification(milestone);
+                  }}
+                >
+                  {milestone.isCertified ? "Не актировать" : "Актировать"}
+                </Dropdown.Item>
+                {milestone.isCertified && (
+                  <Dropdown.Item
+                    onClick={() => handleOpenModal(milestone, "attachDocument")}
+                  >
+                    Приложить акт
+                  </Dropdown.Item>
+                )}
               </DropdownButton>
               <div style={{ flex: "1", position: "relative" }}>
                 {index === 0 && <MilestoneHeader title="Наименование вехи" />}
@@ -205,6 +244,24 @@ const MilestoneForm = ({
         onHide={() => setShowAddModal(false)}
         onAdd={onAddMilestone}
       />
+      <MilestoneStatusModal
+        show={showStatusModal}
+        onHide={() => {
+          setShowStatusModal(false);
+        }}
+        onSave={() =>
+          onUpdateMilestone(selectedMilestone.id, {
+            status: selectedMilestone.status,
+          })
+        }
+        milestone={selectedMilestone}
+      />
+      <AttachDocumentModal
+        show={showAttachDocumentModal}
+        onHide={() => setShowAttachDocumentModal(false)}
+        milestone={selectedMilestone}
+        fetchMilestones={fetchMilestones}
+      />
     </Form>
   );
 };
@@ -214,14 +271,14 @@ const MilestoneHeader = ({ title }) => (
     style={{
       position: "absolute",
       top: "-45px",
-      left: "50%", // Устанавливаем элемент на середину относительно родителя
-      transform: "translateX(-50%)", // Сдвигаем элемент на 50% его ширины назад, для центрирования
+      left: "50%",
+      transform: "translateX(-50%)",
       background: "#f8f9fa",
       padding: "5px 15px",
       borderRadius: "6px",
       textAlign: "center",
       zIndex: 1000,
-      whiteSpace: "nowrap", // Предотвращаем перенос текста
+      whiteSpace: "nowrap",
     }}
   >
     {title}

@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import MilestoneForm from "./MilestoneForm";
 import axios from "../services/axios";
-import milestonesData from "../services/milestonesData";
 import UserSelector from "./UserSelector";
 import TimelineChart from "./TimelineChart";
 import { useAuth } from "../services/AuthContext";
 import { PlusCircle, DashCircle } from "react-bootstrap-icons";
 import "./TimeTable.css";
-import { parseISO } from "date-fns";
 
 const BuildingTimeline = ({ buildingId, activeTab }) => {
   const [milestones, setMilestones] = useState([]);
+  const [maxMilestone, setMaxMilestone] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [workTimeLogs, setWorkTimeLogs] = useState([]);
   const [update, setUpdate] = useState(false);
   const [scale, setScale] = useState(100);
   const [userName, setUserName] = useState("");
+  const [showOnlyCertified, setShowOnlyCertified] = useState(false);
 
   const { userId } = useAuth();
 
@@ -44,7 +44,7 @@ const BuildingTimeline = ({ buildingId, activeTab }) => {
 
   useEffect(() => {
     fetchMilestones();
-  }, []);
+  }, [buildingId, showOnlyCertified]);
 
   useEffect(() => {
     const fetchWorkTimeLogs = async () => {
@@ -73,25 +73,84 @@ const BuildingTimeline = ({ buildingId, activeTab }) => {
   const fetchMilestones = async () => {
     try {
       const response = await axios.get(`/milestones/${buildingId}`);
-      if (Array.isArray(response.data)) {
-        setMilestones(
-          response.data.sort((a, b) => {
-            // Convert dates from ISO format to Date objects and compare their timestamps
-            return new Date(a.updatedDate) - new Date(b.updatedDate);
-          })
-        );
-      } else {
-        console.error(
-          "Expected an array of milestones, but received:",
-          response.data
-        );
-        setMilestones([]);
-      }
+      const milestonesData = response.data;
+
+      const filteredData = showOnlyCertified
+        ? milestonesData.filter((milestone) => milestone.isCertified)
+        : milestonesData;
+
+      setMaxMilestone(getMaxDateMilestone(filteredData));
+      setMilestones(
+        filteredData.sort((a, b) => new Date(a.date) - new Date(b.date))
+      );
     } catch (error) {
       console.error("Error fetching milestones:", error);
       setMilestones([]);
     }
   };
+
+  const handleToggleShowCertified = () => {
+    console.log("showOnlyCertified", showOnlyCertified);
+    setShowOnlyCertified((prev) => {
+      return !prev;
+    });
+  };
+
+  function getMaxDateMilestone(milestonesData) {
+    let maxDate = new Date(0); // начальное значение - самая ранняя возможная дата
+    let maxFields = [];
+
+    // Первый проход определяет максимальную дату
+    milestonesData.forEach((milestone) => {
+      const currentInitialDate = new Date(milestone.initialDate);
+      const currentDate = new Date(milestone.date);
+      const currentUpdatedDate = new Date(milestone.updatedDate);
+
+      maxDate = new Date(
+        Math.max(maxDate, currentInitialDate, currentDate, currentUpdatedDate)
+      );
+    });
+
+    // Второй проход собирает все типы, которые имеют максимальную дату
+    milestonesData.forEach((milestone) => {
+      const currentInitialDate = new Date(milestone.initialDate);
+      const currentDate = new Date(milestone.date);
+      const currentUpdatedDate = new Date(milestone.updatedDate);
+
+      if (
+        currentInitialDate.getTime() === maxDate.getTime() &&
+        !maxFields.includes("InitialDate")
+      ) {
+        maxFields.push("InitialDate");
+      }
+      if (
+        currentDate.getTime() === maxDate.getTime() &&
+        !maxFields.includes("AmendedDate")
+      ) {
+        maxFields.push("AmendedDate");
+      }
+      if (
+        currentUpdatedDate.getTime() === maxDate.getTime() &&
+        !maxFields.includes("ActualDate")
+      ) {
+        maxFields.push("ActualDate");
+      }
+    });
+
+    const maxDateString = maxDate.toISOString().split("T")[0];
+
+    return {
+      name: "Empty",
+      initialDate: maxDateString,
+      date: maxDateString,
+      updatedDate: maxDateString,
+      documentUrl: null,
+      code: "",
+      status: "",
+      id: `max-${Date.now()}`,
+      type: maxFields.join(", "), // Соединяем все типы, имеющие максимальную дату
+    };
+  }
 
   const handleDateChange = async (id, updateData) => {
     console.log(updateData);
@@ -106,7 +165,7 @@ const BuildingTimeline = ({ buildingId, activeTab }) => {
   const handleDeleteMilestone = async (id) => {
     try {
       await axios.delete(`/milestones/${id}`);
-      fetchMilestones(); // Повторно загружаем список вех после удаления
+      fetchMilestones();
     } catch (error) {
       console.error("Error deleting milestone:", error);
     }
@@ -120,13 +179,27 @@ const BuildingTimeline = ({ buildingId, activeTab }) => {
       initialDate,
       date: initialDate,
       updatedDate: initialDate,
+      status: "Активный",
     };
 
     try {
       await axios.post(`/milestones`, newMilestone);
+      console.log("newMilestone", newMilestone);
       fetchMilestones();
     } catch (error) {
       console.error("Ошибка при добавлении вехи:", error);
+    }
+  };
+
+  const handleToggleCertification = async (milestone) => {
+    try {
+      console.log("handleToggleCertification", milestone);
+      await axios.patch(`/milestones/${milestone.id}/certify`, {
+        isCertified: !milestone.isCertified,
+      });
+      fetchMilestones();
+    } catch (error) {
+      console.error("Ошибка при изменении статуса актирования:", error);
     }
   };
 
@@ -160,23 +233,98 @@ const BuildingTimeline = ({ buildingId, activeTab }) => {
                 boxSizing: "border-box",
               }}
             >
-              <TimelineChart
-                milestones={milestones}
-                workTimeLogs={workTimeLogs}
-                update={update}
-                typeDate={"ActualDate"}
-                colorLine="#D92211"
-              />
-              <TimelineChart
-                milestones={milestones}
-                colorLine="#F2BC1B"
-                typeDate={"AmendedDate"}
-              />
-              <TimelineChart
-                milestones={milestones}
-                colorLine="#15BFBF"
-                typeDate={"InitialDate"}
-              />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: "6px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    height: "100px",
+                    width: "30px",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transform: "rotate(-90deg) translateX(-15px)",
+                    transformOrigin: "center",
+                    textWrap: "nowrap",
+                    color: "#0a58ca",
+                    fontSize: "14px",
+                  }}
+                >
+                  Факт. дата
+                </div>
+                <TimelineChart
+                  milestones={[...milestones, maxMilestone]}
+                  workTimeLogs={workTimeLogs}
+                  update={update}
+                  typeDate={"ActualDate"}
+                  colorLine="#D92211"
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: "6px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    height: "100px",
+                    width: "30px",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transform: "rotate(-90deg) translateX(-15px)",
+                    transformOrigin: "center",
+                    textWrap: "nowrap",
+                    color: "#0a58ca",
+                    fontSize: "14px",
+                  }}
+                >
+                  Доп. дата
+                </div>
+                <TimelineChart
+                  milestones={[...milestones, maxMilestone]}
+                  colorLine="#F2BC1B"
+                  typeDate={"AmendedDate"}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: "6px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    height: "100px",
+                    width: "30px",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transform: "rotate(-90deg) translateX(-15px)",
+                    transformOrigin: "center",
+                    textWrap: "nowrap",
+                    color: "#0a58ca",
+                    fontSize: "14px",
+                  }}
+                >
+                  Исх. дата
+                </div>
+                <TimelineChart
+                  milestones={[...milestones, maxMilestone]}
+                  colorLine="#15BFBF"
+                  typeDate={"InitialDate"}
+                />
+              </div>
             </div>
           </div>
           <div
@@ -208,6 +356,10 @@ const BuildingTimeline = ({ buildingId, activeTab }) => {
             onDeleteMilestone={handleDeleteMilestone}
             onAddMilestone={handleAddMilestone}
             userName={userName}
+            handleToggleCertification={handleToggleCertification}
+            handleToggleShowCertified={handleToggleShowCertified}
+            showOnlyCertified={showOnlyCertified}
+            fetchMilestones={fetchMilestones}
           />
         </>
       )}

@@ -10,7 +10,6 @@ const BuildingDetails = ({ building, handleIsUpdated }) => {
   const [_building, setBuilding] = useState(building);
   const { buildingId } = useParams();
   const { userId, userRole } = useAuth();
-  console.log(_building);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setBuilding((prevBuilding) => ({

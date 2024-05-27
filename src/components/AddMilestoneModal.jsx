@@ -63,9 +63,6 @@ const AddMilestoneModal = ({ show, onHide, onAdd }) => {
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        {/* <Button variant="secondary" onClick={onHide}>
-          Закрыть
-        </Button> */}
         <Button
           variant="outline-primary"
           onClick={handleSubmit}
