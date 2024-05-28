@@ -132,7 +132,9 @@ const MilestoneForm = ({
                   <Dropdown.Item
                     onClick={() => handleOpenModal(milestone, "attachDocument")}
                   >
-                    Приложить акт
+                    {milestone?.documentUrl
+                      ? "Просмотреть акт"
+                      : "Приложить акт"}
                   </Dropdown.Item>
                 )}
               </DropdownButton>

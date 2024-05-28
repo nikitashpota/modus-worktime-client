@@ -47,7 +47,10 @@ const DirectorDashboard = () => {
       id="uncontrolled-tab-example"
       className="mb-3"
     >
-      <Tab eventKey="workLogSummaryTable" title="День-час">
+      <Tab
+        eventKey="workLogSummaryTable"
+        title="День-час"
+      >
         <WorkLogSummaryTable />
       </Tab>
       <Tab eventKey="employeeWorkloadTable" title="Объект-проценты">
