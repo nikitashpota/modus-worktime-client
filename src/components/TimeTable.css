@@ -1,32 +1,77 @@
-/* Стили для таблицы */
+/* Общие стили таблицы */
+.table {
+  /* font-family: "Roboto", sans-serif; */
+  color: #333;
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
 
-/* Заголовки столбцов с тонким шрифтом */
+/* Упрощение заголовков столбцов */
 .thin-header th {
-  font-weight: 400; /* Эквивалент .font-weight-light в Bootstrap */
+  font-weight: 400;
+  background-color: #f7f7f7;
+  border: 1px solid #e0e0e0;
+  padding: 8px;
+  text-align: center;
+  min-width: 100px;
 }
 
-/* Подсветка ячейки с актуальной датой */
+/* Минимализм в подсветке сегодняшней даты */
 .today-highlight {
-  background-color: #606060; /* Светло-серый цвет, аналогичный Bootstrap светло-серому */
+  background-color: #e0e0e0; /* Более мягкий оттенок серого */
 }
 
-/* Стили для первого столбца */
+/* Адаптация ширины первого столбца */
 .first-column__width {
-  min-width: 300px !important;
-  max-width: 450px !important;
+  min-width: 200px !important;
+  max-width: 300px !important;
+  padding: 8px;
+  font-size: 14px;
+  text-align: left;
 }
 
-/* Стилизация скроллбара */
+/* Современная стилизация скроллбара */
 .table-responsive::-webkit-scrollbar {
-  height: 8px; /* Высота скроллбара */
-  background: transparent; /* Прозрачный фон скроллбара */
+  height: 8px;
+  background: transparent;
 }
 
 .table-responsive::-webkit-scrollbar-thumb {
-  background: #3d3d3d; /* Цвет скроллбара */
-  border-radius: 4px; /* Скругление углов скроллбара */
+  background: #ccc;
+  border-radius: 4px;
 }
 
 .table-responsive::-webkit-scrollbar-track {
-  background: transparent; /* Прозрачный фон трека скроллбара */
+  background: transparent;
+}
+
+/* Удаление лишних границ */
+.table td,
+.table th {
+  border: 1px solid #e0e0e0;
+  padding: 8px;
+  text-align: center;
+}
+
+.thin-header th,
+.thin-header td {
+  text-align: left; /* Выравнивание текста по левому краю */
+  padding: 8px;
+}
+
+.first-column__width {
+  text-align: left; /* Текст в первом столбце теперь выравнивается по левому краю */
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+/* Особенности дизайна для мобильных и мелких экранов */
+@media (max-width: 768px) {
+  .first-column__width {
+    min-width: 150px !important;
+    max-width: 150px !important;
+  }
 }

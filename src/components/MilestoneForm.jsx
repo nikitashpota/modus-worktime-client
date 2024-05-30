@@ -142,10 +142,8 @@ const MilestoneForm = ({
                 {index === 0 && <MilestoneHeader title="Наименование вехи" />}
                 <FormControl
                   style={{
-                    textDecoration:
-                      milestone.status === "Завершено"
-                        ? "line-through"
-                        : "none",
+                    backgroundColor:
+                      milestone.status === "Завершено" ? "#62a84794" : "white",
                   }}
                   as="select"
                   disabled={userRole === "Проектировщик" ? true : false}
@@ -169,10 +167,6 @@ const MilestoneForm = ({
                   value={milestone.code}
                   style={{
                     textAlign: "center",
-                    textDecoration:
-                      milestone.status === "Завершено"
-                        ? "line-through"
-                        : "none",
                   }}
                 />
               </div>

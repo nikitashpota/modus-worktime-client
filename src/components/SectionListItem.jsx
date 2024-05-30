@@ -1,8 +1,14 @@
 import React from "react";
 import { ListGroup, Button } from "react-bootstrap";
-import { Trash, PersonPlus, Pencil } from "react-bootstrap-icons";
+import { Trash, PersonPlus, Pencil, People } from "react-bootstrap-icons";
 
-const SectionListItem = ({ section, onDelete, onEdit, onAddUser }) => {
+const SectionListItem = ({
+  section,
+  onDelete,
+  onEdit,
+  onAddUser,
+  onShowTeam,
+}) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     if (!dateString) return "";
@@ -32,6 +38,12 @@ const SectionListItem = ({ section, onDelete, onEdit, onAddUser }) => {
         {formatDate(section.endDate)}
       </div>
       <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
+        <Button
+          variant="outline-primary"
+          onClick={() => onShowTeam(section.id)}
+        >
+          <People />
+        </Button>
         <Button variant="outline-success" onClick={() => onAddUser(section.id)}>
           <PersonPlus />
         </Button>

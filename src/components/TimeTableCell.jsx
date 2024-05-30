@@ -31,7 +31,7 @@ const TimeTableCell = ({ date, logs, sectionId, buildingId, onUpdate }) => {
   };
 
   const handleCellClick = () => {
-    if (isActive && !isWeekend) {
+    if (isActive) {
       setShowModal(true);
     }
   };
@@ -50,13 +50,13 @@ const TimeTableCell = ({ date, logs, sectionId, buildingId, onUpdate }) => {
           top: 0,
           bottom: 0,
           borderRadius: 0,
-          backgroundColor: isToday
-            ? "lightgreen"
-            : !isActive
-            ? "#ddd"
-            : isWeekend
-            ? "lightcoral"
-            : "",
+          // backgroundColor: isToday
+          //   ? "lightgreen"
+          //   : !isActive
+          //   ? "#ddd"
+          //   : isWeekend
+          //   ? "lightcoral"
+          //   : "",
           color: !isActive || isWeekend ? "#666" : "",
         }}
       >

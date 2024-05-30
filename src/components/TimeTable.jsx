@@ -89,11 +89,6 @@ const TimeTable = () => {
             onChange={(e) => setEndDate(e.target.value)}
           />
         </Col>
-        {/* <Col>
-          <Button onClick={updateDateRange} variant="outline-primary">
-            Применить
-          </Button>
-        </Col> */}
       </Row>
       <div style={{ overflowX: "auto" }} className="table-responsive">
         <Table bordered className="table thin-header">

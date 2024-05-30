@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
-import { ListGroup, Button } from "react-bootstrap";
+import { ListGroup, Button, Form, FormControl } from "react-bootstrap";
 import axios from "../services/axios";
 import SectionListItem from "./SectionListItem";
 import AddSectionModal from "./AddSectionModal";
 import EditSectionModal from "./EditSectionModal";
 import LoadTemplateModal from "./LoadTemplateModal";
+import ProjectTeamModal from "./ProjectTeamModal";
 import AssignUserToSectionModal from "./AssignUserToSectionModal";
 import templates from "../services/templates.json";
 
 const SectionList = ({ stage, buildingId }) => {
   const [sections, setSections] = useState([]);
+  const [filteredSections, setFilteredSections] = useState([]);
+  const [filter, setFilter] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showTemplateModal, setShowTemplateModal] = useState(false);
@@ -28,23 +31,58 @@ const SectionList = ({ stage, buildingId }) => {
     endDate: "",
   });
 
+  const [showTeamModal, setShowTeamModal] = useState(false);
+  const [teamMembers, setTeamMembers] = useState([]);
+
   useEffect(() => {
     fetchSections();
-  }, [stage, buildingId]);
+  }, [stage, buildingId, filter]);
 
   const fetchSections = async () => {
     try {
       const response = await axios.get(
         `/sections//by-stage-building?stage=${stage}&buildingId=${buildingId}`
       );
-      setSections(
-        response.data.sort((a, b) => {
-          return a.sectionCode.localeCompare(b.sectionCode);
-        })
+      const sortedSections = response.data.sort((a, b) =>
+        a.sectionCode.localeCompare(b.sectionCode)
+      );
+      setSections(sortedSections);
+      setFilteredSections(
+        sortedSections.filter((section) => section.sectionCode.includes(filter))
       );
     } catch (error) {
       console.error("Ошибка при получении разделов:", error);
     }
+  };
+
+  // Функция для открытия модального окна и загрузки данных
+  const handleShowTeam = async (sectionId) => {
+    try {
+      const response = await axios.get(`/sections/${sectionId}/assigned-users`);
+      const users = response.data;
+      // Группировка пользователей по департаменту и сортировка по фамилии
+      const groupedUsers = users.reduce((acc, user) => {
+        const { department } = user;
+        if (!acc[department]) acc[department] = [];
+        acc[department].push(user);
+        return acc;
+      }, {});
+
+      for (const dept in groupedUsers) {
+        groupedUsers[dept].sort((a, b) => a.lastName.localeCompare(b.lastName));
+      }
+
+      setTeamMembers(groupedUsers);
+      setShowTeamModal(true);
+    } catch (error) {
+      console.error("Ошибка при получении пользователей:", error);
+    }
+  };
+
+  // Функция для закрытия модального окна
+  const handleCloseTeamModal = () => {
+    setShowTeamModal(false);
+    setTeamMembers([]);
   };
 
   const handleEdit = (sectionId) => {
@@ -70,7 +108,7 @@ const SectionList = ({ stage, buildingId }) => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`/sections/${id}`);
-      setSections(sections.filter((section) => section.id !== id));
+      setFilteredSections(sections.filter((section) => section.id !== id));
     } catch (error) {
       console.error("Ошибка при удалении раздела:", error);
     }
@@ -127,6 +165,10 @@ const SectionList = ({ stage, buildingId }) => {
     }
   };
 
+  const handleFilterChange = (e) => {
+    setFilter(e.target.value);
+  };
+
   return (
     <>
       <div
@@ -146,15 +188,25 @@ const SectionList = ({ stage, buildingId }) => {
         >
           Загрузить шаблон
         </Button>
+        <Form inline>
+          <FormControl
+            type="text"
+            placeholder="Фильтр по коду раздела"
+            className="mr-sm-2"
+            value={filter}
+            onChange={handleFilterChange}
+          />
+        </Form>
       </div>
       <ListGroup>
-        {sections.map((section) => (
+        {filteredSections.map((section) => (
           <SectionListItem
             key={section.id}
             section={section}
             onDelete={handleDelete}
             onEdit={handleEdit}
             onAddUser={handleAddUser}
+            onShowTeam={handleShowTeam}
           />
         ))}
       </ListGroup>
@@ -184,6 +236,11 @@ const SectionList = ({ stage, buildingId }) => {
         onHide={() => setShowAssignModal(false)}
         sectionId={currentSectionId}
         buildingId={buildingId}
+      />
+      <ProjectTeamModal
+        show={showTeamModal}
+        onHide={handleCloseTeamModal}
+        teamMembers={teamMembers}
       />
     </>
   );
