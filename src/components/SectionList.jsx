@@ -82,6 +82,7 @@ const SectionList = ({ stage, buildingId }) => {
       );
       setSections(updatedSections);
       setShowEditModal(false);
+      fetchSections();
     } catch (error) {
       console.error("Ошибка при сохранении изменений:", error);
     }
@@ -111,6 +112,7 @@ const SectionList = ({ stage, buildingId }) => {
     setEditableSection((prev) => ({ ...prev, [name]: value }));
   };
 
+  //Функция добавить раздел
   const handleAddSection = async () => {
     try {
       const response = await axios.post("/sections", {
@@ -126,11 +128,12 @@ const SectionList = ({ stage, buildingId }) => {
         startDate: "",
         endDate: "",
       });
+      fetchSections();
     } catch (error) {
       console.error("Ошибка при добавлении раздела:", error);
     }
   };
-
+  // Функция загрузки разделов по шаблону
   const handleLoadTemplate = async (template) => {
     try {
       await axios.post(`/sections/loadTemplate`, {
@@ -138,7 +141,7 @@ const SectionList = ({ stage, buildingId }) => {
         buildingId,
         sections: template,
       });
-      fetchSections(); // Перезагрузить разделы после обновления
+      fetchSections();
       setShowTemplateModal(false);
     } catch (error) {
       console.error("Ошибка при загрузке шаблона:", error);

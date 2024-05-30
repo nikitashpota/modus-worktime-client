@@ -39,9 +39,10 @@ const SectionListItem = ({
       </div>
       <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
         <Button
-          variant="outline-info"
+          variant="outline-secondary"
           onClick={() => onShowTeam(section.id)}
           style={{ position: "relative" }}
+          disabled={section.userCount > 0 ? false : true}
         >
           <People />
           {section.userCount > 0 && (
