@@ -5,8 +5,8 @@ import SectionListItem from "./SectionListItem";
 import AddSectionModal from "./AddSectionModal";
 import EditSectionModal from "./EditSectionModal";
 import LoadTemplateModal from "./LoadTemplateModal";
-import ProjectTeamModal from "./ProjectTeamModal";
 import AssignUserToSectionModal from "./AssignUserToSectionModal";
+import ProjectTeamModal from "./ProjectTeamModal";
 import templates from "../services/templates.json";
 
 const SectionList = ({ stage, buildingId }) => {
@@ -31,9 +31,6 @@ const SectionList = ({ stage, buildingId }) => {
     endDate: "",
   });
 
-  const [showTeamModal, setShowTeamModal] = useState(false);
-  const [teamMembers, setTeamMembers] = useState([]);
-
   useEffect(() => {
     fetchSections();
   }, [stage, buildingId, filter]);
@@ -41,9 +38,24 @@ const SectionList = ({ stage, buildingId }) => {
   const fetchSections = async () => {
     try {
       const response = await axios.get(
-        `/sections//by-stage-building?stage=${stage}&buildingId=${buildingId}`
+        `/sections/by-stage-building?stage=${stage}&buildingId=${buildingId}`
       );
-      const sortedSections = response.data.sort((a, b) =>
+      const sectionsData = response.data;
+
+      // Fetch user count for each section
+      const sectionsWithUserCount = await Promise.all(
+        sectionsData.map(async (section) => {
+          const userCountResponse = await axios.get(
+            `/sections/${section.id}/assigned-users/count`
+          );
+          return {
+            ...section,
+            userCount: userCountResponse.data.count,
+          };
+        })
+      );
+
+      const sortedSections = sectionsWithUserCount.sort((a, b) =>
         a.sectionCode.localeCompare(b.sectionCode)
       );
       setSections(sortedSections);
@@ -53,36 +65,6 @@ const SectionList = ({ stage, buildingId }) => {
     } catch (error) {
       console.error("Ошибка при получении разделов:", error);
     }
-  };
-
-  // Функция для открытия модального окна и загрузки данных
-  const handleShowTeam = async (sectionId) => {
-    try {
-      const response = await axios.get(`/sections/${sectionId}/assigned-users`);
-      const users = response.data;
-      // Группировка пользователей по департаменту и сортировка по фамилии
-      const groupedUsers = users.reduce((acc, user) => {
-        const { department } = user;
-        if (!acc[department]) acc[department] = [];
-        acc[department].push(user);
-        return acc;
-      }, {});
-
-      for (const dept in groupedUsers) {
-        groupedUsers[dept].sort((a, b) => a.lastName.localeCompare(b.lastName));
-      }
-
-      setTeamMembers(groupedUsers);
-      setShowTeamModal(true);
-    } catch (error) {
-      console.error("Ошибка при получении пользователей:", error);
-    }
-  };
-
-  // Функция для закрытия модального окна
-  const handleCloseTeamModal = () => {
-    setShowTeamModal(false);
-    setTeamMembers([]);
   };
 
   const handleEdit = (sectionId) => {
@@ -115,7 +97,6 @@ const SectionList = ({ stage, buildingId }) => {
   };
 
   const handleAddUser = (sectionId) => {
-    // console.log("Add user to section", sectionId);
     setCurrentSectionId(sectionId);
     setShowAssignModal(true);
   };
@@ -152,7 +133,6 @@ const SectionList = ({ stage, buildingId }) => {
 
   const handleLoadTemplate = async (template) => {
     try {
-      console.log(stage, buildingId, template);
       await axios.post(`/sections/loadTemplate`, {
         stage,
         buildingId,
@@ -167,6 +147,39 @@ const SectionList = ({ stage, buildingId }) => {
 
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
+  };
+
+  const [showTeamModal, setShowTeamModal] = useState(false);
+  const [teamMembers, setTeamMembers] = useState([]);
+
+  // Функция для открытия модального окна и загрузки данных
+  const handleShowTeam = async (sectionId) => {
+    try {
+      const response = await axios.get(`/sections/${sectionId}/assigned-users`);
+      const users = response.data;
+      // Группировка пользователей по департаменту и сортировка по фамилии
+      const groupedUsers = users.reduce((acc, user) => {
+        const { department } = user;
+        if (!acc[department]) acc[department] = [];
+        acc[department].push(user);
+        return acc;
+      }, {});
+
+      for (const dept in groupedUsers) {
+        groupedUsers[dept].sort((a, b) => a.lastName.localeCompare(b.lastName));
+      }
+
+      setTeamMembers(groupedUsers);
+      setShowTeamModal(true);
+    } catch (error) {
+      console.error("Ошибка при получении пользователей:", error);
+    }
+  };
+
+  // Функция для закрытия модального окна
+  const handleCloseTeamModal = () => {
+    setShowTeamModal(false);
+    setTeamMembers([]);
   };
 
   return (

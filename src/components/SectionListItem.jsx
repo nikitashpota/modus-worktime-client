@@ -1,5 +1,5 @@
 import React from "react";
-import { ListGroup, Button } from "react-bootstrap";
+import { ListGroup, Button, Badge } from "react-bootstrap";
 import { Trash, PersonPlus, Pencil, People } from "react-bootstrap-icons";
 
 const SectionListItem = ({
@@ -39,10 +39,20 @@ const SectionListItem = ({
       </div>
       <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
         <Button
-          variant="outline-primary"
+          variant="outline-info"
           onClick={() => onShowTeam(section.id)}
+          style={{ position: "relative" }}
         >
           <People />
+          {section.userCount > 0 && (
+            <Badge
+              style={{ position: "absolute", top: "60%", left: "60%" }}
+              pill
+              variant="primary"
+            >
+              {section.userCount}
+            </Badge>
+          )}
         </Button>
         <Button variant="outline-success" onClick={() => onAddUser(section.id)}>
           <PersonPlus />
