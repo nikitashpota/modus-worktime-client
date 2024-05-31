@@ -16,7 +16,7 @@ const Header = () => {
     try {
       const response = await axios.get(`/users/user/${userId}`);
       const role = response.data.role;
-      if (userRole !== role) {
+      if (role && userRole !== role) {
         localStorage.setItem("role", role);
         setUserRole(role);
       }
