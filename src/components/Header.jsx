@@ -6,21 +6,24 @@ import "./Header.css";
 import axios from "../services/axios";
 
 const Header = () => {
-  const { isAuthenticated, logout, userId } = useAuth();
+  const { isAuthenticated, logout, userId, userRole, setUserRole } = useAuth();
 
-  // useEffect(() => {
-  //   if (userId) fetchUserRole();
-  // }, [userId]);
+  useEffect(() => {
+    if (userId) fetchUserRole();
+  }, [userId]);
 
-  // const fetchUserRole = async () => {
-  //   try {
-  //     const response = await axios.get(`/users/user/${userId}`);
-  //     const role = response.data.role;
-  //     localStorage.setItem("role", role);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+  const fetchUserRole = async () => {
+    try {
+      const response = await axios.get(`/users/user/${userId}`);
+      const role = response.data.role;
+      if (userRole !== role) {
+        localStorage.setItem("role", role);
+        setUserRole(role);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Navbar expand="lg" className="custom-navbar">
