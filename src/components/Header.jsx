@@ -1,11 +1,26 @@
-import React from "react";
+import { useEffect } from "react";
 import { Container, Navbar, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useAuth } from "../services/AuthContext"; // Используйте контекст аутентификации
 import "./Header.css";
+import axios from "../services/axios";
 
 const Header = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, userId } = useAuth();
+
+  useEffect(() => {
+    if (userId) fetchUserRole();
+  }, [userId]);
+
+  const fetchUserRole = async () => {
+    try {
+      const response = await axios.get(`/users/user/${userId}`);
+      const role = response.data.role;
+      localStorage.setItem("role", role);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Navbar expand="lg" className="custom-navbar">

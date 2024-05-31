@@ -92,6 +92,7 @@ const SectionList = ({ stage, buildingId }) => {
     try {
       await axios.delete(`/sections/${id}`);
       setFilteredSections(sections.filter((section) => section.id !== id));
+      fetchSections();
     } catch (error) {
       console.error("Ошибка при удалении раздела:", error);
     }

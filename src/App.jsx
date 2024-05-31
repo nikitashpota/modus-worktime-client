@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
@@ -70,7 +70,10 @@ function App() {
                   path="/reset-password/:token"
                   element={<ResetPasswordForm />}
                 />
-                <Route path="/reset-password" element={<PasswordResetRequest />} />
+                <Route
+                  path="/reset-password"
+                  element={<PasswordResetRequest />}
+                />
                 <Route
                   path="/financial-reports"
                   element={<FinancialReports />}

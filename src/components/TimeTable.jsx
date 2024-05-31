@@ -99,13 +99,18 @@ const TimeTable = () => {
                 <th
                   key={index}
                   style={{
-                    backgroundColor:
+                    background:
                       formatDateWithWeekday(date) ===
                       formatDateWithWeekday(today)
-                        ? "#c7ccc985"
+                        ? "linear-gradient(to right, #333399, #252525)"
                         : "transparent",
                     textAlign: "center",
                     minWidth: "110px",
+                    color:
+                      formatDateWithWeekday(date) ===
+                      formatDateWithWeekday(today)
+                        ? "white"
+                        : "black",
                   }}
                 >
                   {formatDateWithWeekday(date)}

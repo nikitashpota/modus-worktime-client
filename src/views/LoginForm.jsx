@@ -1,9 +1,17 @@
 import { useState } from "react";
-import { Form, Button, Card, Container, Row, Col, InputGroup } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Card,
+  Container,
+  Row,
+  Col,
+  InputGroup,
+} from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../services/axios";
 import { useAuth } from "../services/AuthContext"; // Используйте контекст аутентификации
-import { EyeSlash, Eye } from "react-bootstrap-icons"; 
+import { EyeSlash, Eye } from "react-bootstrap-icons";
 
 function LoginForm() {
   const [username, setUsername] = useState("");
@@ -13,9 +21,7 @@ function LoginForm() {
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
-    // console.log("login start");
     event.preventDefault();
-    // console.log("login password", username, password);
     try {
       const response = await axios.post("/users/login", {
         username,
@@ -24,8 +30,6 @@ function LoginForm() {
 
       // Сохраняем полученный токен в localStorage
       login(response.data.token, response.data.role, response.data.id);
-      console.log(response.data.role, response.data.id);
-
       navigate("/");
     } catch (error) {
       if (error.response) {
