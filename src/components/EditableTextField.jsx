@@ -7,7 +7,7 @@ const EditableTextField = ({
   type = "text",
   label,
   name,
-  value,
+  value = "",
   onChange,
   options = null,
 }) => {

@@ -31,6 +31,12 @@
   text-align: left;
 }
 
+.table-responsive {
+  background-color: #f8f9fa;
+  padding: 8px;
+  border-radius: 4px;
+}
+
 /* Современная стилизация скроллбара */
 .table-responsive::-webkit-scrollbar {
   height: 8px;

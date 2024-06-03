@@ -194,6 +194,7 @@ const SectionList = ({ stage, buildingId }) => {
           display: "flex",
           flexDirection: "row",
           gap: "8px",
+          alignItems: "center",
         }}
       >
         <Button variant="outline-primary" onClick={() => setShowAddModal(true)}>
@@ -205,7 +206,8 @@ const SectionList = ({ stage, buildingId }) => {
         >
           Загрузить шаблон
         </Button>
-        <Form inline>
+        <div style={{ flexGrow: 1 }} />
+        <Form inline style={{ marginLeft: "auto" }}>
           <FormControl
             type="text"
             placeholder="Фильтр по коду раздела"
@@ -215,6 +217,7 @@ const SectionList = ({ stage, buildingId }) => {
           />
         </Form>
       </div>
+
       <ListGroup>
         {filteredSections.map((section) => (
           <SectionListItem

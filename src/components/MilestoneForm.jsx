@@ -72,7 +72,7 @@ const MilestoneForm = ({
           onClick={handleToggleShowCertified}
           style={{ width: "160px", marginBottom: "38px" }}
         >
-          {showOnlyCertified ? "Показать все" : "Показать с актом"}
+          {showOnlyCertified ? "Показать все" : "Показать с док."}
         </Button>
       </div>
       <ListGroup variant="flush">
@@ -126,15 +126,17 @@ const MilestoneForm = ({
                     handleToggleCertification(milestone);
                   }}
                 >
-                  {milestone.isCertified ? "Не актировать" : "Актировать"}
+                  {milestone.isCertified
+                    ? "Не документировать"
+                    : "Документировать"}
                 </Dropdown.Item>
                 {milestone.isCertified && (
                   <Dropdown.Item
                     onClick={() => handleOpenModal(milestone, "attachDocument")}
                   >
-                    {milestone?.documentUrl
-                      ? "Просмотреть акт"
-                      : "Приложить акт"}
+                    {milestone?.documentUrls
+                      ? "Просмотреть документы"
+                      : "Приложить документы"}
                   </Dropdown.Item>
                 )}
               </DropdownButton>

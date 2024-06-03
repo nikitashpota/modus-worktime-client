@@ -1,107 +1,159 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, ListGroup } from "react-bootstrap";
 import axios from "../services/axios";
 import { Document, Page, pdfjs } from "react-pdf";
+import { X } from "react-bootstrap-icons";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-pdf/dist/esm/Page/TextLayer.css";
+import "./AttachDocumentModal.css"; // подключение пользовательских стилей
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-const AttachDocumentModal = ({
-  show,
-  onHide,
-  milestone,
-  fetchMilestones,
-}) => {
-  const [file, setFile] = useState(null);
-  const [fileUrl, setFileUrl] = useState(null);
+const AttachDocumentModal = ({ show, onHide, milestone, fetchMilestones }) => {
+  const [files, setFiles] = useState([]);
+  const [fileUrls, setFileUrls] = useState([]);
 
   useEffect(() => {
-    console.log("documentUrl", milestone?.documentUrl);
-    if (show && milestone?.documentUrl) {
-      const fullUrl = `${import.meta.env.VITE_API_BASE_URL}/${
-        milestone.documentUrl
-      }`;
-      setFileUrl(fullUrl);
+    if (show && milestone?.documentUrls) {
+      let documentUrls = [];
+      if (typeof milestone.documentUrls === "string") {
+        try {
+          documentUrls = JSON.parse(milestone.documentUrls);
+        } catch (e) {
+          console.error("Error parsing documentUrls:", e);
+        }
+      } else if (Array.isArray(milestone.documentUrls)) {
+        documentUrls = milestone.documentUrls;
+      }
+      const fullUrls = documentUrls.map(
+        (url) =>
+          `${import.meta.env.VITE_API_BASE_URL}/${url.replace(/\\/g, "/")}`
+      );
+      setFileUrls(fullUrls);
+      setFiles([]);
     } else {
-      setFileUrl(null);
+      setFileUrls([]);
     }
   }, [show, milestone]);
 
   const handleFileChange = (event) => {
-    const newFile = event.target.files[0];
-    previewFile(newFile);
-    setFile(newFile);
+    const newFiles = Array.from(event.target.files);
+    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+    previewFiles(newFiles);
   };
 
-  const previewFile = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setFileUrl(reader.result);
-    };
+  const previewFiles = (files) => {
+    const newFileUrls = files.map((file) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      return new Promise((resolve) => {
+        reader.onloadend = () => {
+          resolve(reader.result);
+        };
+      });
+    });
+
+    Promise.all(newFileUrls).then((urls) => {
+      setFileUrls((prevUrls) => [...prevUrls, ...urls]);
+    });
+  };
+
+  const handleRemoveFile = async (index) => {
+    const fileUrl = fileUrls[index];
+    const fileName = fileUrl.split("/").pop(); // Получаем имя файла из URL
+
+    try {
+      await axios.post(`/milestones/${milestone.id}/remove-document`, {
+        fileName,
+      });
+      setFileUrls((prevUrls) => prevUrls.filter((_, i) => i !== index));
+      fetchMilestones(); // Обновить данные после удаления файла
+    } catch (error) {
+      console.error("Error removing document:", error);
+    }
   };
 
   const handleSubmit = async () => {
-    if (!file) {
-      alert("Please select a file first.");
-      return;
-    }
+    if (files.length > 0) {
+      console.log("files", files);
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append("documents", file);
+      });
 
-    const formData = new FormData();
-    formData.append("document", file);
+      // Добавляем существующие файлы, чтобы сервер мог сохранить их
+      const existingDocuments = fileUrls
+        .filter((url) => url.includes(`${import.meta.env.VITE_API_BASE_URL}`))
+        .map((url) => {
+          const parts = url.split("/");
+          const idx = parts.findIndex((part) => part === "uploads");
+          return parts.slice(idx).join("/");
+        });
 
-    try {
-      await axios.post(`/milestones/${milestone.id}/attach-document`, formData);
-      fetchMilestones();
-      onHide(); // Close modal after successful submission
-    } catch (error) {
-      console.error("Error uploading document:", error);
+      console.log("existingDocuments:", existingDocuments);
+      formData.append("existingDocuments", JSON.stringify(existingDocuments));
+
+      // Выводим содержимое formData в консоль
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value.name || value}`);
+      }
+
+      try {
+        await axios.post(
+          `/milestones/${milestone.id}/attach-documents`,
+          formData
+        );
+        fetchMilestones();
+      } catch (error) {
+        console.error("Error uploading documents:", error);
+      }
     }
+    onHide(); // Close modal after successful submission
   };
 
   return (
-    <Modal show={show} onHide={onHide} size="lg">
+    <Modal show={show} onHide={onHide} size="xl">
       <Modal.Header closeButton>
-        <Modal.Title>Приложить акт</Modal.Title>
+        <Modal.Title>Документы</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#f8f9fa",
-            // border: fileUrl ? "3px solid #0d6efd" : "3px solid red",
-            minHeight: "200px",
-            marginBottom: "10px",
-          }}
-        >
-          {fileUrl && (
-            <a href={fileUrl} target="_blank" rel="noopener noreferrer">
-              <Document file={fileUrl} onLoadSuccess={({ numPages }) => {}}>
-                <Page pageNumber={1} width={400} />
-              </Document>
-            </a>
-          )}
-        </div>
         <Form>
           <Form.Group controlId="formFile" className="mb-3">
-            <Form.Label>Выберите PDF файл</Form.Label>
+            <Form.Label>Выберите PDF файлы</Form.Label>
             <Form.Control
               type="file"
               accept="application/pdf"
+              multiple
               onChange={handleFileChange}
             />
           </Form.Group>
         </Form>
+        <div className="pdf-scroll-container">
+          {fileUrls.map((url, index) => (
+            <div className="pdf-thumbnail" key={index}>
+              <a href={url} target="_blank" rel="noopener noreferrer">
+                <Document file={url} onLoadSuccess={({ numPages }) => {}}>
+                  <Page pageNumber={1} width={150} />
+                </Document>
+              </a>
+              <Button
+                style={{ width: "30px", height: "30px", zIndex: "100" }}
+                variant="danger"
+                className="remove-btn"
+                onClick={() => handleRemoveFile(index)}
+              >
+                <X />
+              </Button>
+            </div>
+          ))}
+        </div>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide}>
-          Close
+          Закрыть
         </Button>
         <Button variant="primary" onClick={handleSubmit}>
-          Save Changes
+          Сохранить изменения
         </Button>
       </Modal.Footer>
     </Modal>
