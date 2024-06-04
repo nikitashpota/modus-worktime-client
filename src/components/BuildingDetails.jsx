@@ -147,7 +147,7 @@ const BuildingDetails = ({ building, handleIsUpdated }) => {
               onChange={handleChange}
             />
             <EditableTextField
-              label="Максимальная плотность застройки (кв.м/га)"
+              label="Максимальная плотность застройки (тыс. кв.м/га)"
               type="number"
               name="maxDensity"
               value={_building.maxDensity}
