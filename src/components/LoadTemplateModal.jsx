@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Modal, Button, ListGroup } from "react-bootstrap";
+import { Modal, Button, ListGroup, Form } from "react-bootstrap";
 import * as XLSX from "xlsx";
 
 const LoadTemplateModal = ({ show, onHide, onLoadTemplate }) => {
   const [fileData, setFileData] = useState([]);
+  const [action, setAction] = useState("add");
 
   const handleFile = (e) => {
     const file = e.target.files[0];
@@ -21,15 +22,22 @@ const LoadTemplateModal = ({ show, onHide, onLoadTemplate }) => {
   };
 
   const formatData = (data) => {
-    return data
-      .slice(1)
-      .filter((row) => row.length === 4 && row.every((cell) => cell != null))
-      .map((row) => ({
+    return data.slice(1).map((row) => {
+      const modifications = row
+        .slice(4)
+        .filter((cell) => cell != null)
+        .map((date, index) => ({
+          number: index + 1,
+          date: formatDate(date),
+        }));
+      return {
         sectionCode: row[0],
         sectionName: row[1],
         startDate: formatDate(row[2]),
         endDate: formatDate(row[3]),
-      }));
+        modifications,
+      };
+    });
   };
 
   const formatDate = (date) => {
@@ -40,7 +48,7 @@ const LoadTemplateModal = ({ show, onHide, onLoadTemplate }) => {
   };
 
   const handleSubmit = () => {
-    onLoadTemplate(fileData);
+    onLoadTemplate(fileData, action);
     onHide();
   };
 
@@ -51,6 +59,18 @@ const LoadTemplateModal = ({ show, onHide, onLoadTemplate }) => {
       </Modal.Header>
       <Modal.Body>
         <input type="file" accept=".xlsx, .xls" onChange={handleFile} />
+        <Form.Group style={{ marginTop: "16px" }}>
+          <Form.Label>Выберите действие</Form.Label>
+          <Form.Control
+            as="select"
+            value={action}
+            onChange={(e) => setAction(e.target.value)}
+          >
+            <option value="add">Добавить</option>
+            <option value="delete">Удалить все и добавить</option>
+            <option value="overwrite">Перезаписать существующие</option>
+          </Form.Control>
+        </Form.Group>
         {fileData.length > 0 && (
           <ListGroup style={{ marginTop: "16px" }}>
             {fileData.map((template, index) => (

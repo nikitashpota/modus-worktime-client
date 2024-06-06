@@ -23,12 +23,15 @@ const SectionList = ({ stage, buildingId }) => {
     sectionName: "",
     startDate: "",
     endDate: "",
+    modifications: [],
+    newModificationDate: "",
   });
   const [newSection, setNewSection] = useState({
     sectionCode: "",
     sectionName: "",
     startDate: "",
     endDate: "",
+    modifications: [],
   });
 
   useEffect(() => {
@@ -51,6 +54,7 @@ const SectionList = ({ stage, buildingId }) => {
           return {
             ...section,
             userCount: userCountResponse.data.count,
+            modifications: section.modifications || [], // Ensure modifications is always an array
           };
         })
       );
@@ -69,7 +73,10 @@ const SectionList = ({ stage, buildingId }) => {
 
   const handleEdit = (sectionId) => {
     const section = sections.find((sec) => sec.id === sectionId);
-    setEditableSection(section);
+    setEditableSection({
+      ...section,
+      modifications: section.modifications || [], // Ensure modifications is always an array
+    });
     setShowEditModal(true);
   };
 
@@ -86,6 +93,41 @@ const SectionList = ({ stage, buildingId }) => {
     } catch (error) {
       console.error("Ошибка при сохранении изменений:", error);
     }
+  };
+
+  const handleAddModification = async () => {
+    if (!editableSection.newModificationDate) return;
+
+    const url = `/sections/${editableSection.id}/add-modification`;
+    try {
+      await axios.post(url, { date: editableSection.newModificationDate });
+      const updatedSection = {
+        ...editableSection,
+        modifications: [
+          ...editableSection.modifications,
+          { date: editableSection.newModificationDate },
+        ],
+        newModificationDate: "",
+      };
+      setEditableSection(updatedSection);
+    } catch (error) {
+      console.error("Ошибка при добавлении изменения:", error);
+    }
+  };
+
+  const handleDeleteModification = (index) => {
+    const updatedModifications = editableSection.modifications
+      .filter((_, idx) => idx !== index)
+      .map((mod, idx) => ({
+        ...mod,
+        number: idx + 1,
+      }));
+
+    const updatedSection = {
+      ...editableSection,
+      modifications: updatedModifications,
+    };
+    setEditableSection(updatedSection);
   };
 
   const handleDelete = async (id) => {
@@ -110,10 +152,22 @@ const SectionList = ({ stage, buildingId }) => {
 
   const handleChangeEditSection = (e) => {
     const { name, value } = e.target;
-    setEditableSection((prev) => ({ ...prev, [name]: value }));
+
+    if (name.startsWith("modifications")) {
+      const [_, index, field] = name.split(/[.[\]]/).filter(Boolean);
+      const updatedModifications = editableSection.modifications.map(
+        (mod, idx) =>
+          idx === parseInt(index) ? { ...mod, [field]: value } : mod
+      );
+      setEditableSection((prev) => ({
+        ...prev,
+        modifications: updatedModifications,
+      }));
+    } else {
+      setEditableSection((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
-  //Функция добавить раздел
   const handleAddSection = async () => {
     try {
       const response = await axios.post("/sections", {
@@ -128,19 +182,20 @@ const SectionList = ({ stage, buildingId }) => {
         sectionName: "",
         startDate: "",
         endDate: "",
+        modifications: [],
       });
       fetchSections();
     } catch (error) {
       console.error("Ошибка при добавлении раздела:", error);
     }
   };
-  // Функция загрузки разделов по шаблону
-  const handleLoadTemplate = async (template) => {
+  const handleLoadTemplate = async (templates, action) => {
     try {
       await axios.post(`/sections/loadTemplate`, {
         stage,
         buildingId,
-        sections: template,
+        sections: templates,
+        action,
       });
       fetchSections();
       setShowTemplateModal(false);
@@ -156,12 +211,10 @@ const SectionList = ({ stage, buildingId }) => {
   const [showTeamModal, setShowTeamModal] = useState(false);
   const [teamMembers, setTeamMembers] = useState([]);
 
-  // Функция для открытия модального окна и загрузки данных
   const handleShowTeam = async (sectionId) => {
     try {
       const response = await axios.get(`/sections/${sectionId}/assigned-users`);
       const users = response.data;
-      // Группировка пользователей по департаменту и сортировка по фамилии
       const groupedUsers = users.reduce((acc, user) => {
         const { department } = user;
         if (!acc[department]) acc[department] = [];
@@ -180,7 +233,6 @@ const SectionList = ({ stage, buildingId }) => {
     }
   };
 
-  // Функция для закрытия модального окна
   const handleCloseTeamModal = () => {
     setShowTeamModal(false);
     setTeamMembers([]);
@@ -243,6 +295,8 @@ const SectionList = ({ stage, buildingId }) => {
         section={editableSection}
         onChange={handleChangeEditSection}
         onSave={handleSaveChanges}
+        onAddModification={handleAddModification}
+        onDeleteModification={handleDeleteModification}
       />
       <LoadTemplateModal
         show={showTemplateModal}

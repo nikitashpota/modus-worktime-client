@@ -1,5 +1,11 @@
 import React from "react";
-import { ListGroup, Button, Badge } from "react-bootstrap";
+import {
+  ListGroup,
+  Button,
+  Badge,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
 import { Trash, PersonPlus, Pencil, People } from "react-bootstrap-icons";
 
 const SectionListItem = ({
@@ -20,6 +26,66 @@ const SectionListItem = ({
     return `${day}.${month}.${year}`;
   };
 
+  const renderModifications = () => {
+    const endDate = formatDate(section.endDate);
+    if (!section.modifications || section.modifications.length === 0) {
+      return (
+        <OverlayTrigger
+          placement="top"
+          overlay={
+            <Tooltip>
+              <div>{`Дата окончания: ${endDate}`}</div>
+            </Tooltip>
+          }
+        >
+          <div>{endDate}</div>
+        </OverlayTrigger>
+      );
+    }
+
+    const latestDate = new Date(section.endDate);
+    let latestModification = {
+      number: 0,
+      date: latestDate,
+    };
+
+    section.modifications.forEach((mod, index) => {
+      const modDate = new Date(mod.date);
+      if (modDate > latestModification.date) {
+        latestModification = { number: mod.number, date: modDate };
+      }
+    });
+
+    return (
+      <OverlayTrigger
+        placement="top"
+        overlay={
+          <Tooltip>
+            <div>{`Дата окончания: ${endDate}`}</div>
+            {section.modifications.map((mod, index) => (
+              <div key={index}>
+                {`Изм. ${mod.number}: ${new Date(mod.date).toLocaleDateString(
+                  "ru-RU"
+                )}`}
+              </div>
+            ))}
+          </Tooltip>
+        }
+      >
+        <div>
+          {latestModification.number > 0 ? (
+            <>
+              Изм. {latestModification.number} <br />
+              {formatDate(latestModification.date)}
+            </>
+          ) : (
+            <>{formatDate(latestModification.date)}</>
+          )}
+        </div>
+      </OverlayTrigger>
+    );
+  };
+
   return (
     <ListGroup.Item
       className="d-flex justify-content-between align-items-center"
@@ -35,7 +101,7 @@ const SectionListItem = ({
         {formatDate(section.startDate)}
       </div>
       <div style={{ minWidth: "100px", padding: "0 10px" }}>
-        {formatDate(section.endDate)}
+        {renderModifications()}
       </div>
       <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
         <Button
