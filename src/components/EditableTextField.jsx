@@ -49,7 +49,7 @@ const EditableTextField = ({
         <Form.Control
           as="textarea"
           name={name}
-          value={inputValue}
+          value={inputValue || ""}
           onChange={handleInputChange}
           rows={3}
           readOnly={!isEditable}
@@ -58,7 +58,7 @@ const EditableTextField = ({
         <Form.Control
           as="select"
           name={name}
-          value={inputValue}
+          value={inputValue || null}
           onChange={handleInputChange}
           disabled={!isEditable}
           style={{ whiteSpace: "normal", height: "auto", maxWidth: "100%" }}
@@ -77,7 +77,7 @@ const EditableTextField = ({
         <Form.Control
           type={type === "number" ? "number" : "text"}
           name={name}
-          value={inputValue}
+          value={inputValue || 0}
           onChange={handleInputChange}
           readOnly={!isEditable}
         />
