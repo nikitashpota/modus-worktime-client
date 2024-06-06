@@ -117,7 +117,7 @@ const TimeTable = () => {
   return (
     <>
       <Row className="mb-3" style={{ width: "100%" }}>
-        <Col>
+        <Col style={{ maxWidth: "230px" }}>
           <Form.Group>
             <Form.Label>Начало периода</Form.Label>
             <Form.Control
@@ -127,7 +127,7 @@ const TimeTable = () => {
             />
           </Form.Group>
         </Col>
-        <Col>
+        <Col style={{ maxWidth: "230px" }}>
           <Form.Group>
             <Form.Label>Окончание периода</Form.Label>
             <Form.Control
