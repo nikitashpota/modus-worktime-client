@@ -5,10 +5,11 @@ import { useAuth } from "../services/AuthContext";
 import {
   Hourglass,
   Buildings,
-  Grid3x3,
+  ClipboardData,
   Person,
   People,
-  PiggyBank
+  PiggyBank,
+  FileEarmarkRichtext,
 } from "react-bootstrap-icons"; // Импортируйте нужные иконки
 import "./Sidebar.css"; // Предполагается, что стили будут в этом файле
 
@@ -43,7 +44,6 @@ const Sidebar = ({ isCollapsed }) => {
       >
         Работа
       </SidebarItem>
-
       <SidebarItem
         to="/building"
         icon={<Buildings size={20} />}
@@ -51,24 +51,27 @@ const Sidebar = ({ isCollapsed }) => {
       >
         Объекты
       </SidebarItem>
-
       <SidebarItem
         to="/director"
-        icon={<Grid3x3 size={20} />}
+        icon={<ClipboardData size={20} />}
         isCollapsed={isCollapsed}
       >
         Отчеты
       </SidebarItem>
-
       <SidebarItem
-        icon={<PiggyBank size={20} />}//{<img src="/rub.svg" width="26" height="26" alt="rub" />}
+        icon={<PiggyBank size={20} />}
         isCollapsed={isCollapsed}
         to="/financial-reports"
-        
       >
         Финансы
       </SidebarItem>
-
+      <SidebarItem
+        to="/documents"
+        icon={<FileEarmarkRichtext size={20} />}
+        isCollapsed={isCollapsed}
+      >
+        Документы
+      </SidebarItem>
       <SidebarItem
         icon={<People size={20} />}
         isCollapsed={isCollapsed}

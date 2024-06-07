@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
@@ -11,14 +11,10 @@ import RegistrationForm from "./views/RegistrationForm";
 import ProfileEdit from "./views/ProfileEdit";
 import PasswordResetRequest from "./views/PasswordResetRequest";
 import ResetPasswordForm from "./views/ResetPasswordForm";
-
 import { AuthProvider } from "./services/AuthContext";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-
-import { ChevronCompactLeft } from "react-bootstrap-icons";
-import { ChevronCompactRight } from "react-bootstrap-icons";
+import { ChevronCompactLeft, ChevronCompactRight } from "react-bootstrap-icons";
 import BuildingPage from "./views/BuildingPage";
 import UserManagement from "./views/UserManagement";
 import FinancialReports from "./views/FinancialReports";
@@ -35,11 +31,15 @@ function App() {
       <AuthProvider>
         <div className="App d-flex flex-column" style={{ minHeight: "100vh" }}>
           <Header />
-          <div className="d-flex flex-row flex-grow-1">
+          <div
+            className="d-flex flex-row flex-grow-1"
+            style={{ marginTop: "56px" }}
+          >
             <div
               className={`sidebar-section d-flex flex-column ${
                 isSidebarCollapsed ? "collapsed" : ""
               }`}
+              style={{ position: "fixed", top: "56px", bottom: 0 }}
             >
               <Sidebar isCollapsed={isSidebarCollapsed} />
             </div>
@@ -47,6 +47,13 @@ function App() {
               onClick={toggleSidebar}
               className="sidebar-toggle"
               aria-label="Toggle sidebar"
+              style={{
+                position: "fixed",
+                top: "50%",
+                left: isSidebarCollapsed ? "60px" : "200px",
+                transform: "translateY(-50%)",
+                zIndex: 1000,
+              }}
             >
               {isSidebarCollapsed ? (
                 <ChevronCompactRight />
@@ -55,8 +62,14 @@ function App() {
               )}
             </button>
             <div
-              className="main-content flex-grow-1"
-              style={{ overflowY: "auto" }}
+              className={`main-content flex-grow-1 ${
+                isSidebarCollapsed ? "collapsed-content" : ""
+              }`}
+              style={{
+                marginLeft: isSidebarCollapsed ? "68px" : "208px",
+                overflowY: "auto",
+                paddingTop: "16px",
+              }}
             >
               <Routes>
                 <Route path="/" element={<EmployeeView />} />

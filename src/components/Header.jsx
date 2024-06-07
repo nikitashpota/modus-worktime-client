@@ -26,7 +26,7 @@ const Header = () => {
   };
 
   return (
-    <Navbar expand="lg" className="custom-navbar">
+    <Navbar expand="lg" className="custom-navbar fixed-top">
       <Container fluid>
         <Navbar.Brand className="text-white" style={{ userSelect: "none" }}>
           <img

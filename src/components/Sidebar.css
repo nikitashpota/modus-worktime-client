@@ -1,4 +1,13 @@
-/* Sidebar.css */
+.sidebar {
+  width: 200px;
+  transition: width 0.2s;
+  overflow: hidden; /* Добавлено для предотвращения прокрутки содержимого */
+}
+
+.sidebar.collapsed {
+  width: 60px;
+}
+
 .sidebar .nav-link {
   color: var(--bs-dark);
   padding: 1rem;
@@ -21,7 +30,12 @@
   display: none;
 }
 
-/* Дополнительно может потребоваться общий стиль для иконок */
-.react-bootstrap-icons {
-  vertical-align: bottom; /* Для корректного выравнивания с текстом */
+.main-content.collapsed-content {
+  margin-left: 60px;
+}
+
+.sidebar-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
 }

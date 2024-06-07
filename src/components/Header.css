@@ -1,12 +1,7 @@
-/* Header.css */
 .custom-navbar {
   background: linear-gradient(to right, #000000, #333399, #252525);
   background-color: #252525; /* Fallback for browsers that do not support gradients */
 }
-
-/* .custom-navbar {
-  background-color: #252525 !important;
-} */
 
 .custom-navbar .navbar-brand,
 .custom-navbar .btn {
