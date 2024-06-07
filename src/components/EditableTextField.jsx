@@ -77,7 +77,7 @@ const EditableTextField = ({
         <Form.Control
           type={type === "number" ? "number" : "text"}
           name={name}
-          value={inputValue || 0}
+          value={type === "number" ? inputValue || null : inputValue || ""}
           onChange={handleInputChange}
           readOnly={!isEditable}
         />
