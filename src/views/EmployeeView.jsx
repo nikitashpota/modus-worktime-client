@@ -4,7 +4,6 @@ import axios from "../services/axios"; // Путь к вашему файлу с
 import { useAuth } from "../services/AuthContext"; // Путь к вашему AuthContext
 import TimeTable from "../components/TimeTable";
 
-
 const EmployeeView = () => {
   // user - это объект с информацией о пользователе, например:
   const { userId } = useAuth();
@@ -32,22 +31,7 @@ const EmployeeView = () => {
   }, [userId]);
   return (
     <>
-      {/* <div style={{ marginBottom: "16px" }}>
-        <p style={{ fontWeight: "500" }}>Профиль пользователя:</p>
-        <Card style={{ width: "18rem", marginBottom: "16px" }}>
-          <ListGroup variant="flush">
-            <ListGroup.Item>
-              Имя: {`${user.lastName} ${user.firstName}`}
-            </ListGroup.Item>
-            <ListGroup.Item>Отдел: {user.department}</ListGroup.Item>
-            <ListGroup.Item>Email: {user.email}</ListGroup.Item>
-          </ListGroup>
-        </Card>
-      </div> */}
-      <div>
-        {/* <p style={{ fontWeight: "500" }}>Учет времени:</p> */}
-        <TimeTable />
-      </div>
+      <TimeTable />
     </>
   );
 };
