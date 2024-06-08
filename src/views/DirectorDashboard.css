@@ -1,0 +1,8 @@
+.custom-tabs .nav-link {
+  width: 230px;
+  text-align: center;
+}
+
+.custom-tabs .nav-item {
+  flex: 0 0 auto;
+}

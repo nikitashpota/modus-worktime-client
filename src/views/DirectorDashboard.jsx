@@ -5,6 +5,8 @@ import WorkLogSummaryTable from "../components/WorkLogSummaryTable";
 import EmployeeWorkloadTable from "../components/EmployeeWorkloadTable";
 import ProjectOverview from "../components/ProjectOverview";
 import DepartmentHoursChart from "../components/DepartmentHoursChart";
+import OverlappingSectionsChart from "../components/OverlappingSectionsChart";
+import "./DirectorDashboard.css"; // Подключение CSS
 
 const DirectorDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -15,7 +17,6 @@ const DirectorDashboard = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       const { data } = await axios.get("/users");
-      // console.log("users", data);
       setUsers(data);
     };
 
@@ -26,7 +27,6 @@ const DirectorDashboard = () => {
 
     const fetchSections = async () => {
       const { data } = await axios.get("/sections");
-      // console.log("sections", data);
       setSections(data);
     };
 
@@ -45,22 +45,31 @@ const DirectorDashboard = () => {
     <Tabs
       defaultActiveKey="workLogSummaryTable"
       id="uncontrolled-tab-example"
-      className="mb-3"
+      className="mb-3 custom-tabs"
     >
       <Tab
         eventKey="workLogSummaryTable"
-        title="День-час"
+        title="Таблица дней-часов"
+        className="custom-tab"
       >
         <WorkLogSummaryTable />
       </Tab>
-      <Tab eventKey="employeeWorkloadTable" title="Объект-проценты">
+      <Tab
+        eventKey="employeeWorkloadTable"
+        title="Таблица объектов (%)"
+        className="custom-tab"
+      >
         <EmployeeWorkloadTable
           users={users}
           buildings={buildings}
           workTimeLogs={workTimeLogs}
         />
       </Tab>
-      <Tab eventKey="erojectOverview" title="Польз.-задачи">
+      <Tab
+        eventKey="projectOverview"
+        title="Таблица задач (польз.)"
+        className="custom-tab"
+      >
         <ProjectOverview
           users={users}
           buildings={buildings}
@@ -68,12 +77,23 @@ const DirectorDashboard = () => {
           workTimeLogs={workTimeLogs}
         />
       </Tab>
-      <Tab eventKey="departmentHoursChart" title="Отдел-часы">
+      <Tab
+        eventKey="departmentHoursChart"
+        title="График часов (объекты)"
+        className="custom-tab"
+      >
         <DepartmentHoursChart
           users={users}
           buildings={buildings}
           workTimeLogs={workTimeLogs}
         />
+      </Tab>
+      <Tab
+        eventKey="overlappingSectionsChart"
+        title="График Ганта (Разделы)"
+        className="custom-tab"
+      >
+        <OverlappingSectionsChart users={users} />
       </Tab>
     </Tabs>
   );

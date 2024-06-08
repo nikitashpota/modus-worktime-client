@@ -189,6 +189,7 @@ const SectionList = ({ stage, buildingId }) => {
       console.error("Ошибка при добавлении раздела:", error);
     }
   };
+  
   const handleLoadTemplate = async (templates, action) => {
     try {
       await axios.post(`/sections/loadTemplate`, {
@@ -303,6 +304,7 @@ const SectionList = ({ stage, buildingId }) => {
         onHide={() => setShowTemplateModal(false)}
         templates={templates}
         onLoadTemplate={handleLoadTemplate}
+        fetchSections={fetchSections}
       />
 
       <AssignUserToSectionModal

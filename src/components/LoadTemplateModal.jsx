@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Modal, Button, ListGroup, Form } from "react-bootstrap";
 import * as XLSX from "xlsx";
+import { parse, format } from "date-fns";
 
-const LoadTemplateModal = ({ show, onHide, onLoadTemplate }) => {
+const LoadTemplateModal = ({ show, onHide, onLoadTemplate, fetchSections }) => {
   const [fileData, setFileData] = useState([]);
   const [action, setAction] = useState("add");
 
@@ -22,33 +23,42 @@ const LoadTemplateModal = ({ show, onHide, onLoadTemplate }) => {
   };
 
   const formatData = (data) => {
-    return data.slice(1).map((row) => {
-      const modifications = row
-        .slice(4)
-        .filter((cell) => cell != null)
-        .map((date, index) => ({
-          number: index + 1,
-          date: formatDate(date),
-        }));
-      return {
-        sectionCode: row[0],
-        sectionName: row[1],
-        startDate: formatDate(row[2]),
-        endDate: formatDate(row[3]),
-        modifications,
-      };
-    });
+    console.log(data);
+    return data
+      .slice(1)
+      .filter((row) => row.length > 0) // Фильтрация пустых строк
+      .map((row) => {
+        const modifications = row
+          .slice(4)
+          .filter((cell) => cell != null)
+          .map((date, index) => ({
+            number: index + 1,
+            date: formatDate(date),
+          }));
+        return {
+          sectionCode: row[0],
+          sectionName: row[1],
+          startDate: formatDate(row[2]),
+          endDate: formatDate(row[3]),
+          modifications,
+        };
+      });
   };
 
   const formatDate = (date) => {
+    console.log(date);
+    if (!date) return;
     if (date instanceof Date) {
+      console.log(date.toISOString().slice(0, 10));
       return date.toISOString().slice(0, 10);
     }
-    return date; // Если уже в строковом формате
+    const parsedDate = parse(date, "M/d/yy", new Date());
+    return format(parsedDate, "yyyy-MM-dd");
   };
 
   const handleSubmit = () => {
     onLoadTemplate(fileData, action);
+    fetchSections();
     onHide();
   };
 
