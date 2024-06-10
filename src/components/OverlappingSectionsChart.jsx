@@ -61,7 +61,7 @@ const OverlappingSectionsChart = ({ users }) => {
         const end = new Date(endDate);
 
         return [
-          `${section.section.building.number}: ${sectionCode} (${stage})`,
+          `${section.section.building.name}: ${sectionCode} (${stage})`,
           start,
           end,
         ];
@@ -74,16 +74,16 @@ const OverlappingSectionsChart = ({ users }) => {
   const options = {
     timeline: {
       colorByRowLabel: true,
-      rowLabelStyle: { fontName: "Roboto", fontSize: 12, color: "#333" },
-      barLabelStyle: { fontName: "Roboto", fontSize: 12, color: "#333" },
+      rowLabelStyle: { fontName: "Segoe UI", fontSize: 14, color: "#333" },
+      barLabelStyle: { fontName: "Segoe UI", fontSize: 14, color: "#333" },
     },
     backgroundColor: "#ffffff",
     colors: ["#1c91c0", "#4374e0", "#e49307", "#e07103", "#e49307", "#1c91c0"],
     hAxis: {
       textStyle: {
         color: "#333",
-        fontSize: 12,
-        fontName: "Roboto",
+        fontSize: 14,
+        fontName: "Segoe UI",
         bold: false,
         italic: false,
       },
@@ -91,8 +91,8 @@ const OverlappingSectionsChart = ({ users }) => {
     vAxis: {
       textStyle: {
         color: "#333",
-        fontSize: 12,
-        fontName: "Roboto",
+        fontSize: 14,
+        fontName: "Segoe UI",
         bold: false,
         italic: false,
       },

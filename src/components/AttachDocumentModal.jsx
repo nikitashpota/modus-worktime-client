@@ -5,7 +5,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 import { X } from "react-bootstrap-icons";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-pdf/dist/esm/Page/TextLayer.css";
-import "./AttachDocumentModal.css"; // подключение пользовательских стилей
+import "./AttachDocumentModal.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -25,10 +25,13 @@ const AttachDocumentModal = ({ show, onHide, milestone, fetchMilestones }) => {
       } else if (Array.isArray(milestone.documentUrls)) {
         documentUrls = milestone.documentUrls;
       }
-      const fullUrls = documentUrls.map(
-        (url) =>
-          `${import.meta.env.VITE_API_BASE_URL}/${url.replace(/\\/g, "/")}`
-      );
+      const fullUrls = documentUrls.map((doc) => ({
+        name: doc.name,
+        url: `${import.meta.env.VITE_API_BASE_URL}/${doc.url.replace(
+          /\\/g,
+          "/"
+        )}`,
+      }));
       setFileUrls(fullUrls);
       setFiles([]);
     } else {
@@ -48,7 +51,7 @@ const AttachDocumentModal = ({ show, onHide, milestone, fetchMilestones }) => {
       reader.readAsDataURL(file);
       return new Promise((resolve) => {
         reader.onloadend = () => {
-          resolve(reader.result);
+          resolve({ name: file.name, url: reader.result });
         };
       });
     });
@@ -59,15 +62,15 @@ const AttachDocumentModal = ({ show, onHide, milestone, fetchMilestones }) => {
   };
 
   const handleRemoveFile = async (index) => {
-    const fileUrl = fileUrls[index];
-    const fileName = fileUrl.split("/").pop(); // Получаем имя файла из URL
+    const fileUrl = fileUrls[index].url;
+    const fileName = fileUrls[index].name;
 
     try {
       await axios.post(`/milestones/${milestone.id}/remove-document`, {
         fileName,
       });
       setFileUrls((prevUrls) => prevUrls.filter((_, i) => i !== index));
-      fetchMilestones(); // Обновить данные после удаления файла
+      fetchMilestones();
     } catch (error) {
       console.error("Error removing document:", error);
     }
@@ -75,28 +78,21 @@ const AttachDocumentModal = ({ show, onHide, milestone, fetchMilestones }) => {
 
   const handleSubmit = async () => {
     if (files.length > 0) {
-      console.log("files", files);
       const formData = new FormData();
       files.forEach((file) => {
         formData.append("documents", file);
       });
 
-      // Добавляем существующие файлы, чтобы сервер мог сохранить их
       const existingDocuments = fileUrls
-        .filter((url) => url.includes(`${import.meta.env.VITE_API_BASE_URL}`))
-        .map((url) => {
-          const parts = url.split("/");
-          const idx = parts.findIndex((part) => part === "uploads");
-          return parts.slice(idx).join("/");
-        });
+        .filter((url) =>
+          url.url.includes(`${import.meta.env.VITE_API_BASE_URL}`)
+        )
+        .map((url) => ({
+          name: url.name,
+          url: url.url.split(`${import.meta.env.VITE_API_BASE_URL}/`)[1],
+        }));
 
-      console.log("existingDocuments:", existingDocuments);
       formData.append("existingDocuments", JSON.stringify(existingDocuments));
-
-      // Выводим содержимое formData в консоль
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value.name || value}`);
-      }
 
       try {
         await axios.post(
@@ -108,7 +104,7 @@ const AttachDocumentModal = ({ show, onHide, milestone, fetchMilestones }) => {
         console.error("Error uploading documents:", error);
       }
     }
-    onHide(); // Close modal after successful submission
+    onHide();
   };
 
   return (
@@ -129,15 +125,15 @@ const AttachDocumentModal = ({ show, onHide, milestone, fetchMilestones }) => {
           </Form.Group>
         </Form>
         <div className="pdf-scroll-container">
-          {fileUrls.map((url, index) => (
+          {fileUrls.map((file, index) => (
             <div className="pdf-thumbnail" key={index}>
-              <a href={url} target="_blank" rel="noopener noreferrer">
-                <Document file={url} onLoadSuccess={({ numPages }) => {}}>
+              <a href={file.url} target="_blank" rel="noopener noreferrer">
+                <Document file={file.url} onLoadSuccess={({ numPages }) => {}}>
                   <Page pageNumber={1} width={150} />
                 </Document>
               </a>
+              <div className="pdf-name">{file.name}</div>
               <Button
-                style={{ width: "30px", height: "30px", zIndex: "100" }}
                 variant="danger"
                 className="remove-btn"
                 onClick={() => handleRemoveFile(index)}

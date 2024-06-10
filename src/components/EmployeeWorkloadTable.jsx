@@ -158,7 +158,6 @@ function EmployeeWorkloadTable({ users, buildings, workTimeLogs }) {
                   minWidth: "200px",
                   position: "sticky",
                   left: 0,
-                  background: "white",
                   zIndex: 1,
                 }}
               >
@@ -176,7 +175,6 @@ function EmployeeWorkloadTable({ users, buildings, workTimeLogs }) {
                   style={{
                     position: "sticky",
                     left: 0,
-                    background: "white",
                     zIndex: 1,
                   }}
                 >{`${user.lastName} ${user.firstName} (${user.department})`}</td>

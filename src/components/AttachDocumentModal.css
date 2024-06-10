@@ -7,6 +7,7 @@
 .pdf-thumbnail {
   position: relative;
   margin-right: 10px;
+  width: 150px;
 }
 
 .pdf-thumbnail a {
@@ -16,6 +17,11 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   overflow: hidden;
+}
+
+.pdf-thumbnail .pdf-name {
+  text-align: center;
+  margin-top: 5px;
 }
 
 .pdf-thumbnail .remove-btn {
@@ -28,4 +34,5 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 100;
 }
