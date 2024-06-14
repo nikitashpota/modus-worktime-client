@@ -29,10 +29,21 @@ const EmployeeView = () => {
 
     fetchUserData();
   }, [userId]);
-  return (
-    <>
-      <TimeTable />
-    </>
+  return userId ? (
+    <TimeTable />
+  ) : (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "calc(100vh - 230px)",
+      }}
+    >
+      <h5>
+        Вам необходимо войти под своей учетной записью или зарегестироваться.
+      </h5>
+    </div>
   );
 };
 

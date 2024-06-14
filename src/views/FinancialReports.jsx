@@ -39,7 +39,7 @@ const FinancialReports = () => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                height: "95%",
+                height: "calc(100vh - 230px)",
                 textAlign: "center",
               }}
             >
