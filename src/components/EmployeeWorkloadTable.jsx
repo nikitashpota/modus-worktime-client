@@ -159,6 +159,7 @@ function EmployeeWorkloadTable({ users, buildings, workTimeLogs }) {
                   position: "sticky",
                   left: 0,
                   zIndex: 1,
+                  backgroundColor: '#f8f9fa'
                 }}
               >
                 Фамилия И. (Отдел)
@@ -176,6 +177,7 @@ function EmployeeWorkloadTable({ users, buildings, workTimeLogs }) {
                     position: "sticky",
                     left: 0,
                     zIndex: 1,
+                    backgroundColor: '#f8f9fa'
                   }}
                 >{`${user.lastName} ${user.firstName} (${user.department})`}</td>
                 {sortBuildings.map((building) => {
