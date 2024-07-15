@@ -16,7 +16,7 @@ const getStatusStyle = (status) => {
     case "completed":
       return { color: "gray", text: "завершено" };
     case "pending":
-      return { color: "yellow", text: "в ожидании" };
+      return { color: "#d96004", text: "в ожидании" };
     default:
       return { color: "gray", text: "неизвестно" };
   }

@@ -71,7 +71,7 @@ const BuildingPage = () => {
       case "completed":
         return { color: "gray", text: "Завершено" };
       case "pending":
-        return { color: "yellow", text: "В ожидании" };
+        return { color: "#d96004", text: "В ожидании" };
       default:
         return { color: "gray", text: "Неизвестно" };
     }
