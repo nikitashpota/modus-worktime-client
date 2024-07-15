@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../services/axios";
-import { Tabs, Tab, Button, Badge } from "react-bootstrap";
+import { Tabs, Tab, Button, Badge, Dropdown } from "react-bootstrap";
 import BuildingDetails from "../components/BuildingDetails";
 import { Trash } from "react-bootstrap-icons";
 import SectionList from "../components/SectionList";
@@ -42,6 +42,15 @@ const BuildingPage = () => {
     }
   };
 
+  const handleStatusChange = async (newStatus) => {
+    try {
+      await axios.put(`/buildings/${buildingId}/status`, { status: newStatus });
+      setBuilding((prev) => ({ ...prev, status: newStatus }));
+    } catch (error) {
+      console.error("Ошибка при изменении статуса здания:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchBuilding = async () => {
       try {
@@ -55,9 +64,24 @@ const BuildingPage = () => {
     fetchBuilding();
   }, [isUpdated]);
 
+  const getStatusStyle = (status) => {
+    switch (status) {
+      case "active":
+        return { color: "green", text: "Активный" };
+      case "completed":
+        return { color: "gray", text: "Завершено" };
+      case "pending":
+        return { color: "yellow", text: "В ожидании" };
+      default:
+        return { color: "gray", text: "Неизвестно" };
+    }
+  };
+
   if (!building) {
     return <div>Загрузка данных о здании...</div>;
   }
+
+  const statusStyle = getStatusStyle(building.status);
 
   return (
     <div>
@@ -74,19 +98,90 @@ const BuildingPage = () => {
             <Badge style={{ marginRight: "16px" }}>{building.number}</Badge>
             {building.name}
           </h3>
-          <Button
-            variant="outline-danger"
-            onClick={() => setShowConfirmModal(true)}
-            style={{
-              display: userRole === "Проектировщик" ? "none" : "flex",
-              alignItems: "center",
-              gap: "6px",
-            }}
-          >
-            <Trash />
-            Удалить
-          </Button>
-
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <Dropdown>
+              <Dropdown.Toggle
+                variant="outline-secondary"
+                id="dropdown-status-toggle"
+                style={{ height: "38px", display: "flex", alignItems: "center", gap: "5px" }}
+              >
+                <div
+                  style={{
+                    width: "10px",
+                    height: "10px",
+                    borderRadius: "50%",
+                    backgroundColor: statusStyle.color,
+                    boxShadow: `0 0 4px ${statusStyle.color}`,
+                  }}
+                ></div>
+                <span style={{ color: statusStyle.color, fontWeight: "normal", fontSize: "16px" }}>
+                  {statusStyle.text}
+                </span>
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => handleStatusChange("active")}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                    <div
+                      style={{
+                        width: "10px",
+                        height: "10px",
+                        borderRadius: "50%",
+                        backgroundColor: "green",
+                        boxShadow: `0 0 4px green`,
+                      }}
+                    ></div>
+                    <span style={{ color: "green", fontWeight: "normal", fontSize: "16px" }}>
+                      Активный
+                    </span>
+                  </div>
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => handleStatusChange("completed")}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                    <div
+                      style={{
+                        width: "10px",
+                        height: "10px",
+                        borderRadius: "50%",
+                        backgroundColor: "gray",
+                        boxShadow: `0 0 4px gray`,
+                      }}
+                    ></div>
+                    <span style={{ color: "gray", fontWeight: "normal", fontSize: "16px" }}>
+                      Завершено
+                    </span>
+                  </div>
+                </Dropdown.Item>
+                {/* <Dropdown.Item onClick={() => handleStatusChange("pending")}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                    <div
+                      style={{
+                        width: "10px",
+                        height: "10px",
+                        borderRadius: "50%",
+                        backgroundColor: "yellow",
+                        boxShadow: `0 0 4px yellow`,
+                      }}
+                    ></div>
+                    <span style={{ color: "yellow", fontWeight: "normal", fontSize: "16px" }}>
+                      В ожидании
+                    </span>
+                  </div>
+                </Dropdown.Item> */}
+              </Dropdown.Menu>
+            </Dropdown>
+            <Button
+              variant="outline-danger"
+              onClick={() => setShowConfirmModal(true)}
+              style={{
+                display: userRole === "Проектировщик" ? "none" : "flex",
+                alignItems: "center",
+                gap: "6px",
+              }}
+            >
+              <Trash />
+              Удалить
+            </Button>
+          </div>
           {showConfirmModal && (
             <ConfirmDeleteModal
               show={showConfirmModal}
