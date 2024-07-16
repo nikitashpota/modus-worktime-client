@@ -6,6 +6,7 @@ import { useAuth } from "../services/AuthContext";
 import TimeTableCell from "./TimeTableCell";
 import { format, parseISO, subDays, addDays } from "date-fns";
 import "./TimeTable.css";
+import StatusBadge from "./StatusBadge";
 
 const TimeTable = () => {
   const { userId } = useAuth();
@@ -15,8 +16,17 @@ const TimeTable = () => {
   const [workTimeLogs, setWorkTimeLogs] = useState([]);
   const [buildingOptions, setBuildingOptions] = useState([]);
   const [sectionCodeOptions, setSectionCodeOptions] = useState([]);
+  const [statusOptions, setStatusOptions] = useState([
+    { label: "Активный", value: "active" },
+    { label: "В ожидании", value: "pending" },
+    { label: "Завершено", value: "completed" },
+  ]);
   const [selectedBuildings, setSelectedBuildings] = useState([]);
   const [selectedSectionCodes, setSelectedSectionCodes] = useState([]);
+  const [selectedStatuses, setSelectedStatuses] = useState([
+    { label: "Активный", value: "active" },
+    { label: "В ожидании", value: "pending" },
+  ]);
   const today = new Date();
   const sevenDaysAgo = subDays(today, 7);
   const twoDaysAhead = addDays(today, 2);
@@ -66,7 +76,7 @@ const TimeTable = () => {
 
   useEffect(() => {
     filterSections();
-  }, [selectedBuildings, selectedSectionCodes, sections]);
+  }, [selectedBuildings, selectedSectionCodes, selectedStatuses, sections]);
 
   const fetchSectionsAndLogs = async () => {
     if (userId) {
@@ -99,18 +109,28 @@ const TimeTable = () => {
 
   const filterSections = () => {
     let filtered = sections;
+
     if (selectedBuildings.length > 0) {
       const buildingNames = selectedBuildings.map((b) => b.value);
       filtered = filtered.filter((us) =>
         buildingNames.includes(us.section.building.name)
       );
     }
+
     if (selectedSectionCodes.length > 0) {
       const sectionCodes = selectedSectionCodes.map((sc) => sc.value);
       filtered = filtered.filter((us) =>
         sectionCodes.includes(us.section.sectionCode)
       );
     }
+
+    if (selectedStatuses.length > 0) {
+      const statusValues = selectedStatuses.map((s) => s.value);
+      filtered = filtered.filter((us) =>
+        statusValues.includes(us.section.building.status)
+      );
+    }
+
     setFilteredSections(filtered);
   };
 
@@ -159,6 +179,17 @@ const TimeTable = () => {
             />
           </Form.Group>
         </Col>
+        <Col>
+          <Form.Group>
+            <Form.Label>Фильтр по статусу</Form.Label>
+            <MultiSelect
+              options={statusOptions}
+              value={selectedStatuses}
+              onChange={setSelectedStatuses}
+              labelledBy="Выберите статус"
+            />
+          </Form.Group>
+        </Col>
       </Row>
 
       <div style={{ overflowX: "auto" }} className="table-responsive">
@@ -192,7 +223,14 @@ const TimeTable = () => {
           <tbody>
             {filteredSections.map((us) => (
               <tr key={us.section.id}>
-                <td className="first-column__width">
+                <td
+                  className="first-column__width"
+                  style={{ position: "relative" }}
+                >
+                  <StatusBadge
+                    status={us.section.building.status}
+                    position={{ top: "10px", right: "10px" }}
+                  />
                   <h5
                     style={{ fontWeight: 400, fontSize: 16 }}
                   >{`${us.section.building.number}`}</h5>
