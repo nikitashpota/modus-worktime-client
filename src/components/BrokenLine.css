@@ -1,0 +1,4 @@
+canvas {
+  cursor: pointer;
+  transition: transform 2s ease;
+}

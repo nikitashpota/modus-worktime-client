@@ -12,6 +12,7 @@ import {
   FileEarmarkRichtext,
 } from "react-bootstrap-icons"; // Импортируйте нужные иконки
 import "./Sidebar.css"; // Предполагается, что стили будут в этом файле
+import BrokenLine from "./BrokenLine";
 
 const SidebarItem = ({ to, icon, children, isCollapsed }) => (
   <Nav.Item className={isCollapsed ? "text-center" : ""}>

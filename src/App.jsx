@@ -14,10 +14,10 @@ import ResetPasswordForm from "./views/ResetPasswordForm";
 import { AuthProvider } from "./services/AuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import { ChevronCompactLeft, ChevronCompactRight } from "react-bootstrap-icons";
 import BuildingPage from "./views/BuildingPage";
 import UserManagement from "./views/UserManagement";
 import FinancialReports from "./views/FinancialReports";
+import BrokenLine from "./components/BrokenLine";
 
 function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
@@ -43,24 +43,19 @@ function App() {
             >
               <Sidebar isCollapsed={isSidebarCollapsed} />
             </div>
-            <button
+            {/* <button
+              className={`sidebar-toggle ${
+                isSidebarCollapsed ? "collapsed" : ""
+              }`}
               onClick={toggleSidebar}
-              className="sidebar-toggle"
               aria-label="Toggle sidebar"
-              style={{
-                position: "fixed",
-                top: "50%",
-                left: isSidebarCollapsed ? "60px" : "200px",
-                transform: "translateY(-50%)",
-                zIndex: 1000,
-              }}
-            >
-              {isSidebarCollapsed ? (
-                <ChevronCompactRight />
-              ) : (
-                <ChevronCompactLeft />
-              )}
-            </button>
+            >      <BrokenLine isSidebarCollapsed={isSidebarCollapsed} top="100px" left="100px" /></button> */}
+            <BrokenLine
+              isCollapsed={isSidebarCollapsed}
+              top="50%"
+              left={isSidebarCollapsed ? "60px" : "190px"}
+              toggleSidebar={toggleSidebar}
+            />
             <div
               className={`main-content flex-grow-1 ${
                 isSidebarCollapsed ? "collapsed-content" : ""

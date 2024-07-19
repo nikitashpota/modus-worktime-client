@@ -8,27 +8,63 @@
   overflow-y: auto;
 }
 
-
 .sidebar-section.collapsed {
   min-width: 67px !important; /* Минимальная ширина при свернутом состоянии */
 }
 
-/* .sidebar-section.expanded {
-  min-width: 200px !important;
-} */
-
 .sidebar-toggle {
+  position: fixed;
+  top: 50%;
+  left: calc(67px + 4px); /* Положение стрелки рядом с сайдбаром */
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none; /* Убирает фоновый цвет */
   border: none; /* Убирает границы */
-  color: #000000; /* Задает цвет иконок, настроить под цвет вашего дизайна */
-  cursor: pointer; /* Делает курсор в виде руки, указывая на интерактивность кнопки */
-  padding: 0.5rem; /* Добавляет небольшой отступ вокруг иконки */
-  height: auto; /* Убирает фиксированную высоту, позволяет кнопке определяться по высоте содержимого */
-  align-self: center; /* Выравнивание кнопки по центру, если родитель использует flex */
-  z-index: 100;
+  padding: 0; /* Убирает отступы */
 }
 
-/* Отключает полосу прокрутки для Sidebar в свернутом состоянии */
+/* .sidebar-toggle::before,
+.sidebar-toggle::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 20px;
+  background-color: black;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-toggle::before {
+  transform: rotate(0deg);
+  top: 10px;
+}
+
+.sidebar-toggle::after {
+  transform: rotate(0deg);
+  bottom: 10px;
+}
+
+.sidebar-toggle:hover::before {
+  transform: rotate(60deg) translate(-3px, 0);
+}
+
+.sidebar-toggle:hover::after {
+  transform: rotate(-60deg) translate(3px, 0);
+}
+
+.sidebar-toggle.collapsed::before {
+  transform: rotate(-60deg) translate(3px, 0);
+}
+
+.sidebar-toggle.collapsed::after {
+  transform: rotate(60deg) translate(-3px, 0);
+} */
+
 .sidebar-section {
   min-width: 200px !important;
   transition: min-width 0.3s ease; /* анимация изменения ширины */
@@ -37,4 +73,8 @@
 
 .custom-modal-size {
   max-width: 75%;
+}
+
+.main-content.collapsed-content {
+  margin-left: 68px;
 }

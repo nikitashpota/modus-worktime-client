@@ -1,6 +1,6 @@
 .sidebar {
   width: 200px;
-  transition: width 0.2s;
+  transition: width 0.3s;
   overflow: hidden; /* Добавлено для предотвращения прокрутки содержимого */
 }
 
