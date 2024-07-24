@@ -61,7 +61,7 @@ const BrokenLine = ({ isCollapsed, top, left, right, toggleSidebar }) => {
       height="40"
       style={{
         background: "transparent",
-        position: "absolute",
+        position: "fixed",
         top: top,
         left: left,
         right: right,

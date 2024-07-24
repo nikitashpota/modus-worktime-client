@@ -49,11 +49,12 @@ function App() {
               }`}
               onClick={toggleSidebar}
               aria-label="Toggle sidebar"
-            >      <BrokenLine isSidebarCollapsed={isSidebarCollapsed} top="100px" left="100px" /></button> */}
+            > 
+            */}
             <BrokenLine
               isCollapsed={isSidebarCollapsed}
               top="50%"
-              left={isSidebarCollapsed ? "60px" : "190px"}
+              left={isSidebarCollapsed ? "57px" : "190px"}
               toggleSidebar={toggleSidebar}
             />
             <div
@@ -61,7 +62,7 @@ function App() {
                 isSidebarCollapsed ? "collapsed-content" : ""
               }`}
               style={{
-                marginLeft: isSidebarCollapsed ? "68px" : "208px",
+                marginLeft: isSidebarCollapsed ? "67px" : "200px",
                 overflowY: "auto",
                 paddingTop: "16px",
               }}
