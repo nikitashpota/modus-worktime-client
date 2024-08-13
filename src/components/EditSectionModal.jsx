@@ -1,6 +1,8 @@
+// src/components/EditSectionModal.js
 import React from "react";
 import { Modal, Button, Form, FormControl } from "react-bootstrap";
 import { Trash } from "react-bootstrap-icons";
+import { statuses } from "../services/statuses";
 
 const EditSectionModal = ({
   show,
@@ -18,6 +20,21 @@ const EditSectionModal = ({
       </Modal.Header>
       <Modal.Body>
         <Form>
+          <Form.Group className="mb-3">
+            <Form.Label>Статус раздела</Form.Label>
+            <FormControl
+              as="select"
+              name="status"
+              value={section.status}
+              onChange={onChange}
+            >
+              {Object.entries(statuses).map(([key, { ru }]) => (
+                <option key={key} value={key}>
+                  {ru}
+                </option>
+              ))}
+            </FormControl>
+          </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Код раздела</Form.Label>
             <FormControl
@@ -48,7 +65,7 @@ const EditSectionModal = ({
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Дата окончания</Form.Label>
+            <Form.Label>Дата выпуска раздела</Form.Label>
             <FormControl
               type="date"
               name="endDate"

@@ -39,7 +39,7 @@ const AddSectionModal = ({ show, onHide, newSection, onChange, onAdd }) => {
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Дата окончания</Form.Label>
+            <Form.Label>Дата выпуска раздела</Form.Label>
             <FormControl
               type="date"
               name="endDate"

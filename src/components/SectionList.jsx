@@ -33,6 +33,7 @@ const SectionList = ({ stage, buildingId }) => {
     endDate: "",
     modifications: [],
   });
+  const [showModifications, setShowModifications] = useState(false);
 
   useEffect(() => {
     fetchSections();
@@ -45,7 +46,6 @@ const SectionList = ({ stage, buildingId }) => {
       );
       const sectionsData = response.data;
 
-      // Fetch user count for each section
       const sectionsWithUserCount = await Promise.all(
         sectionsData.map(async (section) => {
           const userCountResponse = await axios.get(
@@ -54,7 +54,7 @@ const SectionList = ({ stage, buildingId }) => {
           return {
             ...section,
             userCount: userCountResponse.data.count,
-            modifications: section.modifications || [], // Ensure modifications is always an array
+            modifications: section.modifications || [],
           };
         })
       );
@@ -75,7 +75,7 @@ const SectionList = ({ stage, buildingId }) => {
     const section = sections.find((sec) => sec.id === sectionId);
     setEditableSection({
       ...section,
-      modifications: section.modifications || [], // Ensure modifications is always an array
+      modifications: section.modifications || [],
     });
     setShowEditModal(true);
   };
@@ -189,7 +189,7 @@ const SectionList = ({ stage, buildingId }) => {
       console.error("Ошибка при добавлении раздела:", error);
     }
   };
-  
+
   const handleLoadTemplate = async (templates, action) => {
     try {
       await axios.post(`/sections/loadTemplate`, {
@@ -259,6 +259,13 @@ const SectionList = ({ stage, buildingId }) => {
         >
           Загрузить шаблон
         </Button>
+        <Button
+          style={{ width: "210px" }}
+          variant="outline-secondary"
+          onClick={() => setShowModifications(!showModifications)}
+        >
+          {showModifications ? "Свернуть историю" : "Развернуть историю"}
+        </Button>
         <div style={{ flexGrow: 1 }} />
         <Form inline style={{ marginLeft: "auto" }}>
           <FormControl
@@ -280,6 +287,7 @@ const SectionList = ({ stage, buildingId }) => {
             onEdit={handleEdit}
             onAddUser={handleAddUser}
             onShowTeam={handleShowTeam}
+            showModifications={showModifications}
           />
         ))}
       </ListGroup>
