@@ -59,7 +59,7 @@ const Sidebar = ({ isCollapsed }) => {
       >
         Отчеты
       </SidebarItem>
-      <SidebarItem
+      {/* <SidebarItem
         icon={<PiggyBank size={20} />}
         isCollapsed={isCollapsed}
         to="/financial-reports"
@@ -72,7 +72,7 @@ const Sidebar = ({ isCollapsed }) => {
         isCollapsed={isCollapsed}
       >
         Документы
-      </SidebarItem>
+      </SidebarItem> */}
       <SidebarItem
         icon={<People size={20} />}
         isCollapsed={isCollapsed}
@@ -80,13 +80,15 @@ const Sidebar = ({ isCollapsed }) => {
       >
         Персонал
       </SidebarItem>
-      <SidebarItem
-        to="/profile-edit"
-        icon={<Person size={20} />}
-        isCollapsed={isCollapsed}
-      >
-        Профиль
-      </SidebarItem>
+      <div style={{justifySelf: "end"}}>
+        <SidebarItem
+          to="/profile-edit"
+          icon={<Person size={20} />}
+          isCollapsed={isCollapsed}
+        >
+          Профиль
+        </SidebarItem>
+      </div>
     </Nav>
   );
 };

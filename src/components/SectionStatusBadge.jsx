@@ -13,11 +13,11 @@ const SectionStatusBadge = ({ status, position }) => {
   return (
     <div
       style={{
-        position: "absolute",
-        top: top ? top : "auto",
-        left: left ? left : "auto",
-        right: right ? right : "auto",
-        bottom: bottom ? bottom : "auto",
+        // position: "absolute",
+        // top: top ? top : "auto",
+        // left: left ? left : "auto",
+        // right: right ? right : "auto",
+        // bottom: bottom ? bottom : "auto",
         display: "flex",
         alignItems: "baseline",
         gap: "8px",

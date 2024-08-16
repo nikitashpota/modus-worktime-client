@@ -133,15 +133,22 @@ const SectionListItem = ({
     <>
       <ListGroup.Item
         className="d-flex justify-content-between align-items-end"
-        style={{ borderRight: "1px solid #dee2e6", position: "relative", minHeight: "65px" }}
+        style={{
+          borderRight: "1px solid #dee2e6",
+          position: "relative",
+          minHeight: "40px",
+        }}
       >
-        <SectionStatusBadge
-          status={section.status}
-          position={{ top: "10px", left: "10px" }}
-        />
-        <div style={{ minWidth: "180px", paddingRight: "10px" }}>
-          {section.sectionCode}
+        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+          <SectionStatusBadge
+            status={section.status}
+            position={{ top: "10px", left: "10px" }}
+          />
+          <div style={{ minWidth: "180px", paddingRight: "10px" }}>
+            {section.sectionCode}
+          </div>
         </div>
+
         <div style={{ flexGrow: 1, padding: "0 10px" }}>
           {section.sectionName}
         </div>
