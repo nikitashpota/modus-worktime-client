@@ -78,3 +78,29 @@
 .main-content.collapsed-content {
   margin-left: 67px;
 }
+
+/* Заголовки столбцов с тонким шрифтом */
+.thin-header th {
+  font-weight: 400;
+  background-color: "#f8f9fa";
+  text-align: center;
+}
+
+.column__text-center {
+  text-align: center;
+}
+
+.column__width-300 {
+  min-width: 300px;
+  max-width: 300px;
+}
+
+.column__width-400 {
+  min-width: 400px;
+  max-width: 400px;
+}
+
+.column__width-500 {
+  min-width: 500px;
+  max-width: 500px;
+}

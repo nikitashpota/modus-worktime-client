@@ -18,6 +18,8 @@ import BuildingPage from "./views/BuildingPage";
 import UserManagement from "./views/UserManagement";
 import FinancialReports from "./views/FinancialReports";
 import BrokenLine from "./components/BrokenLine";
+import TaskManagement from "./views/TaskManagement";
+import HomePage from "./views/HomePage";
 
 function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
@@ -68,7 +70,9 @@ function App() {
               }}
             >
               <Routes>
-                <Route path="/" element={<EmployeeView />} />
+                <Route path="/" element={<HomePage />} />
+                <Route path="/work-time" element={<EmployeeView />} />
+                <Route path="/task-view" element={<TaskManagement />} />
                 <Route path="/building" element={<ManagerView />} />
                 <Route path="/director" element={<DirectorDashboard />} />
                 <Route path="/auth" element={<LoginForm />} />

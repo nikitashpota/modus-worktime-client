@@ -196,7 +196,7 @@ const TimeTable = () => {
         <Table bordered className="table thin-header">
           <thead>
             <tr>
-              <th className="first-column__width"></th>
+              <th className="column__width-300 "></th>
               {dates.map((date, index) => (
                 <th
                   key={index}
@@ -224,12 +224,12 @@ const TimeTable = () => {
             {filteredSections.map((us) => (
               <tr key={us.section.id}>
                 <td
-                  className="first-column__width"
+                  className="column__width-300 "
                   style={{ position: "relative" }}
                 >
                   <StatusBadge
                     status={us.section.building.status}
-                    position={{ top: "10px", right: "10px" }}
+                    position={{ top: "0px", right: "10px" }}
                   />
                   <h5
                     style={{ fontWeight: 400, fontSize: 16 }}

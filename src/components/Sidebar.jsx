@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useAuth } from "../services/AuthContext";
@@ -8,11 +8,10 @@ import {
   ClipboardData,
   Person,
   People,
-  PiggyBank,
-  FileEarmarkRichtext,
-} from "react-bootstrap-icons"; // Импортируйте нужные иконки
-import "./Sidebar.css"; // Предполагается, что стили будут в этом файле
-import BrokenLine from "./BrokenLine";
+  ChevronDown,
+  ChevronUp,
+} from "react-bootstrap-icons";
+import "./Sidebar.css";
 
 const SidebarItem = ({ to, icon, children, isCollapsed }) => (
   <Nav.Item className={isCollapsed ? "text-center" : ""}>
@@ -28,8 +27,29 @@ const SidebarItem = ({ to, icon, children, isCollapsed }) => (
   </Nav.Item>
 );
 
+const SidebarSubItem = ({ to, icon, children, isCollapsed }) => (
+  <Nav.Item>
+    <Nav.Link
+      as={Link}
+      to={to}
+      eventKey={to}
+      className={
+        isCollapsed
+          ? `d-flex align-items-center justify-content-end`
+          : `d-flex align-items-center`
+      }
+    >
+      {isCollapsed && <div style={{}}>{icon}</div>}
+      {!isCollapsed && <span className="ms-2">{children}</span>}
+    </Nav.Link>
+  </Nav.Item>
+);
+
 const Sidebar = ({ isCollapsed }) => {
   const { userRole } = useAuth();
+  const [isWorkMenuOpen, setWorkMenuOpen] = useState(false);
+
+  const toggleWorkMenu = () => setWorkMenuOpen(!isWorkMenuOpen);
 
   return (
     <Nav
@@ -38,13 +58,49 @@ const Sidebar = ({ isCollapsed }) => {
         isCollapsed ? "collapsed" : ""
       }`}
     >
-      <SidebarItem
-        to="/"
-        icon={<Hourglass size={20} />}
-        isCollapsed={isCollapsed}
-      >
-        Работа
-      </SidebarItem>
+      {/* Основной элемент "Работа" */}
+      <Nav.Item className={isCollapsed ? "text-center" : ""}>
+        <Nav.Link
+          onClick={toggleWorkMenu}
+          className="d-flex align-items-center"
+        >
+          <div className="sidebar-icon">
+            <Hourglass size={20} />
+          </div>
+          {!isCollapsed && <span className="ms-2">Работа</span>}
+          {!isCollapsed && (
+            <div className="ms-auto">
+              {isWorkMenuOpen ? (
+                <ChevronUp size={20} />
+              ) : (
+                <ChevronDown size={20} />
+              )}
+            </div>
+          )}
+        </Nav.Link>
+      </Nav.Item>
+
+      {/* Подвкладки под "Работа" */}
+      {isWorkMenuOpen && (
+        <>
+          <SidebarSubItem
+            to="/work-time"
+            icon={"У-Р"}
+            isCollapsed={isCollapsed}
+          >
+            Учет работы
+          </SidebarSubItem>
+          <SidebarSubItem
+            to="/task-view"
+            icon={"З-Д"}
+            isCollapsed={isCollapsed}
+          >
+            Задания
+          </SidebarSubItem>
+        </>
+      )}
+
+      {/* Другие пункты меню */}
       <SidebarItem
         to="/building"
         icon={<Buildings size={20} />}
@@ -59,28 +115,14 @@ const Sidebar = ({ isCollapsed }) => {
       >
         Отчеты
       </SidebarItem>
-      {/* <SidebarItem
-        icon={<PiggyBank size={20} />}
-        isCollapsed={isCollapsed}
-        to="/financial-reports"
-      >
-        Финансы
-      </SidebarItem>
       <SidebarItem
-        to="/documents"
-        icon={<FileEarmarkRichtext size={20} />}
-        isCollapsed={isCollapsed}
-      >
-        Документы
-      </SidebarItem> */}
-      <SidebarItem
+        to="/user-management"
         icon={<People size={20} />}
         isCollapsed={isCollapsed}
-        to="/user-management"
       >
         Персонал
       </SidebarItem>
-      <div style={{justifySelf: "end"}}>
+      <div style={{ justifySelf: "end" }}>
         <SidebarItem
           to="/profile-edit"
           icon={<Person size={20} />}

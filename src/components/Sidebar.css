@@ -1,7 +1,7 @@
 .sidebar {
   width: 200px;
   transition: width 0.3s;
-  overflow: hidden; /* Добавлено для предотвращения прокрутки содержимого */
+  overflow: hidden; /* Предотвращает прокрутку содержимого */
 }
 
 .sidebar.collapsed {
@@ -14,11 +14,13 @@
   margin: 0.5rem 0;
   border-radius: 0.5rem;
   transition: background-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
 }
 
 .sidebar-icon {
   display: inline-block;
-  width: 2rem;
+  width: 2rem; /* Фиксированная ширина для иконок */
   text-align: center;
 }
 
@@ -38,4 +40,26 @@
   background: none;
   border: none;
   cursor: pointer;
+}
+
+/* Подвкладки без смещения вправо */
+.sidebar .nav-item .nav-link.sub-item {
+  padding-left: 1rem; /* Минимальный отступ для вложенных элементов */
+}
+
+.collapsed .nav-item .nav-link.sub-item {
+  padding-left: 0; /* Убираем отступ для свернутого состояния */
+}
+
+/* Стили для стрелочек */
+.nav-link .ms-auto {
+  margin-left: auto;
+}
+
+.nav-link .chevron-icon {
+  transition: transform 0.3s ease;
+}
+
+.sidebar.collapsed .chevron-icon {
+  display: none; /* Скрываем стрелочки в свернутом состоянии */
 }

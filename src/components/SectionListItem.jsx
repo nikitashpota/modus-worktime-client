@@ -132,7 +132,7 @@ const SectionListItem = ({
   return (
     <>
       <ListGroup.Item
-        className="d-flex justify-content-between align-items-end"
+        className="d-flex justify-content-between align-items-start"
         style={{
           borderRight: "1px solid #dee2e6",
           position: "relative",
