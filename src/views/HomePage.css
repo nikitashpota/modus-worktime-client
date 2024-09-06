@@ -7,7 +7,7 @@
   background-color: white;
 }
 
-.card-body {
+.custom-card {
   display: grid;
   flex: 1 1 auto;
   padding: 1rem 1rem;
