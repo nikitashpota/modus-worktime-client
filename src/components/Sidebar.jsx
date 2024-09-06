@@ -10,6 +10,7 @@ import {
   People,
   ChevronDown,
   ChevronUp,
+  PiggyBank,
 } from "react-bootstrap-icons";
 import "./Sidebar.css";
 
@@ -116,12 +117,20 @@ const Sidebar = ({ isCollapsed }) => {
         Отчеты
       </SidebarItem>
       <SidebarItem
+        to="/financial-reports"
+        icon={<PiggyBank size={20} />}
+        isCollapsed={isCollapsed}
+      >
+        Финансы
+      </SidebarItem>
+      <SidebarItem
         to="/user-management"
         icon={<People size={20} />}
         isCollapsed={isCollapsed}
       >
         Персонал
       </SidebarItem>
+
       <div style={{ justifySelf: "end" }}>
         <SidebarItem
           to="/profile-edit"
