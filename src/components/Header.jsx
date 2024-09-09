@@ -4,9 +4,11 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../services/AuthContext"; // Используйте контекст аутентификации
 import "./Header.css";
 import axios from "../services/axios";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const { isAuthenticated, logout, userId, userRole, setUserRole } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (userId) fetchUserRole();
@@ -28,7 +30,11 @@ const Header = () => {
   return (
     <Navbar expand="lg" className="custom-navbar fixed-top">
       <Container fluid>
-        <Navbar.Brand className="text-white" style={{ userSelect: "none" }}>
+        <Navbar.Brand
+          className="text-white"
+          style={{ userSelect: "none", cursor: "pointer" }}
+          onClick={() => navigate("/")}
+        >
           <img
             src="/logo.png"
             width="30"
@@ -36,7 +42,7 @@ const Header = () => {
             className="d-inline-block align-top"
             alt="MODUS logo"
           />
-          MODUS Work Time
+          GetWORK <span style={{ fontSize: "20px" }}>.</span>{" "}
         </Navbar.Brand>
         {isAuthenticated ? (
           <Button

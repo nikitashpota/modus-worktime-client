@@ -3,7 +3,7 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 60px;
+  width: 65px;
   background-color: white;
 }
 
@@ -33,17 +33,17 @@
 /* Высота для боковых и центральных полос */
 .logo-strip:nth-child(1),
 .logo-strip:nth-child(6) {
-  height: 60px; /* Боковые полосы самые длинные */
+  height: 40px; /* Боковые полосы самые длинные */
 }
 
 .logo-strip:nth-child(2),
 .logo-strip:nth-child(5) {
-  height: 50px; /* Чуть короче боковых */
+  height: 30px; /* Чуть короче боковых */
 }
 
 .logo-strip:nth-child(3),
 .logo-strip:nth-child(4) {
-  height: 40px; /* Центральные полосы самые короткие */
+  height: 20px; /* Центральные полосы самые короткие */
 }
 
 /* Поворот полос по очереди */
@@ -81,7 +81,7 @@
 
 /* Стиль заголовка */
 .logo-title {
-  font-size: 24px;
+  font-size: 36px;
   color: black;
   text-align: center;
   margin: 20px;

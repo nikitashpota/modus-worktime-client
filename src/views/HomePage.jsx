@@ -1,6 +1,16 @@
 import React from "react";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import {
+  Hourglass,
+  Buildings,
+  ClipboardData,
+  Person,
+  People,
+  ChevronDown,
+  ChevronUp,
+  PiggyBank,
+} from "react-bootstrap-icons";
 import "./HomePage.css"; // CSS для анимации и стилей
 
 const HomePage = () => {
@@ -27,14 +37,17 @@ const HomePage = () => {
           <div className="logo-strip"></div>
           <div className="logo-strip"></div>
         </div>
-        <h1 className="logo-title">MODUS Work Time</h1>
+        <h1 className="logo-title">GetWORK .</h1>
       </div>
 
       <Row className="g-4 justify-content-center">
         <Col md={4}>
-          <Card className="custom-card">
-            <Card.Body>
-              <Card.Title>Учет рабочего времени</Card.Title>
+          <Card>
+            <Card.Body className="custom-card">
+              <Card.Title>
+                <Hourglass size={30} style={{ marginRight: "16px" }} />
+                Учет рабочего времени
+              </Card.Title>
               <Card.Text>
                 Управляйте временем сотрудников, отслеживайте их рабочие часы.
               </Card.Text>
@@ -50,9 +63,12 @@ const HomePage = () => {
         </Col>
 
         <Col md={4}>
-          <Card className="custom-card">
-            <Card.Body>
-              <Card.Title>Задачи и управление</Card.Title>
+          <Card>
+            <Card.Body className="custom-card">
+              <Card.Title>
+                <Hourglass size={30} style={{ marginRight: "16px" }} />
+                Задачи и управление
+              </Card.Title>
               <Card.Text>
                 Управляйте задачами, выданными сотрудникам, следите за статусом
                 выполнения.
@@ -69,9 +85,12 @@ const HomePage = () => {
         </Col>
 
         <Col md={4}>
-          <Card className="custom-card">
-            <Card.Body>
-              <Card.Title>Управление объектами</Card.Title>
+          <Card>
+            <Card.Body className="custom-card">
+              <Card.Title>
+                <Buildings size={30} style={{ marginRight: "16px" }} />
+                Управление объектами
+              </Card.Title>
               <Card.Text>
                 Просматривайте и управляйте объектами строительства.
               </Card.Text>
@@ -87,14 +106,18 @@ const HomePage = () => {
         </Col>
 
         <Col md={4}>
-          <Card className="custom-card">
-            <Card.Body>
-              <Card.Title>Получить отчеты</Card.Title>
+          <Card>
+            <Card.Body className="custom-card">
+              <Card.Title>
+                <ClipboardData size={30} style={{ marginRight: "16px" }} />
+                Получить отчеты
+              </Card.Title>
               <Card.Text>
-                Просмотреть отчеты по задачам и загрузки сотрудников. Скачать отчеты в табличной форме
+                Просматривайте отчеты по задачам и загрузкам сотрудников.
+                Скачивайте отчеты в табличной форме
               </Card.Text>
               <Button
-                onClick={() => navigate("/building")}
+                onClick={() => navigate("/director")}
                 variant="outline-primary"
                 className="card-button"
               >
@@ -105,14 +128,17 @@ const HomePage = () => {
         </Col>
 
         <Col md={4}>
-          <Card className="custom-card">
-            <Card.Body>
-              <Card.Title>Управление объектами</Card.Title>
+          <Card>
+            <Card.Body className="custom-card">
+              <Card.Title>
+                <PiggyBank size={30} style={{ marginRight: "16px" }} />
+                Управление финансами
+              </Card.Title>
               <Card.Text>
-                Просматривайте и управляйте объектами строительства.
+                Просматривайте и управляйте даижением финансовых потоков.
               </Card.Text>
               <Button
-                onClick={() => navigate("/building")}
+                onClick={() => navigate("/financial-reports")}
                 variant="outline-primary"
                 className="card-button"
               >
@@ -121,8 +147,6 @@ const HomePage = () => {
             </Card.Body>
           </Card>
         </Col>
-
-        {/* Добавь больше карточек по аналогии */}
       </Row>
     </Container>
   );

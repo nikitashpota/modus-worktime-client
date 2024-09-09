@@ -13,7 +13,7 @@ import { parseISO, isWithinInterval, differenceInDays } from "date-fns";
 const CustomDot = (props) => {
   const { cx, cy, stroke, payload, index } = props;
   const yOffset = index % 2 === 0 ? 35 : -20;
-  const circleStroke = payload.status === "Завершено" ? "green" : "none";
+  const circleStroke = payload.status === "Завершено" ? "#7cc429" : "none";
   if (payload.code) {
     return (
       <>
@@ -21,10 +21,10 @@ const CustomDot = (props) => {
           <circle
             cx={cx}
             cy={cy}
-            r={6}
+            r={10}
             fill={stroke}
             stroke={circleStroke}
-            strokeWidth={3}
+            strokeWidth={4}
           />
         </g>
         <foreignObject x={cx - 30} y={cy - yOffset} width="60" height="35">
